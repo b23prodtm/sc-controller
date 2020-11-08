@@ -1,0 +1,10 @@
+ 0x000000000000000e (SONAME)             Library soname: [libscc-slave-mapper.so]
+None B 8
+SLAVE_MAPPER_TYPE D 8
+sccc_slave_mapper_feed T 1ae
+sccc_slave_mapper_free T f1
+sccc_slave_mapper_get_userdata T 61
+sccc_slave_mapper_new T 12b
+sccc_slave_mapper_set_devices T 68
+sccc_slave_mapper_set_sa_handler T 61
+sccc_slave_mapper_set_userdata T 61

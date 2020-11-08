@@ -1,0 +1,20 @@
+ 0x000000000000000e (SONAME)             Library soname: [libscc-osd.so]
+__bss_start B
+_edata D
+_end B
+install_css_provider T 17
+menu_icon_draw_pixbuf T 162
+menu_icon_get_pixbuf T 1d
+menu_icon_get_type T 60
+menu_icon_new T 103
+menu_icon_set_filename T bf
+menu_icon_set_has_colors T 29
+osd_window_compute_position T d1
+osd_window_exit T 29
+osd_window_get_active_screen_geometry T 96
+osd_window_get_position T 21
+osd_window_get_type T 60
+osd_window_new T 50
+osd_window_set_position T 29
+osd_window_setup T fe
+reconfigure_css_provider T 327

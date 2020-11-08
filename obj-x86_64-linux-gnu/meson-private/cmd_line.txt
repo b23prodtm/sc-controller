@@ -1,0 +1,11 @@
+[options]
+prefix = /usr
+libdir = lib/x86_64-linux-gnu
+libexecdir = lib/x86_64-linux-gnu
+localstatedir = /var
+sysconfdir = /etc
+buildtype = plain
+wrap_mode = nodownload
+
+[properties]
+

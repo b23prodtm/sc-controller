@@ -1,0 +1,19 @@
+ 0x000000000000000e (SONAME)             Library soname: [libscc-parser.so]
+None B 8
+_scc_tokens_to_param_list T 42b
+json_reader_fn T 14
+parse_after_keyword T 201
+scc_make_empty_profile T b
+scc_menudata_apply_generators T 2b4
+scc_menudata_free T 1a
+scc_menudata_from_generator T 30c
+scc_menudata_from_json T 614
+scc_menudata_get_by_id T 66
+scc_menudata_get_by_index T 23
+scc_menudata_len T d
+scc_parse_action T 31
+scc_parse_action_with_parameters T 85
+scc_parse_parameter T 271
+scc_profile_from_json T 407
+scc_str_is_float T 39
+scc_str_is_int T 39

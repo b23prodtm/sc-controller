@@ -1,0 +1,18 @@
+ 0x000000000000000e (SONAME)             Library soname: [libscc-virtual-device.so]
+flush_mouse T 200
+keyboard_scan_event T 74
+scc_virtual_device_close T 31
+scc_virtual_device_create T 50
+scc_virtual_device_flush T 76
+scc_virtual_device_get_type T 7
+scc_virtual_device_key_press T c4
+scc_virtual_device_key_release T c4
+scc_virtual_device_mouse_move T 3a
+scc_virtual_device_mouse_scroll T 3a
+scc_virtual_device_set_axis T 69
+scc_virtual_device_set_x_display T 5
+scc_virtual_device_to_string T 18
+setup_device T 463
+setup_gamepad T 129
+setup_keyboard T 232
+setup_mouse T 139
