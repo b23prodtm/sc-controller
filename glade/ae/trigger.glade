@@ -53,7 +53,7 @@
       </row>
       <row>
         <col id="0" translatable="yes">Normal - Exclusive Buttons</col>
-        <col id="1" translatable="yes">normal_exclusive</col>
+        <col id="1" translatable="yes">NORMAL_EXCLUSIVE</col>
       </row>
       <row>
         <col id="0" translatable="yes">Hip Fire</col>
