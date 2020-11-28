@@ -7,6 +7,8 @@ export GDK_PIXBUF_MODULEDIR=${APPDIR}/usr/lib/gdk-pixbuf-2.0/2.10.0/loaders
 export PYTHONPATH=${APPDIR}/usr/lib/python3.8/site-packages:$PYTHONPATH
 export PYTHONPATH=${APPDIR}/usr/lib64/python3.8/site-packages:$PYTHONPATH
 export SCC_SHARED=${APPDIR}/usr/share/scc
+export PYTHON=${APPDIR}/usr/bin/python2
+
 
 function dependency_check_failed() {
 	# This checks 4 different ways to open error message in addition to
@@ -35,6 +37,9 @@ ARG1=$1
 if [ "x$ARG1" == "x" ] ; then
 	# Start gui if no arguments are passed
 	ARG1="gui"
+elif [ "x$ARG1" == "xbash" ] ; then
+	bash
+	exit $?
 else
 	shift
 fi

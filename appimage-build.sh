@@ -1,5 +1,7 @@
 #!/bin/bash
 APP="sc-controller"
+DEPCACHE="/tmp"
+BUILDCACHE="/tmp"
 EXEC="scc"
 LIB="lib"
 
@@ -12,22 +14,29 @@ function download_dep() {
 	URL=$2
 	if [ -e ../../${NAME}.obstargz ] ; then
 		# Special case for OBS
-		cp ../../${NAME}.obstargz /tmp/${NAME}.tar.gz
+		cp ../../${NAME}.obstargz ${DEPCACHE}/${NAME}.tar.gz
 	elif [ -e ${NAME}.tar.gz ] ; then
-		cp ${NAME}.tar.gz /tmp/${NAME}.tar.gz
-	elif [ -e /tmp/${NAME}.tar.gz ] ; then
-		echo "/tmp/${NAME}.tar.gz already downloaded"
+		cp ${NAME}.tar.gz ${DEPCACHE}/${NAME}.tar.gz
+	elif [ -e ${DEPCACHE}/${NAME}.tar.gz ] ; then
+		echo "${DEPCACHE}/${NAME}.tar.gz already downloaded"
 	else
-		wget -c "${URL}" -O /tmp/${NAME}.tar.gz
+		wget -c "${URL}" -O ${DEPCACHE}/${NAME}.tar.gz
 	fi
 }
 
 function build_dep() {
 	NAME="$1"
+<<<<<<< HEAD
 	mkdir -p /tmp/${NAME}
 	pushd /tmp/${NAME}
 	tar --extract --strip-components=1 -f /tmp/${NAME}.tar.gz
 	PYTHONPATH=${BUILD_APPDIR}/usr/lib/python3.8/site-packages python3 \
+=======
+	mkdir -p ${BUILDCACHE}/${NAME}
+	pushd ${BUILDCACHE}/${NAME}
+	tar --extract --strip-components=1 -f ${DEPCACHE}/${NAME}.tar.gz
+	PYTHONPATH=${BUILD_APPDIR}/usr/lib/python2.7/site-packages python2 \
+>>>>>>> 1b49f701... Managed to generate AppImage for Ubuntu 20.04
 		setup.py install --optimize=1 \
 		--prefix="/usr/" --root="${BUILD_APPDIR}"
 	mkdir -p "${BUILD_APPDIR}/usr/lib/python3.8/site-packages/"
@@ -39,15 +48,21 @@ function unpack_dep() {
 	NAME="$1"
 	pushd ${BUILD_APPDIR}
 	tar --extract --exclude="usr/include**" --exclude="usr/lib/pkgconfig**" \
+<<<<<<< HEAD
 			--exclude="usr/lib/python2.7**" -f /tmp/${NAME}.tar.gz
+=======
+			--exclude="usr/lib/python3.6**" -f ${DEPCACHE}/${NAME}.tar.gz
+>>>>>>> 1b49f701... Managed to generate AppImage for Ubuntu 20.04
 	popd
 }
 
 set -ex		# display commands, terminate after 1st failure
 
 # Download deps
+download_dep "python-2.7.18" "https://archive.archlinux.org/packages/p/python2/python2-2.7.18-1-x86_64.pkg.tar.zst"
 download_dep "python-evdev-0.7.0" "https://github.com/gvalkov/python-evdev/archive/v0.7.0.tar.gz"
 download_dep "pylibacl-0.5.3" "https://github.com/iustin/pylibacl/releases/download/pylibacl-v0.5.3/pylibacl-0.5.3.tar.gz"
+<<<<<<< HEAD
 download_dep "python-gobject-3.36.1" "https://archive.archlinux.org/packages/p/python-gobject/python-gobject-3.36.1-1-x86_64.pkg.tar.zst"
 download_dep "libpng-1.6.34" "https://archive.archlinux.org/packages/l/libpng/libpng-1.6.34-2-x86_64.pkg.tar.xz"
 download_dep "gdk-pixbuf-2.36.9" "https://archive.archlinux.org/packages/g/gdk-pixbuf2/gdk-pixbuf2-2.36.9-1-x86_64.pkg.tar.xz"
@@ -55,6 +70,17 @@ download_dep "libcroco-0.6.13" "https://archive.archlinux.org/packages/l/libcroc
 download_dep "libxml2-2.9.10" "https://archive.archlinux.org/packages/l/libxml2/libxml2-2.9.10-2-x86_64.pkg.tar.zst"
 download_dep "librsvg-2.48.7" "https://archive.archlinux.org/packages/l/librsvg/librsvg-2%3A2.48.7-1-x86_64.pkg.tar.zst"
 download_dep "icu-67.1" "https://archive.archlinux.org/packages/i/icu/icu-67.1-1-x86_64.pkg.tar.zst"
+=======
+download_dep "python-gobject-3.26.1" "https://archive.archlinux.org/packages/p/python2-gobject/python2-gobject-3.26.1-1-x86_64.pkg.tar.xz"
+download_dep "python-cairo-1.18.2" "https://archive.archlinux.org/packages/p/python2-cairo/python2-cairo-1.18.2-3-x86_64.pkg.tar.xz"
+download_dep "libpng-1.6.34" "https://archive.archlinux.org/packages/l/libpng/libpng-1.6.34-2-x86_64.pkg.tar.xz"
+download_dep "gdk-pixbuf-2.36.9" "https://archive.archlinux.org/packages/g/gdk-pixbuf2/gdk-pixbuf2-2.36.9-1-x86_64.pkg.tar.xz"
+download_dep "libcroco-0.6.13" "https://archive.archlinux.org/packages/l/libcroco/libcroco-0.6.13-1-x86_64.pkg.tar.xz"
+download_dep "libxml2-2.9.7" "https://archive.archlinux.org/packages/l/libxml2/libxml2-2.9.7%2B4%2Bg72182550-2-x86_64.pkg.tar.xz"
+download_dep "librsvg-2.42.2" "https://archive.archlinux.org/packages/l/librsvg/librsvg-2%3A2.42.2-1-x86_64.pkg.tar.xz"
+download_dep "libffi-3.2.1" "https://archive.archlinux.org/packages/l/libffi/libffi-3.2.1-4-x86_64.pkg.tar.xz"
+download_dep "icu-60.2" "https://archive.archlinux.org/packages/i/icu/icu-60.2-1-x86_64.pkg.tar.xz"
+>>>>>>> 1b49f701... Managed to generate AppImage for Ubuntu 20.04
 download_dep "zlib-1:1.2.11" "https://archive.archlinux.org/packages/z/zlib/zlib-1%3A1.2.11-1-x86_64.pkg.tar.xz"
 download_dep "libffi-3.3" "https://archive.archlinux.org/packages/l/libffi/libffi-3.3-3-x86_64.pkg.tar.zst"
 
@@ -70,8 +96,15 @@ fi
 
 build_dep "python-evdev-0.7.0"
 build_dep "pylibacl-0.5.3"
+unpack_dep "python-2.7.18"
 unpack_dep "libpng-1.6.34"
+<<<<<<< HEAD
 unpack_dep "python-gobject-3.36.1"
+=======
+unpack_dep "python-cairo-1.18.2"
+unpack_dep "libffi-3.2.1"
+unpack_dep "python-gobject-3.26.1"
+>>>>>>> 1b49f701... Managed to generate AppImage for Ubuntu 20.04
 unpack_dep "gdk-pixbuf-2.36.9"
 unpack_dep "libcroco-0.6.13"
 unpack_dep "libxml2-2.9.10"
@@ -123,6 +156,7 @@ convert -background none ${BUILD_APPDIR}/usr/share/pixmaps/${APP}.svg ${BUILD_AP
 mkdir -p ${BUILD_APPDIR}/usr/share/metainfo/
 cp scripts/${APP}.appdata.xml ${BUILD_APPDIR}/usr/share/metainfo/${APP}.appdata.xml
 
+<<<<<<< HEAD
 # Make symlinks
 ln -sfr ${BUILD_APPDIR}/usr/lib64/python3.8/site-packages/libcemuhook.cpython-38-x86_64-linux-gnu.so ${BUILD_APPDIR}/usr/lib64/python3.8/site-packages/libcemuhook.so
 ln -sfr ${BUILD_APPDIR}/usr/lib64/python3.8/site-packages/libhiddrv.cpython-38-x86_64-linux-gnu.so ${BUILD_APPDIR}/usr/lib64/python3.8/site-packages/libhiddrv.so
@@ -130,6 +164,12 @@ ln -sfr ${BUILD_APPDIR}/usr/lib64/python3.8/site-packages/libremotepad.cpython-3
 ln -sfr ${BUILD_APPDIR}/usr/lib64/python3.8/site-packages/libsc_by_bt.cpython-38-x86_64-linux-gnu.so ${BUILD_APPDIR}/usr/lib64/python3.8/site-packages/libsc_by_bt.so
 ln -sfr ${BUILD_APPDIR}/usr/lib64/python3.8/site-packages/libuinput.cpython-38-x86_64-linux-gnu.so ${BUILD_APPDIR}/usr/lib64/python3.8/site-packages/libuinput.so
 ln -sfr ${BUILD_APPDIR}/usr/lib64/python3.8/site-packages/posix1e.cpython-38-x86_64-linux-gnu.so ${BUILD_APPDIR}/usr/lib64/python3.8/site-packages/posix1e.so
+=======
+# Fix shebangs
+for x in "${BUILD_APPDIR}/usr/bin"/sc-controller "${BUILD_APPDIR}/usr/bin"/scc* ; do
+	sed -i 's|#!/usr/bin/python2|#!/usr/bin/env python2|' "$x"
+done
+>>>>>>> 1b49f701... Managed to generate AppImage for Ubuntu 20.04
 
 # Copy AppRun script
 cp scripts/appimage-AppRun.sh ${BUILD_APPDIR}/AppRun
