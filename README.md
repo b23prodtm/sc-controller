@@ -1,4 +1,4 @@
-# SC Controller [![Build Status](https://travis-ci.org/kozec/sc-controller.svg?branch=master)](https://travis-ci.org/kozec/sc-controller)
+# SC Controller [![Build Status](https://travis-ci.org/b23prodtm/sc-controller.svg?branch=travisobs)](https://travis-ci.org/kozec/sc-controller)
 
 
 User-mode driver, mapper and GTK3 based GUI for Steam Controller, DS4 and similar controllers.
