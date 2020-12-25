@@ -737,7 +737,7 @@ class SCCDaemon(Daemon):
 		
 		while True:
 			try:
-				line = rfile.readline()
+				line = rfile.readline().decode("utf-8")
 			except Exception:
 				# Connection terminated
 				break
@@ -763,7 +763,7 @@ class SCCDaemon(Daemon):
 		if message.startswith(b"Profile:"):
 			with self.lock:
 				try:
-					filename = message[8:].decode("utf-8").strip("\t ")
+					filename = message[8:].strip("\t ")
 					self._set_profile(client.mapper, filename)
 					log.info("Loaded profile '%s'", filename)
 					client.wfile.write(b"OK.\n")
@@ -777,7 +777,7 @@ class SCCDaemon(Daemon):
 				client.wfile.write(b"Fail: Cannot show OSD; there is no scc-osd-daemon registered\n")
 			else:
 				try:
-					text = message[5:].decode("utf-8").strip("\t ")
+					text = message[5:].strip("\t ")
 					with self.lock:
 						if not self._osd("message", text):
 							raise Exception()
