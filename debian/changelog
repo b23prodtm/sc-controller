@@ -1,0 +1,2282 @@
+sc-controller (0.4.9) UNRELEASED; urgency=medium
+
+  [ btinarako ]
+  * Initial release. (Closes: #XXXXXX) 
+
+  [ kozec ]
+  * Imported code from 'https://github.com/ynsta/steamcontroller'
+  * Tabs please
+  * Fix: I'm using another module name
+  * Added/imported setup.py, so I can compile libuinput.so
+  * Moved stuff around, as I'd like to have __init__ empty
+  * Removed any mention of 'Steam' because of... reasons
+  * Added .gitignore
+  * Added new mapper and daemon with json configuration
+  * Profile loading moved to separate module
+  * Fix: Wrong shellbang all around the place
+  * Moved *Event classes from mapper to events.py (this completly overwrites original event.py from steamcontroller project)
+  * Added action parser, so there is no longer need for eval()
+  * Merged 'pad' and 'button' action
+  * Made ActionParser throw
+  * Fix: i somehow killed right pad
+  * Added workng 'describe' method and lot of action classes
+  * Fix: Parsing negative numbers
+  * Imported (partialy completed) GUI code
+  * Merged tools.py from gui and tools.py from steamcontroller together
+  * Moved GUI code stuff to scc/gui
+  * GUI now can set button actions
+  * Action editor: respond to enter and escape
+  * Playing with UI and descriptions
+  * Added key grabing
+  * Added support to write action as string directly into UI
+  * Looks like 'enum' is not standard python package
+  * Merged 'button' and 'key' action
+  * GUI: Editing trigger bindings
+  * Merged 'button' and 'key' action
+  * Simplified code around Actions
+  * Added some comments
+  * Preparing GUI for configuring trigger-to-button mappings
+  * Action editor: enabled trigger-to-button mappings
+  * Hilighting what's already selected when opening Action editor
+  * Hilighting what's already selected when editing trigers
+  * Fix: triggers are not clickable on image in main window
+  * Working on Stick action editor
+  * Added sensitivity settings to axis
+  * Added way to specify X and Y axis actions in custom action field
+  * Added editor for dpad emulation with stick
+  * Fix: Areas in axistrigger.svg offseted
+  * Added per-axis stick editing
+  * Just moving stuff around
+  * Storing stick actions + displaying stick/pad actions in main window
+  * Editing pad actions
+  * Loading profile list and selected profile
+  * Profile saving
+  * Moved daemon to module and added control socket that does nothign so far
+  * typo
+  * Controll socket now can load profile on command
+  * Daemon: Send OK or error when profile change is requested
+  * Added 'macro' action
+  * Updating docs
+  * Added basic code for controllign daemon from GUI
+  * Moved 'C' button down
+  * Automatically apply UI changes in daemon
+  * Added working 'new profile' option
+  * Integrated libusb1 as it looks like it is not commonly packaged
+  * Fix: Prefilling axis/pad actions in editor
+  * More UI tweaks
+  * Renamed icons -> images
+  * Improved mouse handling
+  * Added 'profile' action, allows changing profiles using gamepad buttons
+  * Fix: stick translated as LPAD if RPAD is pressed
+  * Hidden 'action name' field, it has no use for now
+  * Added run.sh to run this thing from source directory
+  * Added icon, desktop file, scripts, updated setup.py, renamed stuf to sc-*
+  * Moved .pid and .socket to ~/.config/scc
+  * Save current profile into config, so program doesn't start with XBox profile all the time
+  * Glade: set min.version to 3.10
+  * Added README.md and *LICENSE* files
+  * Removed license notices from files, there is main LICENSE file in root directory
+  * Added screenshots
+  * Added screenshots into README
+  * Added PKGBUILD
+  * Hidden -Wunused-result compiler warning
+  * README: Download source -> download latest release
+  * Returned MIT license notices back, those are not related to main LICENSE file
+  * Added 'shell' action, can execute stuff
+  * Fix: UI only partialy updated when profile is changed using gamepad  button
+  * Fix: desktop file: There is no "Games" category
+
+  [ Rohit Nirmal ]
+  * Fix default left stick binding for desktop profile.
+
+  [ kozec ]
+  * Added TODO...
+  * Added 8-way DPAD emulation
+  * typo
+  * Added trigger sensitivity settngs
+  * Added package links to README. Fixes #1
+  * Display key combinations if possible. Fixes #4
+  * Added 'clear' button, sets action to nothing. Fixes #5
+  * Removed no-longer used json files
+  * Fix: None is kinda bad name for action :(
+  * ActionParser moved to its own module
+  * Changed internal event mappings to allow better flexibility
+  * Fully-working 'click' action, allows to define DPAD that acts only when clicked. No GUI yet
+  * Added UI for click-requiring DPAD
+  * Fix: Hide sensitivity slider when it's not applicable. Ref #6
+  * Parsing fixes
+
+  [ Rohit Nirmal ]
+  * Fix typo.
+
+  [ kozec ]
+  * Fix: This got merged in wrong way
+  * Fix: Ubuntu Gnome 15.10 compatibility. Fixes #7
+  * Fix: crash when editing trigger
+  * Report error when daemon can't access controller device
+  * USBErrorBusy handling
+  * Moved disabling haptic auto feadback to method so SCController class can be initialized without blocking
+  * Recovering after error (for example when dongle is connected)
+  * Handle USBErrorPipe
+  * Renamed sc-daemon to scc-daemon (that was intended name from the begining...)
+  * Re-enabled IO redirect in daemon
+  * This cannot be symlink
+  * Added modeswitch (no UI)
+  * Fix: This needs arg expansion
+  * UI for modeswitch
+  * Allow enabling modeswitch from UI
+  * Fix: Don't display ModeSwitch button when ActionEditor is child of ModeSwitch editor
+  * Fix: Hide modeswitch from trigger and stick (for now)
+  * Undo/Redo. Fixes #3
+  * Fix: temporaly disable undo/redo for stick and pad
+  * Better (de)serialization for stick, pad and modifiers
+  * XYAction can be now called
+  * Fixed what last change broke in editor
+  * Undo/redo for stick and pads. Ref #3
+  * Turned NoAction into singleton, bool(NoAction()) == False
+  * Enabled modeswitching for stick / pad
+  * Fix: Mapper broken (a little)
+  * Fix: missing import
+  * Fix: button and trigger can get stuck when used with modifier
+  * Check if /dev/uinput is usable when starting
+  * Added support for stuff stored in /usr/local
+  * Holly...
+  * Added UI to configure pad as button
+  * Removed debug code
+  * Allow to set different bindings for pressing LPAD and stick
+  * Redone binding to pad press in UI + added binding ot stick press
+  * Enabled action names - UI can now show 'Aim' instead of 'MOUSE3'
+  * Updated screenshot
+  * Removed redundant images
+  * Display stick/pad press bindings in UI
+  * controller.py: removed callback_args
+  * controller.py: added time to callback arguments
+  * Added scheduler
+  * Ubuntu is an ancient African word for not being able to keep up-to-date Debian
+  * Macro that uses scheduler instead of blocking all inputs
+  * Turned ';' into macro, UI still missing
+  * Removed parts of titles, I need more space and 'edit action for' is redundant anyway
+  * Fix: typo modeswitch -> modeshift
+  * squash
+  * Macro editor WIP
+  * Macro editor done
+  * Action name for macro
+  * UI fixeS
+  * Added repeat / rapid fire mode
+  * Allowed macro to include 'button press' and 'button release'
+  * Bragging in readme
+  * Fix: Using newline to create macros kills my jumping in tombrider :(
+  * Updated readme
+  * Fix: Don't switch to custom action tab when there is no action
+  * Fix: Don't display all macros as repeating
+  * Me. Cannot. Engrish. ug. Ref #12
+  * Allow line starting with ')'. Fixes #12
+  * Allow macro and modeshift to be used on dpad. Fixes #11
+  * Fix: Allow ',' at start of line as well
+  * Just moving stuff around
+  * Added action to turn controller off
+  * Detect when controller is turned on/off and re-configure haptics
+  * Enabling gyro sensors (always for now)
+  * Kinda working gyro->mouse mapping
+  * Added 'joystick move' and 'mouse joystick' modes for gyro
+  * Fix: Don't freak out when trigger has only 2nd button set
+  * Moved glade files into separate directory
+  * Split AcitonEditor into multiple files so I can add more stuff without crashing Glade
+  * Fix: display selected button when changing button for trigger
+  * Editing gyro, with custom action editor only
+  * Basic Gyro editor
+  * Enabled 'Gyro Enable Button'
+  * Added per-axis gyro settings
+  * TODO: Modeshift for gyro
+  * Fix: Don't replace 'and' with newline in custom action editor
+  * Allow setting sensitivity everywhere. Fixes #13, #6
+  * Fix: 'and' can't handle gyro
+  * Fix: 'and' can't handle gyro
+  * Gyro support in modeshift editor
+  * Gyro support in modeshift editor
+  * Preparing UI for sensitivity settings
+  * sensitivity UI: clear buttons
+  * sensitivity UI: hide what's not needed
+  * sensitivity UI: pretty-much working
+  * Fix: Allow editor to recognize actions with changed sensitivity
+  * Load stored sensitivity settings back to editor
+  * Load stored sensitivity settings even through XYAction
+  * Hide modifier settings when custom action editor is visible
+  * Fix: setting only one axis in per-axis component shouldn't cause crash
+  * Fix: Don't overflow virtual axis values
+  * Removed now redundant controlls
+  * Hide sensitivity settings by default
+  * Removed forgotten debug print
+  * Fix: setup is not installing everything
+  * Turned PKGBUILD into -git one
+  * Fixed file permissions
+  * Fix: Install ALL glade files...
+  * Updated screenshot
+  * Fix: Replace '< Select' with '&lt; Select' when setting button markup
+  * Allowed to set button to turnoff controller, run command an change profile in UI
+  * Basic haptic feedback support, can send feedback when pressing the button
+  * added some docs
+  * Feedback for trackball done
+  * Removed forgotten debug line. Fixes #15
+  * Fix: Can't open gyro settings on Ubuntu. Fixes #16
+  * Fixed scrolling whell scrolling as with stick even on touchpad
+  * Added feedback for scrolling
+  * Fix: don't cause crazy feedback loop when changing profiles
+  * Added feedback for stick emulation
+  * Added feedback for gyro
+  * Fix: allowed sensitivity to be set on gyroabs
+  * Reduced amount of calls from mapper when using modifiers
+  * Just moving numbers around
+  * Turn gyrosensor on/off if current profile uses gyro action or not.
+  * Turn gyrosensor on/off if current profile uses gyro action or not.
+  * Fix: Display action name on SensitivityModifier
+  * Added UI to set trigger to half of virtual stick axis (can make left trigger to move stick left and right axist to move same stick right
+  * UI for feedback, not working yet
+  * Removed special treatment of XYAction in custom action editor to sanitize applying modifiers
+  * Better XYAction & modifier handling in editor
+  * Fix: cannot map to PAUSE key
+  * Fix: don't generate sensitivity modifier when everything is set to 1.0
+  * Load feedback settings *to* action editor
+  * Applying feedback settings from action editor
+  * Fix: FeedbackModifier.strip missing
+  * Updated TODO and README
+  * Simplified profile file format
+  * Even better profile file format
+  * Typo
+  * Allowed launching with python2 scripts/something
+  * Attempt for OSD
+  * Made window click-trought
+  * Fix: Backwards compatibility broken a little
+  * Very basic OSD message
+  * Converted make_window_clicktrough code from c to pure python
+  * Added parameters & timeout to sc-osd-message
+  * Turned 'protocol' used to communicate with daemon into actual protocol, so new stuff can be added
+  * Extended protocol so OSD stuff can work with gamepad
+  * Default profiles updated with feedback support
+  * Unbuntu...
+  * Fix: who made this thing single-instance anyway?
+  * setup.py: install osd-related stuff
+  * Default profiles updated with feedback support
+  * Reusable stuff from osd.message moved into osd.__init__.py
+  * osd.message: Font-size moved to css
+  * Some code mysteriously uses CRLF
+  * Begining of OSD menu
+  * Cursor for osd-menu
+  * Moved common parts of argument parsing to osd.__init__.py
+  * Basic, but working OSD menu
+  * Added cursor to osd menu
+  * Loading menu from profile file
+  * Detect (kinda) when USB dongle gets stuck and reset it to prevent infinite 'LIBUSB_ERROR_BUSY' loop. Fixes #14
+  * Litle rework on special_actions.py, so I can add more with less hassle
+  * Removed duplicate launching scripts
+  * Added osd action
+  * Typo
+  * osd() as modifier
+  * Almost working OSD menu
+  * Moving constants around so osd-* scripts don't have to import slow-loading modules
+  * Putting menu on pad (wip)
+  * Created OSD daemon that handles menus and messages, because running those on-demand is too slow.
+  * added SVGWidget.get_pixbuf method
+  * Actually working menu
+  * Renamed sc-osd-* to scc-osd-*
+  * Fix: suddendly can't save anything
+  * Save menus loaded from profile (don't wipe menus when saving profile
+  * Fix: osd shouldn't exit just because daemon reports error
+  * Merged scc-osd-daemon (script) with osd_daemon.py
+  * Better osd-daemon management in scc-daemon
+  * Allowed menu on pad
+  * Fix: wrong cursor on menu
+  * Loading menus from file
+  * Added rectangular/grid menu
+  * Removed forgotten debug line
+  * WIP: OSD keyboard image
+  * OSD keyboard basic code
+  * OSD keyboard hilighting
+  * OSD keyboard image - nicely aligned
+  * Missing comma. Fixes #19
+  * Fix: Probably broken merge
+  * Fix: don't start osd-daemon if there is no XServer available
+  * Send only larger changes in PAD position to imporove perfomance
+  * Fix: don't try to unlock inputs when connection to daemon is broken
+  * OSD Keyboard kinda works, sends wrong keys
+  * OSD Keyboard, sends correct keys.
+  * OSD Keyboard, space, backpace, shift, etc
+  * OSD Keyboard: Set labels from active keymap
+  * Moving keyboard with stick
+  * Close OSD Keyboard with steam button
+  * Added 'keyboard' action, displays OSD Keyboard
+  * Getting keyboard labels from keymap
+  * Small optimalization: don't redraw keyboard unnecessarily
+  * renamed xfixes -> xwrappers
+  * OSD Keyboard: change labels when shift is pressed or when keyboard group is changed
+  * Fix: Some labels are wrong
+  * Moved border around keyboard to CSS
+  * Made 56 great again
+  * Added last 5 missing keys and AltGr support
+  * Load keyboard image from ~/.config/scc, if there is any
+  * Just some recoloring
+  * Added keyboard screenshot
+  * Updated keyboard screenshot
+  * Fix: Ignore IDLE events generated by wired steam controller. Fixes #21
+  * Fix: Ignore IDLE events generated by wired steam controller. Fixes #21
+  * Fix: KEY_EQUAL mixed with KEY_MINUS
+  * Modified keyboard colors a little
+  * Renamed main.menu -> Default.menu
+  * Added UI to showing keyboard by button
+  * Hide OSD keyboard by any button that doesn't do anything on it
+  * Updated TODO and Readme
+  * Fixed executable flags + updated setup.py
+  * ... except for this one, this should stay executable
+  * holly...
+  * Fix: use python interpreter to execute osd_daemon
+  * Fix: This one shouldn't close keyboard
+  * Returned correct labels on OSD keyboard buttons
+  * Added UI for displaying OSD messages and menus (but menu editor is TODO)
+  * Fix: Center cursors on OSD Keyboard. Fixes #27
+  * ... and center cursor on menu as well. Ref #27
+  * Fix: mess with quotes in OSD Message
+  * Typo
+  * WIP: Menu editor
+  * Fix: Alternative .so names on Ubuntu. Ref #23
+  * Fix: OSD for GTK <3.20
+  * Fix: Cannot edit KeyboardAction. Fixes #24
+
+  [ TotalCaesar659 ]
+  * Adding Russian translation to the pop-up comment
+
+  [ kozec ]
+  * Menu Editor kinda done, needs testing and saving to file
+  * Saving menus into file
+  * Menu editor done.
+  * Editting OSD modifier
+  * Fix: OSD Keyboard: Don't freak out when key label cannot be translated
+  * Adding menus, removing menu items
+  * Fix: Don't crash when menu has no items
+  * Fix: Don't remove .mod file before OSD dameon can read it
+
+  [ Aidan Epstein ]
+  * Fix daemon not exiting when receiving SIGTERM.
+
+  [ kozec ]
+  * Fix: GTK on Debian doesn't know monospace. Ref #7
+  * Typo
+  * Updated TODO and README
+  * Added deadzone option. Fixes #22
+  * changed import
+  * Added circular movement pad mouse wheel rotation... thing. Fixes #29
+  * Typo
+  * Updated TODO
+  * Fixing IDs for Ubuntu
+  * Fixed title on New Menu dialog
+  * Fix: child_get_property works differenly on Ubuntu
+  * Support for detecting OSD Keyboard labels on  old Ubuntu
+  * CImprovedway how keygrabber translates keys. Fixes #32
+  * README: Added better headers and Patreon button
+  * Fix: wrong newlines
+  * Changed wrapping in circular scrolling
+  * WIP: Mapping mouse to screen area, does nothing :(
+  * Mapping mouse to screen area, working
+  * Allowed specifying mouse area from other side of screen
+  * Allowed specifying mouse area relative to window
+  * ... and with relative sizes of everything
+  * Added code for displaying OSD border around mouse area
+  * ... and for area relative to window as well
+  * WIP: UI for mouse area thing
+  * WIP: Preview for Area action
+  * Mapping mouse to screen area complete, along with complete editor
+  * Fix: Calling wrong super method
+  * Allowed to assign menu to PAD in UI
+  * Allowed to assign menu to PAD in daemon
+
+  [ TotalCaesar659 ]
+  * Fixed typo
+  * Fixed typo
+
+  [ kozec ]
+  * Merged similar combobox methods into one place
+  * Added support for grid menu
+  * Updated TODO and README
+  * Introducing: The About Dialog
+  * Fix: Always have some menu type selected
+  * it's starting to look like I need money :)
+  * Documenting stuff...
+  * Updating links to match github
+  * Typo (wrong button order)
+  * Restart daemon if GUI is started fter update
+  * Fix: version in about dialog wrong
+  * Fix: IDs on Ubuntu
+  * Added option to set different action to double-clicking button, without GUI so far
+  * Added option to set different action to holding the button, still without GUI
+  * Loading 'hold' modifier from profile
+  * Fixed nasty warning
+  * WIP: Editing double click and hold buttons
+  * UI for double-click and hold modifiers
+  * Fix: Wrong MRO killed my feedbacks :( Ref #35
+  * Ubuntu...
+  * Bumped version
+  * Better subprocess management in scc-daemon
+  * Autoswitcher: active window detection works
+  * Autoswitcher works, but has no configuration so far
+  * Added configuration file and loading autoswitcher conditions from configuration
+  * Added OSD message when auto-switching profile
+  * Moved common part of setup_widgets method into Editor class
+  * Created UI for autswitcher, does nothing so far
+  * Extended keyboard limits a little to give better reach for last row. Ref #38
+  * Stuffed more help on on-screen keyboard
+  * Support for setting sensitivity on stick and trigger. Ref #37
+  * Added 'Retro City Rampage' to example profiles
+  * Allowed to set 'None' as half-pressed trigger button. Ref #37
+  * Condition editting done, but without saving
+  * Condition editting AND saving
+  * Added 'Reconfigure.' and 'Reconfigured.' messages to protocol
+  * Autoswitch: enabled reloading when configuration is changed in UI
+  * Automatically start and stop scc-autoswitch-daemon as needed
+  * Fix: don't open global settings automatically
+  * Fix: autoswitch daemon shouldn't steal ^C
+  * Added menu generators, they'll make sense later
+  * Documenting stuff...
+  * Docs...
+  * Added menu separators
+  * Working auto-generated profile list
+  * Submenus
+  * Added configuration file
+  * Added list of recently used profiles (to config file)
+  * Added 'recent profiles' menu generator
+  * Allowed to pass settings from JSON to MenuGenerator
+  * Fix: Inifnite loop when menu has no selectable items
+  * WIP: Autoswitcher settings in OSD menu
+  * Display 'No Profile Assigned' in Autoswitcher menu if needed
+  * Moved Autoswticher menu generator to autoswitcher py file
+  * Fix: running out of menu with only one item
+  * Setting autoswitcher from OSD done
+  * Autoswitcher OSD: Ignore part of title before dash
+  * Added more space between submenu label and '>>' symbol
+  * Typo
+  * Typo
+  * Fix: Autoswitch profile only if window was switched
+  * Fix: setup.py not installing scc.x11. Fixes #39
+  * GUI for new menu options, partialy done
+  * GUI for new menu options, can edit, cannot save
+  * Fix: Edit button disabled when Recent Profiles menu generator is selecteD
+  * GUI for new menu options, can edit and save everything but submenu
+  * ... can edit and save everything
+  * Removed debug prints
+  * Fix: Don't allow editing same menu in two windows at once
+  * Fix: That last one broke switching menu type
+  * Allowed adding submenus
+  * Fix: Don't create submenu in profile
+  * Added 'default.menu' as hold or click action for center button to each default profile
+  * Post-merge fixes
+  * Fix: .autoswitch.menu not installed
+  * Global Setting dialog: Reload configuration if changed
+  * Hold single Configuration object in osd-daemon instead of reloading configuration all the time
+  * Fix: Reassigning autoswitcher profile from on-scren menu creates duplicate rules
+  * Fix: 'Show OSD when profile switched' combo does nothing
+  * Fix: autoswitcher doesn't actually reloads config
+  * Added debug (-d) flag for scripts/osd*
+  * Reworked way how OSD keyboard handles events, so it can be configurable using profile. Ref #33, Ref #38
+  * Missing file
+  * Allowed triggers to be mapped on osd-keyboard
+  * Allowed to set sensitivity of pads on onscreen keyboard. Ref #38
+  * Fixed forgotten debug stuff
+  * Removed some debug and simplified searching for default_profiles and default_menus dirs
+  * Updated TODO and Readme
+  * Added binding editor for on-screen keyboard
+  * on-screen keyboard: reload profile when configuration changes
+  * on-screen keyboard: enabled editting triggers and stick
+  * Fix: Settings window opening automatically
+  * Fix: Install .scc-osd.keyboard.sccprofile along with other default profiles. Fixes #41, #43
+  * Fix: cannot edit autoswitcher condition with exact title. Fixes #43
+  * Fix: Missing space before 'and'. Fixes #43 this time for real
+  * Fix: missing imports. Fixes #42
+  * Added simplified version of OSK settings. Fixes #33
+  * Renamed keyboard_actions.py -> osk_actions.py
+  * Allowed closing OSK bindings editor with escape
+  * Added option to recolor OSD keyboard, no GUI so far
+  * Don't remove modifiers from custom action. Fixes #36
+  * Added UI for setting axis and trigger on trigger at once. Fixes #37
+  * min(max()) -> clamp
+  * Added UI for setting OSK pad sensitivity. Fixes #38
+  * Allow writing (and recognizing on trigger) button(None, Key.SOMETHING). Fixes #37, this time for real
+  * Re-centered nubs on osd-keyboard. Ref #38
+  * Fix: missing import
+  * Fix: Ignore invisible windows when setting RelWinArea
+  * Fix: hacky stuff backfired
+  * Fix: Can't store menu in profile anymore
+  * Fix: Ignore hidden menus
+  * Fix: Trouble with menu editing
+  * Special handling for 6 and 8 items-long grid menu
+  * Fix: Loosing actions on dpad
+  * Added more profile examples
+  * Hide dot profiles and sort them by name
+  * Add automatic conversion for old version of profile; This one adds 'display menu' button to all profiles
+  * Ubuntu fixes
+  * Removed forgotten debug line
+  * Fix: Settings dialog trying to overwrite profile in /usr/share. Fixes #44
+  * Added OSD color settings, not used so far
+  * Actually use OSD color settings
+  * More colors to set
+  * Fix: invalid default color (how this could happen...)
+  * Hilight pressed key on OSD keyboard. Fixes #34
+  * Added UI for settings OSD keyboard colors
+  * ... and made said UI little more compact
+  * Fix: loosing feedback settings when clicking OK while custom action page is active. Fixes #47
+  * Don't crash and use default values when css for OSD cannot be constructed. Ref #48
+  * Added button cycling, no gui so far
+  * Added GUI for setting button cycling
+  * Updated TODO and README, bumped daemon version
+  * Recoded macro editor so action data is stored in namedtuples instead of nested lists
+  * Added quick way to setup WSAD and arrows emulation
+  * Added context menu and copy/paste
+  * WIP: 'Open in Custom Editor button in Modeshift/Macro editor (kinds works)
+  * Simplified way how ection editor is being open
+  * Removed 'reopen' flag from ActionEditor callback to simplify stuff around
+  * Open in Custom Editor button in Modeshift/Macro editor (this time working)
+  * Added option to set timeouts for holding and double-clicking with buttons (no gui yet)
+  * Fix: Cannot save doubleclick action from GUI
+  * Fix: Cannot save doubleclick action from GUI
+  * UI for holding and double-click timeout
+  * Added udev rule that enables rw access to steam controller and uinput
+  * Improved way how check for /dev/uinput access is done; This adds pylibacl dependency
+  * Added pylibacl into list of dependencies in README
+  * Bumped internal version
+  * Initial attempt at radial menu; Draws, but SVG 'edditing' needs general rework
+  * Improved (and hopefully optimized) internal svg manipulation
+  * RadialMenu can display its items, no control so far
+  * Radial menu controlls, it's slow a.f. :(
+  * Fix: ModeModifier without timeout crashes Modeshift editor. Fixes #49
+  * Much better looking radial menu
+  * Added UI and profile action for displaying radial menu (-> radial menu is done)
+  * Fix: Don't freak when user tries to save profile with invalid action
+  * Turned AEComponent.CTXS into bit mask
+  * Always switch to 'custom action' page when invalid action is edited
+  * Fix: Don't crash when finfo.get_name() returns None. Ref #50
+  * Added workaround method used when FileInfo.get_name() returns None. Ref #50
+  * Added UI and options to have menu displayed only while button is pressed (basically weapon selection menu from PS3)
+  * Fix: menu with space in name doesn't works correctly
+  * Fix: Using floats for better alinged radial menu
+  * Fix: editing DPad actions broken in many ways
+  * Fix: Copy & paste should copy and paste action name as well
+  * Allowed to store DPAD action names
+  * Fix: Not loading DPAD action name
+  * Added 'type()' action, allows to type strings in much shorter way
+  * Added example profile for GZDoom
+  * Fix: global settings dialog crashing when its windows are closed in specific order
+  * Bumped internal version
+  * Don't generate button release event until everything pressed and mapped to same virtual button is released. Fixes #52
+  * Added 'tap' action. Ref #52
+  * Removed forgotten prints
+  * Little docs update
+  * ... and some docs reordering
+  * Fix: Wrong action for mouse wheel selected by GUI. Ref #53
+  * All trackball-related and mouse-related code to one action and one BallModifier
+  * Updated docs
+  * Enabled doing ball(axis), this allows to 'Mouse-Like Joystick' emulation
+  * Added UI for setting Mouse-like joystick emulation
+  * Updated TODO: This is alraedy done for some time...
+  * Fix: UI now generates wheel action without rolling effect
+  * Added more stuff to profile conversion, as last changes broke mouse wheel
+  * Allowed radial menu to be used with stick alone
+  * Fix: ball modifier needs to be saved as everythig else, otherwise it would not be possible to parse it correctly later
+  * Trying to rewrite what I did for 2 days in way that doesn't basically breaks everything :(
+  * Fixed kinda broken haptics
+  * ... and this can be removed now
+  * Added some methods that will allow me to simplify code later
+  * Allow customizing menu controlls  when menu is set on button. Fixes #55
+  * Redone modifiers in (hopefully) more clear way
+  * Fixed kinda broken haptics
+  * Added some methods that will allow me to simplify code later
+  * Cleanup code related to registering actions
+  * Profile parsing code split, now each action class parses its own data
+  * Fixes
+  * Added Undertale profile example
+  * Updated docs about 'ball' modifier
+  * Added pad/stick input rotatation (no UI yet). Ref #58
+  * UI for pad/stick input rotatation. Ref #58
+  * Allowed user to set negative sensitivity. Fixes #58
+  * Fix: Don't crash horibly in USB mess after computer wakes up from sleep mode. Fixes #57
+  * Fix: don't select mouse-like joystick as default
+  * Fix: Feedback settings incorrectly saved, mouse incorrectly loaded
+  * Simplifying to_string code
+  * Added get_speed and get_haptic methods as set_speed and set_haptic counterparts
+  * Ubuntu fixes
+  * Imported tests. Ref #60
+  * Fixing comments
+  * Imported tests. Ref #60
+  * Fixing comments
+  * Added travis configuration file
+  * Bumping version numbers before release
+  * Added build status image to README
+  * Fix: emulate releasing of pads when they are being locked. Fixes #55
+  * Fix: 'X Axis Controlled by' option not loading into UI. Fixes #64
+  * ... and same thing for joystick axis. Ref #64
+  * Added 'Invert Y axis checkbox to Gyro action editor. Ref #63
+  * Use RPADTOUCH as Gyro enable button by default. Ref #63
+  * Fix: Editor crashing when editting default mouse wheel action
+  * Fix: Missing import prevents circular wheel from working
+  * Fix: Action with mods don't load correctly (maybe broken by merge :()
+  * Split gyro -> mouse mapping into desktop and camera mode. Fixes #63
+
+  [ Timo Gurr ]
+  * Update README to include Exherbo package
+
+  [ kozec ]
+  * Fix: haptic on trigger->buttom mapping not generated
+  * Adde TriggerAction, gives user more options for trigger
+  * Redone UI for triggers
+  * Fixes: Not every trigger settings that UI can save can UI load
+  * Added json encoder and decoder for MultiAction ('and') and TriggerAction
+  * Added profile conversion from old trigger settings
+  * Haptic fixes
+  * Removed some dummy methods as I just realized that I _want_ to get warnings there
+  * Added tests, updated tests, fixed failures
+  * Added test that checks if every action has docs
+  * Added test that checks if every profile key is documented
+  * ... and updated docs so it doesn't fails
+  * Fix: actions.md is suddendnly binary file
+  * Updated docs
+  * Bumped daemon version
+  * Updated ADDITIONAL-LICENSES in ADDITIONAL-LICENSES file.
+  * Added VDF parser
+  * Fix: Correctly parse repeating keys in vdf file
+  * Added partialy working VDFProfile class
+  * 'import' probably wasn't best name for python package
+  * Fix: Apparently, keys in vdf are case-insensitive
+  * More of vdf importing
+  * Added vdf import tests
+  * More vdf parsing
+  * VDF: Converting doubleclick, holding and haptic data
+  * VDF: Converting sensitivity
+  * Added conversions for missing buttons
+  * Found what's breaking those tests
+  * Fix: Convert VDF dpad 'buttons' into Hat* actions
+  * WIP: Import UI
+  * Added option to change menu position
+  * Fix: Don't set menu cancel button to 'A' by default
+  * VDF: Actually loads list of profiles
+  * Basic Steam profile import finished. Ref #67
+  * Fixed missing IDs
+  * Importing gyros and switch_bindings from v2 profiles. Ref #67
+  * vdf: Importing modeshift
+  * vdf: Lowered intensity and frequency of imported haptic settings
+  * vdf: Parsing multiple keys at once
+  * vdf: Import _legacy.bins as well
+  * vdf: support for four_buttons bindings
+  * vdf: Can import actions sets, but UI can't save them yet
+  * vdf: Added joystick_camera and mouse_joystick inputs
+  * vdf: scrollwheel support
+  * Allowed importing vdf files with drag&drop. Ref #67
+  * vdf: More unknown keycodes
+  * vdf: Importing touch_menu. Ref #67
+  * vdf: Finished support for importing action sets. Ref #67
+  * Fix: don't refuse changing to profile starting with dot
+  * Display and remove profile that begins in dot if daemon reports its usage
+  * vdf: Add default menu action to imported profiles
+  * vdf: Added some locking around log callS
+  * vdf: Added 'display profile dump' button
+
+  [ mulark ]
+  * Fix typo
+  * Various typographical fixes
+  * Update actions.md
+  * Rephrase
+  * Minor phrasing
+  * Fix bug where F11 and F12 key in conflict
+
+  [ kozec ]
+  * Fix: Don't crash when sharedconfig.vdf doesn't contains expected. Ref #67
+  * Fix: Prevent deadlocking when user manages to close menu really fast
+  * Redone locking to prevent future deadlocks
+  * Added example profile for Stardew Valley
+  * Fix: Wrong load order on ModeModifier & co
+  * Allowed to set name on ModeModifier
+  * vdf: importing mouse_region. Ref #67
+  * Separated menu controlls to new class
+  * Fix: Allow navigating to all directions in grid menu. Fixes #72
+  * Fix: setting trigger on button is not loaded correctly
+  * Added two patrons to About dialog
+  * Added Donate button to README. Ref #66
+  * Small style change to README
+  * ... and even more styling, this time in About dialog
+  * Fix: None -> NoAction
+  * Added stick and pad positions to background image
+  * Added option ot 'sniff' inputs from Daemon. This will help displaying what's being done in OSD and can be used as input test in GUI
+  * ... and added docs for above
+  * Renamed Sniffing to Observing
+  * Addde client-side of 'observe' funciotn
+  * Added very basic version of testing mode, hilights pressed button in UI
+  * Fix: switching profiles kills observing
+  * fuck...
+  * Added stick and pads to testing mode
+  * Testing mode now works with everything but stick clicking
+  * And now with stich as well
+  * Added forgotten cusor image and changed hilight color so it matches
+  * Fix: daemon_manager pairs responses to wrong requests
+  * Added config option to disable test mode (sniffing). Disabled by default
+  * Bumped daemon version
+  * Added GUI option to enable/disable sniffing
+  * Added 'No Man Sky' as example profile
+  * Added debug flag to daemon, disables starting other daemons
+  * Fix: Wrong daemon response to OSD: requests breaks literaly everything :(
+  * Fix: Steam imports generates invalid buttons for trigger mappings. Ref #67
+  * Bumping version numbers
+  * Added mime type for steam controller database profile. Ref #67
+  * Added vdffz import. Ref #67
+  * Fix: vdffz.py missing, dropping vdffz does nothing
+  * Added code needed to send LED settings to controller. Ref #78
+  * SCController.disable_auto_haptic: Removed unused method
+  * Renamed SCController.configure_controller -> SCController.configure
+  * Added config option to set LED level, no UI yet. Ref #78
+  * I'm calling it a typo, so it doesn't looks like I can't count
+  * Added 'Led:' command and led(xy) action to allow setting led brightness on the fly. Ref #78
+  * Removed another redundant method
+  * Fix: Use IDLE packets to recognize controller faster
+  * Added UI for setting LED level. Fixes #78
+  * Bumped daemon version
+  * Fix: Don't crash when LED settings is float
+  * Added tilt action. Ref #83
+  * Added tests for tilt action
+  * Added docs for tilt action
+  * Updated TODO
+  * Fix: I accidentaly created keyboard repeat emulation with tilt action. Ref #83
+  * Fix: Allow specifying only some arguments in tilt action
+  * Reversed meaning on sensitivity on tilt action to unify it with everythin else. Ref #83
+  * Added image for 'tilt' action GUI, it's WIP
+  * ... stip WIP, but almost done
+  * GUI and small fixes for for Tilt action done. Fixes #83
+  * Documented tilt
+  * Added intial code for StatusIcon. Ref #82
+
+  [ Sven Kocksch ]
+  * multi-monitor setups: show osd on the monitor containing the active application
+
+  [ kozec ]
+  * StatusIcon actually does something #82
+  * Added icon for error status. Ref #82
+  * Added Status Icon GUI settings. Needs testing on Ubuntu, but Fixes #82
+  * Forgotten file
+  * Ubuntu fixes
+  * Added 22x22 status icons and refreshed scc-error.png
+  * Fix: Bounding mouse wheel to button breaks UI and displays nonsense. Fixes #76, Fxes #75
+  * Increased multipliers for button->mouse mapping, so it actually does something visible. Ref #75
+  * Fix: Forgotten line breaks Confirm selection by releasing button menu option. Ref #77
+  * Allowed using pads to control menus in all cases. Ref #77
+  * Fix: My circle turned to be ellipse and I can't recolor ellipses. Fixes #79
+
+  [ MeDeVILe ]
+  * Add files via upload
+  * Update Kodi.sccprofile
+  * See kodi's keymaps.xml
+
+  [ kozec ]
+  * Small fix for logging to allow sending non-str parameters
+  * Removed useless debug print
+  * Fix: Changing led brightness suddendly crashes in many ways
+  * Allowed more stuff to be done from autoswitcher. Ref #89
+  * Fixed missing IDs
+  * Bumped daemon version
+  * Fix: Can't display Tilt tab after action is cleared
+  * Added 'MODE' button to UI. Fixes #88
+  * Small fix for logging to allow sending non-str parameters
+  * Redoing a lot of stuff to enable support for multiple (different) controllers. Ref #73
+  * Can recieve inputs from two controllers at once, but it doesn't do anything right now. Ref #73
+  * Removed useless debug print
+  * Can use single controller again
+  * ... and send feedback too
+  * Removed old code
+  * Can use two controllers at once, one has hardcoded profile. Ref #73
+  * Better support for having two profiles at once
+  * Can use OSD again, but only from 1st controller. Ref #73
+  * Added multi-controller support to OSD menu, it almost works. Ref #73
+  * Fix: 'Controller:' message sends no response
+  * Fix: Always search for all 4 steam controllers, dongle may assign non-continous ID
+  * Fixed adding and removing controllers on the fly. Ref #73
+  * Fix: USB dongle removal handling
+  * Re-added support for controller direct connection. Ref #73
+  * Display warning when trying to turn off wired controller
+  * Renaming, renaming and renaming
+  * Fixed UI, no multicontroller support yet, but at least it doesn't crash
+  * Found way to get wired controller serial
+  * I have only vague idea about what i'm doing :(
+  * Reading serial from wireless done
+  * Use serial number as controller ID
+  * Removed some magic numbers
+  * Fix: ReportingAction calls wrong super method
+  * Fix: Repeat attempt to claim USB device if it's already claimed before
+  * Added fake controller driver, just to make debuging easyier
+  * Fix: Changing led brightness suddendly crashes in many ways
+  * Added initial multicontroller support to UI. It does... something.
+  * Moved overwrite_control one level up, so both drivers can use it
+  * UI: React to adding/removing controllers
+  * Fix: multicontroller support for OSD keyboard
+  * Fix: Wired controller acting weird
+  * Separated profile switching logic in UI, so it can be reused for multiple controllers
+  * UI can now handle multiple profiles
+  * Fix: Daemon crashes when calling X
+  * Fix: Profile switching should change editor only for 1st controller
+  * Fix: Cannot edit submenus
+  * Fix: Editting 'default.menu' is ignored by daemon
+  * Fix: selecting submenu item doesn't works
+  * Removed controller name from daemon, it can be UI-only thing
+  * Fix: Scrolling through profile list too fast may crash everything
+  * Fix: App restarts daemon even when not expected
+  * Fix: uinput devices not being created when running on background
+  * Info about controller ID being from S/N is now propagated up to GUI
+  * Added scc.drivers to setup.py. Fixes #91
+  * Added test for setup.py containing all packages. Ref #91
+  * Unified formatting in setup.py
+  * Fix: travis can't find setup.py
+  * Removed commented-out code
+  * Added protocol messages for turning off controllers and restarting daemon.
+  * Added action that restarts scc-daemon. Ref #89
+  * Fix: ReportingAction calls wrong super method
+  * Allowed autoswitcher to restart scc-daemon. Fixes #89
+  * Autoswitcher: Don't do anything if there are no controllers connected
+  * Fix: Repeat attempt to claim USB device if it's already claimed before
+  * Moved overwrite_control one level up, so both drivers can use it
+  * Fix: multicontroller support for OSD keyboard
+  * Fix: Wired controller acting weird
+  * Fix: Daemon crashes when calling X
+  * Fix: Cannot edit submenus
+  * Fix: Editting 'default.menu' is ignored by daemon
+  * Fix: selecting submenu item doesn't works
+  * Fix: uinput devices not being created when running on background
+  * Possible fix for #92
+  * Made outpu gamepad properties configurable. Ref #93
+  * Added aliases to simplify binding to custom button / axes. Ref #93
+  * Use DAEMON_VERSION as version for python egg. Fixes #94
+
+  [ Lukáš Mandák ]
+  * * Make sure setup.py is run by python2 interpreter. * Fix: controller images were not installed.
+
+  [ kozec ]
+  * Fix: Crash when there is no current_profile set. Ref #92
+  * Added check and warning message if uinput module is not loaded. Ref #92
+  * Fix: Controller icons not shown at all when ~/.config/scc/controller-icons is missing
+  * Spent evening on icons :(
+  * Thicker lines in icons + one more color
+  * Changed way how profile switcher displays controllers, now it uses icons with different color for each controller
+  * Fix: UI breaks with more than 2 controllers
+  * Ooops...
+  * Started to work on controller settings, have menu and UI but does nothing
+  * Set center-on-parent for every dialog
+  * Controller settings dianlog done. Ref #73
+  * Immediatelly set changed icon in app
+  * Brighther and (hopefully) more recognizable icons
+
+  [ MeDeVILe ]
+  * Add files via upload
+
+  [ kozec ]
+  * Added code to track libuinput.so version and rebuild it if needed
+  * Moved IO polling to separate class, so it's not wired into USB driver
+  * Rumble support: WIP
+  * Rumble: Can recieve events up to mapper, they are only printed so far
+  * Fix: Allow daemon to create ~/.config/scc instead of crashing
+  * Fix: Missing icon
+  * Fix: don't offer configuring controller when none is connected
+  * Removed led brightnes from global settings
+  * Fix: Removed too much of led settings
+  * Fix: led level setting not initially applied
+  * Fix: Always set controller profile after daemon is restarted
+  * Updated TODO
+  * Added menu option to turn controller off
+  * Hidden options that are not yet implemented.
+  * Bumped daemon version
+  * Fix: Always display some controller icon
+  * Re-enabled error reporting when USB device is busy
+  * Fix: Possible crash when controller battery dies out
+  * Fix: Made posix1e optional, so it doesn't breaks OBS
+  * Added env.variable to disable gamepad emulation
+  * Fix: Not showing save button
+  * Fix: allow spaces in daemon profile argument
+  * Added option to not specify profile for daemon at all - loads last used
+  * Initial gesture detection code
+  * Client can request gesture now
+  * Little more readable gesture string syntax
+  * Fix: Catch any error when loading filelist. Ref #98
+  * Fix: Look for uinput in built-in modules as well. Ref #97
+  * WIP: Better way to detect gestures
+  * Fix: Don't crash OSD when there is no active window. Fixes #99
+  * Fix: vfd import: ignore game_actions. Fixes #87
+  * Fix: vdf import: importing trigger in 'switches' group. Ref #87
+  * Fix: vdf import: importing lowercase key names. Ref #87
+  * Fix: I just killed multimonitor support :(
+  * Redone some tests
+  * Fix: Parsing nested hold() and doubleclick() doesn't always works as expected
+  * Fix: sensitivity setting getting lost in modeshift (+ test). Ref #101
+  * Enable gyros if needed, if controller is just connected
+  * Fix: Sensitivity over modeshift is not parsed correctly from profile (+ test). Fixes #101
+  * Tests, tests, tests...
+  * Gestures almost usable, with nice working cleanup method.
+  * Removed diagonals from gestures
+  * Removed debug output
+
+  [ MeDeVILe ]
+  * Add files via upload
+
+  [ kozec ]
+  * Unlinked left pad from stick (most likely depends on updated controller fw release)
+  * Fix: non-fatal exception in input test mode
+  * Slightly better error messages for USB errors
+  * Fix: udev rule installed to wrong place in Ubuntu
+  * Revert "Fix: udev rule installed to wrong place in Ubuntu"
+  * Allowed OSD keyboard to emulate mouse as well. Ref #108
+  * Added UI for binding mouse click to buttons on OSD keyboard. Fixes #108
+  * Added gesture display, not really done yet
+  * Added code to deatach emulated pad from xinput mouse emulation. Fixes #105
+  * Removed debug code commited by mistake
+  * Lowered maximum feedback freq in GUI to 100.0. Ref 109
+  * Fix: Modifier.strip_defaults strips defaults for wrong parameters. Fixes #109
+  * Moved xinput.py to lib/
+  * Bumped daemon version
+  * Removed verctical/horisontal preference from gesture detection, diagonals are disabled for now
+  * Gesture detection done up to that part when recognized action is executed
+  * Fix: Broken press() and release() actions used in macros
+  * Rewrote detection code once again, this time it actually works (+OSD done)
+  * debug-related imporvements
+  * Encoding and decoding GesturesAction + initial GUI
+  * Fix: Trackball has no sensitivity, breaks mouse-like camera in dumb games
+  * Fixed and added tests for changes in ballaction
+  * Fix: Parsing OSD on GestureAction
+  * Changed gesture string representation (again)
+  * Gesture detection WORKS, fully. Now that gui part :(
+  * Gesture display in UI, looks like shit :(
+  * Simplified UI for gestures, looks less bad now
+  * Editing gesture actions
+  * UI can grab gestures now, not stored anywhere yet
+  * Allow controller buttons to control gesture grabber
+  * Silenced one non-fatal error
+  * Can add gestures through UI now
+  * Can EDIT gesture in UI
+  * Fix: Don't treat empty gesture as gesture
+  * Removed resolution from gesture string
+  * Added UI for ignoring stroke length in gesture, not supported by daemon so far
+  * Force OSD on GestureAction when set by editor
+  * Documented GestureAction
+  * Added missing tests
+  * Fixed missing glade IDs
+  * Changed timing on gestures, Feral games seems to ignore extremly short presses
+  * Fix: why is default number of output buttons 20 again?
+  * Ignoring stroke length works
+  * Removed right pad from gesture display for now
+  * Finished gesture support on right pad
+  * Remove gesture button works now
+  * Version bump
+  * (renamed variable)
+  * Disabled deadozne settings for gesture recognition and menus
+  * Sending 'edit gesture' widget between ActionEditor and Modeshift Editor
+  * Moved code for above to Editor class, so I don't have to write it multiple times
+  * Sending 'edit gesture' widget between ActionEditor and Macro Editor
+  * Disabled modeshift editor and feedback option for gesture action
+  * User can now choose if he needs OSD to be displayed with gesture recognition.
+  * Added debug option for doing usb requests. Ref #103
+  * Fix: GUI doesn't remembers last profile set if controller is turned off
+  * Fix: Radial menu crashes when menu contains separators
+  * Fix: Having feedback on menuitem prevents menuitem from being used. Ref #113
+  * Fix: exception for '=' on OSD keyboard may break on weird-enought layouts
+  * Fix: Unicode + svg editting  = crashes
+  * (partial fix): OSD keyboard crashes when layout has modifiers on letter keys. Ref #112
+  * Added Action.get_compatible_modifiers method
+  * Editor: Redone and simplified way how to decide which modifier options to show
+  * Editor: Don't add modifiers where modifiers are not supported
+  * Editor: Show only modifier options appropriate for input being edited
+  * Fix: I killed click on pad
+  * Fix: Cannot set ABS_X on Gyro per-axis page. Fixes #117
+  * vdf: added translations for RIGHT_BRACKET and LEFT_BRACKET. Fixes #119
+  * Moved find_lib method to uinput module to prevent circular import
+  * Fix: ABS_X gets stripped from action parameters. Fixes #118
+  * Better fix for strip_none stripping zero tuple values
+  * FIx: Ballmodifier loading before feedback
+  * Removed string that should be constant
+  * Allowed BallModifier to save and load advanced settings. Ref #116
+  * Added UI for setting BallModifier friction. Ref #116
+  * Fix: Missing ID in glade file
+  * Updated docs with recent BallModifier changes. Ref #116
+  * Redone DPAD in way where it can be used as radial menu replacement. Fixes #120, Fixes #115
+  * Fix: Rotation setting not available on DPad
+  * BallModifier: Allowed zero friction. Fixes #116
+  * typo
+  * Fix: OSD keyboard: double-escaping causes some keys to display wrong. Ref #112
+  * OSD keyboard: Added backup way for following layout changes. Fixes #112
+  * Added option to kill daemon when exiting gui. Fixes #122
+  * Version bump
+  * Added config option to disable querying for serial numbers. Ref #103
+  * Fix: Modeshift editor shows editors for buttons even when used on pads. Ref #126
+  * Fix: Sensitivity on 'roll' not applied while pad is being touched. Fixes #125
+  * OSD keyboard: Added command line argument to change keyboard image
+  * OSD Keyboard: recoded way how key labels are readed. Ref #123
+  * Reuse fake serials when ignore_serials option is set. Ref #103
+  * Fix: I accidentally killed KeyGrabber
+  * Fix: typos in dpad8. Ref #115
+  * Fix: Wrong control flow in click modifier. FIxes #130
+  * Renamed stick t 'Stick Movement' in OSK editor. Ref #127
+  * Allowed configuring and binding stick press on OSK keyboard. Fixes #127
+  * Fix: Using wired inputs as timer is too slow. Fixes #129
+  * Close all devices on ^C
+  * Allowed wired controller to generate haptics out of order. Ref #129
+  * Added gui for ignore_serials option. Ref #103
+  * Enabled ignore_serials by default. Fixes #103
+  * Allowed to use rotation modifier with radial menu. Fixes #128
+  * Fixed broken test
+  * Clarified/simplified modeshift dialog for stick and pads. Fixes #126
+  * Removed forgotten debug pring
+  * Extended on_action_chosen callback with mark_changed option
+  * Fix: release all buttons when profile is being changed
+  * Added option to preview mouse emulation on the fly. Ref #124
+  * Allowed previewing stick and dpad emilation. Ref #124
+  * Allowed previewing most of menus. Ref #124
+  * Allowed deadzone with dpad (ref #133)
+  * Fix: UI not updating when button action is set
+  * Improved controller settings load/saving and added defaults
+  * version bump
+  * Added input rotation settings for both pads. Ref #133
+  * fuck glade...
+  * Fix: Monitor with ID 0 doesn't mean no monitor at all. Fixes #131
+  * Fix: Apply clamping by axis even when axis(or hat) is used as button. Ref #134
+  * Added HatAction.to_string, just to cleanup display in editor
+  * Inverted HatAction min and maxes (@Ryochan7 was right...) Fixes #134
+  * Fixed hat tests. Ref #134
+  * Fix: rotated axis input cannot end with floats
+  * Just some docs
+  * Fix: Entering dpad from custom action may cause non-saveable profile
+  * Allowed using ball() and dpad() together
+  * Allowed ball+ball+feedback
+  * Added horizontal menu
+  * Added code to track libuinput.so version and rebuild it if needed. Ref #139
+  * Bumped libuinput.so version. Ref #139
+  * Turned uinput device version from hardcoded number to parameter. Ref #139
+  * Emulated XBox controller version is now configurable and defaults to 0x110. Fixes #139
+  * Added attemtp at filer modifier. Ref #138
+  * Forgotten file :(
+  * Another take on filtering/smoothing. Ref #138
+  * Added tests and docs for FilterModifier
+  * Added 'Edit Pressed Action' to editor context menu. Fixes #135
+  * Changed order in which sensitivity and modeshift is loaded from profile. Fixes #146
+  * Bad print. Bad :(
+  * Moved IO polling to separate class, so it's not wired into USB driver
+  * Rumble support: WIP
+  * Rumble: Can recieve events up to mapper, they are only printed so far
+  * Bumped uinput_module_version
+  * Changed uinput_module_version into constant. It's still defined at 3 places, but at least it's searchable
+  * Getting stuff to work after big rebase
+  * Finished basic rumble support, now it does _something_. Dunno how much correct it is. Ref #141
+  * SCC now reports support for all feedback effect types. Ref #141
+  * Added configuration to enable/disable for rumble, enabled by default. Ref #141
+  * Removed redundant test file
+  * Better support for rumble events generated by Dolphin emu. Ref #141
+  * Better support for SDL2 rumble effects. Ref #141
+  * Fix: Rumble: Respect effect lenght sent by SDL. Ref #141
+  * Added new/copy option to New Profile dialog. Fixes #154
+  * Changed format of profile copy to 'Something something (copy)'. Fixes #156
+  * Added new/copy profile into context menu. Fixes #155
+  * Fix: Don't turn off all controllers at once. Fixes #152
+  * ... missing ID in glade ...
+  * Cleaned return codes from ff_read
+  * Fix: Rumble effects for retroarch. Ref #141
+  * Bumbed UNPUT_MODULE_VERSION
+  * SDL, Dolphin and Retroarch rumble works at once. Ref #141
+  * Cleaning up a little
+  * Renamed filter -> smooth. Ref #138
+  * Changed SmoothModifier so it uses weighted averages. Ref #138
+  * Changed haptic generation on mouse, XY and ball to reflect output instead of accumulated movements on pad
+  * ... and same change in haptics for circular
+  * Fix: SmoothModifier dequeues may start empty
+  * Fixed tests
+  * Fix: I accidentaly killed scrollwheel. Fixes #162
+  * Fix: Allowed using wired controller with ignore_serials turned on
+  * Fix: 'Controller settings' dialog crash when controller has no name. Ref #161
+  * Added UI for rumble support. Ref #141
+  * GlobalSettings: Added warning when option that needs restart is toggled
+  * Added filter option on smoothing modifier. Ref #138
+  * Added UI for mouse smoothing. Fixes #138
+  * Enabled some smoothing in default profiles. Ref #138
+  * Version bump. Fixes #147
+  * Quick fix for OBS refusing to build my stuff
+  * oops...
+  * Fix: Restrict max.lenght of rumble effect to something that HW can handle. Ref #163
+  * Fix: Crash on importing Keys from wrong module. Ref #165
+  * Removed threading from wired controller driver. Fixes #163, Fixes #164
+  * Version bump
+  * Fix: Too many c. I need a break :( Ref #163
+  * Fixed rumble in Saints Row 4 (both), Borderlands and Hyper Light Drifter. Ref #163, Ref #141
+  * Removed redundant RumbleEffect.playing field
+  * Bumped UNPUT_MODULE_VERSION
+  * no idea how this happened...
+  * Little update to readme
+  * Fix: broken haptic generation on XYAction
+  * Added media keys to button selector. Fixes #159
+  * v0.3.6.2
+
+  [ Matthias Mailänder ]
+  * Add a FreeDesktop compliant category.
+
+  [ kozec ]
+  * Update TODO.md
+  * Update TODO.md
+  * Moved Modifier Settings into tabbed interface (glade only)
+  * Removed all references to old Modifier Settings revealers
+  * Cleared up action_editor.glade
+  * Finished moving modifiers into tabs. Red #167
+  * Right-aligned tabs
+  * Removed entire two-lines-for-XY thing to save some space. Ref #167
+  * Fixed missing glade IDs
+  * Fix: XYAction may call set_speed even when no set_speed is defined
+  * Working on deleting/reverting profiles. UI is done, but does nothing so far
+  * Fix: Invalid action is generated when changing from 'Press' to 'Click' in MacroEditor. Ref #169
+  * Finished 'delete profile' option. Fixes #153, Fixes #59
+  * Removed redundant method
+  * Fix: Removing modified profile may fail
+  * Fix: detect wayland and disable X11-related stuff in daemon. Ref #173
+  * Fix: Don't try to edit MouseRegion binding on Wayland. Fixes #173
+  * Don't try to edit Gestures on Wayland (XWayland works). Ref #173
+  * OSD Daemon: fail gracefully when started on (X)Wayland. Ref #173
+  * Allowed localization on just added strings
+  * Added 'mouseabs' and modified 'gyroabs' action to allow moving mouse by tilting controller or using pad as stick. Ref #168
+  * Fix: Display Area While Touched option doesn't work. Fixes #171
+  * Fix: Deadzone disabled for stick emulation
+  * Hide non-applicable options when edditing Stick or Pad bindings
+  * Added GUI for new mouse emulation method on pad. Ref #168
+  * Fix: Setting stick to emulate scrollwell in UI doesn't work
+  * Added GUI for new mouse emulation method on gyro. Fixes #168
+  * Allowed deadzone on gyro, it kinda works. Ref #168
+  * First attempt at inner/outer ring bindings, it actually works. Ref #158
+  * Recompute position on ring bindigs so it always covers entire range. Ref #158
+  * Ring: added docs & tests, only UI is missing. Ref #158
+  * typo
+  * typo
+  * Added code needed to use 'ring' as 5th dpad button. Ref #158
+  * New argument parsing for deadzone, does nothing so far
+  * Ring Bindings editor WIP
+  * Ring Binding editor pretty-much done
+  * More readable labels on Ring Bindings
+  * Deadzone modes working, no GUI yet. Ref #174
+  * Documented modified deadzones
+  * Added GUI for deadzone modes, needs testing
+  * Finished UI for deadzone mods. Fixes #174
+  * Disabling modifier settings when modifier checkbox is unchecked
+  * Changed way how cursor position in menu is computed. Fixes #175
+  * Bumped version
+  * Added option to restrict grid menu size. Ref #176
+  * Version dump
+  * typo
+  * Fix: Don't crash when PID file is unreadable. Fixes 178
+  * Profile export WIP, GUI partially done
+  * Preparing to export profile along with referenced files
+  * Pre-select non-default referenced profiles/menus when exporting
+  * Fix: Cannot edit submenus
+  * export: Search for referenced stuff recursively
+  * export: ... and include submenus
+  * Fix: Cannot edit submenus
+  * export: ... and modeshift & co as well
+  * export: clicking checkbox now actually works
+  * export: Redone a little, everything but 'Select All' and 'Save As' works
+  * export: select all selects all
+  * export: done everything but writing the file
+  * export: WORKS!
+  * Changed export dialog into import/export dialog, so it will be able to handle everythin in future
+  * export: Automatically pre-select current profile
+  * Mashed Steam import and scc import together
+  * Steam import now actually works combined with import/export dialog
+  * Fix: Volume up/down names missmatched. Fixes #180
+  * Fixed tests
+  * Import: open dialog works
+  * import: can detect & display error
+  * import: display warning if shell() is used
+  * removed redundant import
+  * Fix: sensitivity applied wrong when editing gyros. Fixes #181
+  * Fix: Gyro sensitivity doesn't sticks. Fixes #182
+  * Import: entire GUI for simple import done, doesn't save yet
+  * Big fix: allowed to actually use custom axes and buttons when 'output' settings are overriden
+  * Fix: Default LStick/RStick/DPAD bindigns are displaying weird
+  * Moved PAD -> virtual gamepad DPAD emulation to 'DPAD' section, so someone may actually find it
+  * Allowed circular input to be used with all axes + GUI for that
+  * ... + docs
+  * ... + tests
+  * Added small inputdisplay thingy
+  * Fix: Found way to get buttons stuff
+  * Added action to reset gyro orientation
+  * Importing simple SCC profile done
+  * Profile class: added load_fileobj and save_fileobj methods
+  * MenuData: added from_file and from_fileobj
+  * Import: importing tar almot done
+  * Import: importing tar done, but there is no code to import menus yet
+  * Improved way how to retrieve all actions in profile
+  * Profile.get_actions -> Profile.get_all_actions
+  * sq to better way
+  * Profile import: Finished & ready
+  * Allowed importing all profile types with drag&drop
+  * Added mime types for .sccprofile and .sccprofile.tar.gz
+  * Added handler and error message for uinput failing because /dev/uinput is owned by wrong user
+  * Added automatic fix button to two most common uinput-related problems
+  * Added circularabs action
+  * Fix: each button in import dialog has different size
+  * Allowed drag&droping links to import profiles
+  * Removed collon
+  * Version bump
+  * Added voidlinux template to README. Ref #186
+  * Added option to set profile description and to set profile as template. Ref #157
+  * Let user know when template is selected. Ref #157
+  * Fix: new profile shouldn't be a template
+  * Fix: New profile may be assigned to wrong controller
+  * squash front
+  * Warn user when writing over template. Closes #157
+  * Fix: I broken profile switching when there is no controller
+  * Added UI for Grid menu horizontal size. Fixes #176
+  * Added GUI for configuring menu buttons on pad, needs changes in daemon. Ref #185
+  * Finished GUI for menu buttons on pad, stores and loads as expected. Ref #185
+  * Finished menu on pad settings. Fixes #185
+  * Fix: menu with position relative to top still displays from bottom
+  * Added code to load & save menu icons
+  * Fix: forgotten debug
+  * Displaying menuicons in list-menu
+  * Displaying and auto-sizing icons in menu. Ref #177
+  * Fix: autoswitcher completly borked
+  * Added support for normal and automatically colored icons. Ref #177
+  * Fix: autoswitcher can't unassign profile from menu
+  * Fix: reatach kernel driver after releasing controller device. Fixes #188
+  * Fix: I broke menu editor (again :( )
+  * WIP: Icon chooser
+  * WIP: Item chooser displays icons
+  * Reverted logic behind grayscale/color icons, now grayscale icon uses special filename
+  * Fix: wrong color on selected icon
+  * Added heckload of menu icons. Ref #177
+  * WIP: Icon chooser now supports categories. Ref #177
+  * Icon chooser pretty-much done. Ref #177
+  * Fixed icon names
+  * Removed some forgotten debug prints
+  * Fix: Radialmenu default values are not storing correctly
+  * Added support for menu icons to grid menu. Ref #177
+  * Added support for icons to horisontal menu. Ref #177
+  * Added license display to IconChooser. Ref #177
+  * Fix: medpack icon displays wrong
+  * Small tweaks
+  * Added protocol, daemon and DaemonManager code to generate haptic effects from OSD. Ref #179
+  * Allowed menus to generate haptic effects. Ref #179
+  * Added support for generating haptic feedback from DPad action. Ref #179
+  * Added haptic effect triggered when trigger moves over 'soft pull' zone. #179
+  * Added feedback effect when hold action is triggered. Ref #179
+  * typo
+  * Menu has feedback 8-)
+  * ... and radial menu has feedback too
+  * Fix: TriggerAction with feedback not saving correctly & not editable. Ref #179
+  * Fix: DPAD shoud generate feedback even if click is not required. Ref #179
+  * Allowed using feedback on holdmodifier. Ref #179
+  * Fixed tests
+  * removed forgotten print
+  * Added button/link to user icons folder
+  * Fix: doubleclick/hold modifier encodes to wrong string
+  * Fix: open modeshift editor even if feedback is used
+  * Sketched UI for hold modifier feedback
+  * Added UI for hold modifier feedback. Ref #179
+  * Fix: Do not crash when xinput binary is not available. Fixes #196
+  * Fix: returning unset variable
+  * Fix: Mixing icons and text breaks GridMenu
+  * Icons support in radial menu. Fixes #177
+  * Fix: VDF: Importing dash/minus/- key. Fixes #198
+  * Increased default stick sensitivity in XBox Pad profiles. Fixes #195
+  * Version bump
+  * Prefer bw icons in list menu
+  * Icon chooser: Display color icon where possible
+  * Added icons to default menu
+  * Fix: Don't spam 'Fix Temporary' buttons
+  * Solus is packaging SCC
+  * Removed application/json sub-class from mimetypes. Ref #198
+  * Fix: Apparently, not every distro has gksudo
+  * who forgot to package new icons?
+  * Fix: modeshift editor has 'OK' and 'Clear' buttons switched
+  * Colorful buttons :)
+  * Improved stick resposivity in menu
+  * Added OSD Dialog
+  * Added action for OSD Dialog
+  * Cleaned up dialog code
+  * WIP: OSD launcher
+  * Launcher pretty-much done
+  * Launcher done
+  * Fix: Don't use new css on archaic systems. Fixes #201
+  * Added window list menu
+  * Reduced max.window list menu width
+  * WIP: Adding default menu options to settings dialog
+  * Added default menu options to settings dialog
+  * Hidden not-yet reany mainmenu option
+  * Added icon for window list
+  * Fix: importing directory doesn't really make sense, but shouldn't crash
+  * I'm gonna be soo rich :)
+  * Useless print
+  * WIP: Quickmenu
+  * squash forward
+  * Redone entire quickmenu in way that actually works
+  * Allowed submenus in quick menu
+  * Added GUI, daemon code and tests for quickmenu
+  * Added 'kill current window' menu option
+  * Licenses are hard, 'mkay?
+  * Version bump
+  * Forgotten file
+  * Fix: Adding new scripts to setup.py
+  * Fix: radial menu: crashing when menuitem_template has no transform svg attribute. Ref #200
+  * Improved working with SVG transformations
+  * Added radial menu size option. Fixes #200
+  * Small version bump
+  * GUI: Changed position of menu size value
+  * Fix: menuicons from user folder not loading
+  * Added background / mockup for on-screen bindings display
+  * Almost working code for on-screen bindings display
+  * Fix for weird, harmless exception when terminating daemon
+  * Improved imager generated for bindings display
+  * bindings display, image looks almost usable
+  * Much more readable bindings display
+  * Adding icons
+  * More icons
+  * ... and less icons displayed
+  * Fix: Menu options in setting wiping out menu actions from menu
+  * Fix: Looks like I broke keyboard
+  * binding display for OSD, 90% done
+  * bindingdisplay: Resize on small display
+  * Small cleanup
+  * Binding display actually displays
+  * Fix: rsvg can't display linked images :(
+  * Small optimalization in SmoothModifier. Ref #205
+  * Bindings display WORKS
+  * Added binding display menu toggle into settings
+  * Fix: osd-daemon shouldn't became unresponsible when menu crashes. Ref #206
+  * Fix: svg_widget.clone_element crashes
+  * Fix: 'Action FeedbackModifier can't handle whole stick event' when feedback is used along with ring modifier
+  * Improving ring bindings gui
+  * Allow ring action on stick
+  * Fix: OK button on ring editor is on wrong side
+  * Added GUI for assinging single button to entire dpad
+  * Fix: feedback->ball->mouse wheel loads wrong
+  * binding display: limited max.width of boxes
+  * binding display: don't draw characters outside of box when max.width is used
+  * binding display: Merge vertical and horisontal togethern if they control same stick
+  * binding display: Better display for multiple actions on same button
+  * Removed no-longer defined constant. Fixes #210
+  * Added separate tray menu with 'Show/Hide Window' item visible when libAppIndicator is used. Fixes #211
+  * Fix: Crashing on openSUSE KDE. Fixes #209
+  * Added timeout to quick menu
+  * Fix: Scaling bindings display to smaller screen
+  * Fix: Sensitivity modifier crashing in to_string. Ref #212
+  * Version bump
+  * Fix: Striping NoAction from mode() and crashing with specific mode() on gyro
+  * Allowed mapping circular() to two buttons, no GUI yet. Ref #216
+  * Added minimal velocity required when lifting finger to start rolling to ball(). Ref #219
+  * Removed debug print
+  * Fix: Using some custom buttons may crash daemon. Ref #191
+  * Allowed nesting 'circular' and 'and'. Ref #216
+  * Added GUI for circular -> two buttons mapping. Fixes #216
+  * Added GUI for turning gyro enable to gyro *disable* button. Fixes #214
+  * Fix: Missing glade ID fails test
+  * ... and editing XML on github fucks everything
+  * Fixed smooth() jump when used without ball(). Fix #219
+  * Managed to get smoothing + ball optimized, working and not jumping at once. Fixes #219, Fixes #205
+  * Changed magical numbers in Curcular feedback so default matches step of mouse scroll. Ref #222
+  * InputDisplay: Added less cryptic error message when sniffing is disabled. Fixes #225
+  * Getting stuff ready for evdev driver, can list & detect devices for start. Ref #145
+  * Can read PS3 controllers buttons. Ref #145
+  * Can read axes, but mapper can't parse them. Ref #145
+  * PS3 Sticks kinda working. Ref #145
+  * Fix: Found why menu sometimes stucks and moves by own
+  * PS3 sticks _actually_ working
+  * ... and triggers. PS3 controller fully works. Ref #145
+  * Fix: Found why menu sometimes stucks and moves by own
+  * Redone CircularModifier feedback to imporove precission. Ref #222
+  * Fix: Reset internal wheel position when profile is changed. Fixes #222
+  * Added storage for axis position used with circular->axis mapping. Fixes #213
+  * ...and fixed case when circular->axis AND normal axis mapping is used at once. Ref #213
+  * Added bunch of driving icons. Fixes #207
+  * Added size option to hmenu
+  * Version bump
+  * evdev: Scanning and 'hot'pluging gamepad on the fly
+  * evdev: handling unpluging gamepads as well
+  * Working on GUI for adding evdev controllers. Can choose device and switch to next screen
+  * Added button images
+  * Non-steam controller editor and around 10240 images
+  * typo
+  * Fix: Editor: Closing window undoes set preview even if OK button was pressed. Fixes #231
+  * evdev: last page of GUI, WIP
+  * evdev: gui: mapping is autogenerated and shows
+  * evdev: gui: Can ask for rebinding
+
+  [ tom ]
+  * evdev: gui: Button reassingment works
+  * evdev: gui: Triggers
+  * evdev: gui: partial axis support
+
+  [ Matteo Signer ]
+  * Fix gyro resetting
+
+  [ tom ]
+  * evdev: gui: Added option to invert axes
+  * evdev: gui can now save settings + changed config location
+  * evdev: moved scanning to separate thread
+  * Renaming everything until naming matches everywhere
+  * evdev: driver now reads same format as gui saves
+  * Added centralised scheduler
+  * Small cleanup
+  * evdev: Added LPADTOUCH and RPADTOUCH emulation (as evdev gamepads don't have those buttons)
+  * evdev: button->trigger emulation
+  * Added gamecontrollerdb.txt from SDL library
+  * Removed Windows and OSX mappings from gamecontrollerdb
+  * Apparently, I have weirdest PS3 pad in the world...
+  * evdev: gui: Reading & pre-setting bindings from gamecontrollerdb
+
+  [ kozec ]
+  * Renamed STICK button to STICKPRESS to avoid name conflict with STICK axes. Ref #235, Ref #237
+  * Added exception for case when HoldModifier is used on pad/stick press. Fixes #234
+  * Added Stick press to ModeShift editor. Fixes #235
+  * Added Stick press option to list of possible menu confirm/cancel buttons. Fixes #237
+  * Added support for system icons in menus. Ref #232
+  * Added game list generator. No GUI yet. Ref #232
+  * Small cleanup
+
+  [ Ondřej Hruška ]
+  * fix gyro forgetting settings / not initing right
+  * Fix YAW/ROLL gyro cb not being properly populated
+
+  [ kozec ]
+  * GUI for game list generator, 1/2. Ref #232
+  * GUI for game list generator, 2/2. Fixes #232
+  * Changed all (3) non-stocks icons to use more generic names. Fix #241
+  * Redone dpad action once again, now with configurable diagonal portions. Ref #203
+  * Added saving for configurable diagonal portions. Ref #203
+  * Added UI for configurable diagonal portions. Fixes #203
+  * Moved 'you can also drag&drop' line in Import dialog to less ambiguous place. Fixes #242
+  * Added / fixed dpad tests
+  * Fix: Handling of undead daemon. Fixes 224
+  * Added profile rename option. Fixes #236
+  * Fix: Profile menu showing wrong items for default profiles
+  * Fix: Click bindings GUI broken somewhere in the process
+  * Added 'SCC was upgraded' notification with release notes and shady link to my patreon. Fixes #66
+  * Release bump
+  * Added option to turn 'SCC was upgraded' notification on and off
+  * Don't show release notes for same release repeadedly
+  * Fixed missing glade IDs
+  * Fix: Found that showind RIBar twice can crash GTK :(
+  * Fix: SCC was upgraded message cannot be dismissed. Fixes #246
+  * Version bump
+  * Ignore last number (v0.3.14.1 ignores .1) when checking for release notes
+  * evdev: Don't crash on broken device config file
+  * evdev: gui: button->trigger emulation
+  * Renamed STICK button to STICKPRESS to avoid name conflict with STICK axes.
+  * evdev: gui: Mapping to sticks
+  * evdev: gui: display unassigned triggers
+  * evdev: gui: Mapping buttons to triggers (again)
+  * evdev: gui: Mapping buttons *and axes* to triggers
+  * evdev: gui: support for ps3-like dpads
+  * evdev: gui: support for binding ps3-like dpads
+  * evdev: gui: Moving stuff around and cleaning up
+  * evdev: gui: Still renaming stuff, controller_registration -> creg
+  * evdev: gui: emulated dpad pressing
+  * Fix: imports broken by merge
+  * evdev: gui: added small 'raw data' textbox mostly for debuging
+  * Added option to map multiple keys with GUI. Fixes #244
+  * Unified SC-Controller / SC Controller labels
+  * Small ball & smooth modifier improvements
+  * Added 'Replace:' protocol message for teporal replacing actions on the fly
+  * Small cleanup
+  * Added (theoretical) feedback & padtouch support to slave mapper
+  * Initial support for running aplicatio/editor in OSD. Ref #250
+  * evdev: gui: saving ps3-like dpads
+  * evdev: support for ps3-like dpad in driver
+  * evdev: 'small' math improvements
+  * Pretty-much finished evdev emulation
+  * Very basic HID device support
+  * Forgotten file
+  * Removed licence text from controller.py, most likely copy-pasted by mistake
+  * Fixing GUI icons around
+  * Fix: Disconnecting client can break ObservingAction
+  * HID: Button and dpad mappings. Daemon-side HID theoretically done
+  * HID: Redone most of input code in c for better speed
+  * HID: Fixes for PS3 pad
+  * Added test mode to evdevdrv
+  * Removed DS3 driver, HID one can take care of it
+
+  [ predr ]
+  * profile for DiRT Rally with gyro steering
+
+  [ kozec ]
+  * scripts/scc - Added script to end all other scripts
+  * ControllerReg.GUI: Universal way to use any driver test scripts while configuring non-steam controller
+  * ControllerReg.GUI: I basically broke everything with that last commit...
+  * ControllerReg.GUI: gamecontrollerdb should now work with both drivers
+  * ControllerReg.GUI: user-selectable driver, warning, saving with both drivers...
+  * Small fixes
+  * HID: Detect when controller is disconnected
+  * Simplified code for assinging controller IDs
+  * Added code needed to rescan and add evdev/hid controllers on the fly
+  * Finished controller registration code
+  * fix: typo
+  * Fix: Chosing profile with controller no.2 changes profile of 1st controller. Refs #256
+  * HID: Redone reading HID descriptors to use descriptor provided by kernel where possible
+  * HID: dpad / hatswitch support both ways
+  * Added basic support for DS4 controller
+  * Reading gyro sensors from DS4 controller
+  * Finished gyro and accelration sensors for DS4 controller
+  * Redoing controller icons and images
+  * Protocol change: Controllel list now sends path to GUI config file when available
+  * ... forgotten images
+  * Changed some uses of 'LEFT'/'RIGHT' to 'LT'/'RT' when triggers are involved
+  * Loading images from controller configs in GUI
+  * Better DS4 image
+  * Fix: Crashing when serials are enabled
+  * Added 'scc' script for osd-keyboard
+  * Fix: fake driver crashing
+  * Typo
+  * GUI now can edit profile for all connected controllers
+  * Small cleanup
+  * Few controller registration fixes
+  * Using new ControllerImage widget in controller registration
+  * Final controller registration fixes
+  * Fix: Chosing profile with controller no.2 changes profile of 1st controller. Refs #256
+  * Small cleanup
+  * Last bits of switchable multi-controller support in GUI
+  * Fixed daemon not always closing correctly with HID controller
+  * Fixed older gcc errors and warnings
+  * Fixed glade IDs and setup
+  * A lot of stuff in /usr/share not copied by setup.py
+  * Added 'gui' option to scc script
+  * Added code needed to build & run sc-controller as appimage
+  * Fixing AppImage for OBS
+  * Fix: Appimage can't find lib on 64bit systems
+  * Forgotten file
+  * Added evdev package check to 'scc dependency-check'
+  * Made evdev support optional on daemon side
+  * Added python-evdev package to appimage
+  * Added appdata.xml file to support newer appimage versions
+
+  [ predr ]
+  * ignore out.svg and pycharm ide
+  * add separators to submenus, used as menu titles
+  * double boarders to solid, opacity to all windows, padding and left border for messages
+  * colors for osd/osk, todo opacity config
+  * use set_opacity to fade main menu
+
+  [ kozec ]
+  * Allowed to specify axis range instead of button in modeshift (does nothing so far). Ref #208
+  * appimage-build.sh: Moved 'set -ex' few lines lower
+  * Allowed to specify axis range instead of button in modeshift (does nothing so far). Ref #208
+  * Added parsing + code needed to use soft trigger pulls in modeshift, no GUI yet. Ref #208
+  * Fix: Last change breaks GUI _and_ tests at once
+  * Fix: GUI crashing when no controller is connected
+  * Fix: Setting triggers in GUI broken
+  * Added GUI for Soft trigger modeshift. Fixes #208
+  * Added trigger level setting (soft pull) to Grid activation. Fixes #86
+  * Removed glade label added by mistake
+  * Fixed ioctl that _may_, in theory, be responsible for scc-daemon hanging with wine. Ref #251
+  * Version bump
+  * Fix: Appimage can't be buit, OBS can't download
+  * Fix: appimage/usr/bin is not added to PATH. Ref #145
+  * Fixes for ds4 over evdev. Ref #262
+  * Status icon support for Ubuntu 17.10. Fixes #263
+  * Much better support for ds4 over evdev. Ref #262
+  * Fix: Typo
+  * DS4 evdev mappings for older kernel. Fixes #262
+  * spaces->tabs
+
+  [ Clement Zrounba ]
+  * Fix Dpad crash on Dualshock 3 controller
+
+  [ kozec ]
+  * Fix: evdev driver generating float values. Fixes #264
+  * Added config options to disable drivers
+  * I accidentaly broke USB driver
+  * Controller registration: Added dialog specially for DS4 controller. Ref #262
+  * Fix: UnicodeDecodeError when droping files with weird characters in path. Fixes #267
+
+  [ tom ]
+  * Sensitivity: Replaced negative slider positions with 'invert axis' checkboxes. Ref #268
+
+  [ kozec ]
+  * Fix: DS4 over evdev not working if evdev doesn't create device soon enough
+  * GUI: Disable buttons not available on connected controller
+  * Managed to stop mouse jumping when modeshift is used to change sensitivity. Fixes #268
+  * Fix: ranged modifier may crash when state is None
+  * Added UI to set button as togle
+  * Updated README
+  * Removed PKGBUILD, doesn't work anyway
+
+  [ tom ]
+  * Added touchpad support for DS4 over evdev
+  * Added gyro sensor for DS4 over evdev
+
+  [ kozec ]
+  * Fixing ds4 icons and sc images
+  * Fix: Applying changes to all controllers when profile file is modified
+  * Fix: Daemon crashing from ds4 over evdev getting disconnected
+  * Working gyro *motion* DS4 over evdev, orientation yields weird values
+
+  [ tom ]
+  * Added 'first page' to quickly setup most commonly used bindings
+
+  [ kozec ]
+  * Fix: Breaking infinite recursion in holdmodifier.get_all_actions. Fixes #272
+
+  [ tom ]
+  * Fix: Force order when grabbing multiple keys. Fixes #275
+  * Fix: Show 'Hide/Display Window' in tray icon menu on Ubuntu. Fixes #263
+  * WIP: Recoloring radial menu
+
+  [ kozec ]
+  * Added code for recoloring radial menu. Fixes #270
+  * Finished entire 'fist page' stuff
+  * Added explanation to 'Failed to read release notes' message
+  * Version bump
+  * Patreon stuff
+  * Commented-out code broken by merge (?). Ref #271
+  * Removed line from commit above
+  * Added 'Controllers' page in global settings so new pad can be added or _removed_ as well
+
+  [ tom ]
+  * Removed 'Register new controller' menu item, button in settings is enough
+  * Allowed rstick to be used as mouse
+
+  [ kozec ]
+  * Fixed glade IDs
+  * Added test_inputs script
+
+  [ tom ]
+  * GUI: Fixed centering on 'C' button
+
+  [ kozec ]
+  * Better way to map rstick to mouse
+
+  [ Federico Damián Schonborn ]
+  * tools: find_binary: Add the standard binary paths if they are not in PATH
+
+  [ kozec ]
+  * Evdev: Fully working stick to mouse mapping
+  * Added passtrough for ball() and smooth() modifiers so actions designed for steam controller can be used on evdev controllers
+
+  [ tom ]
+  * Trying to get one last buttom to display
+  * ... finally
+
+  [ kozec ]
+  * woo, I broke everything
+  * Fix: Broken sticks as well 8-)
+  * A lot of UI fixed, CPAD is fully editable now
+  * DS4 touchpad support almost done
+  * Redone controller flags checking
+
+  [ tom ]
+  * OSD mode: forgotten file
+  * OSD mode: now works with combobox
+
+  [ kozec ]
+  * Fixed tests
+  * Fixed tests for travis
+  * Whet the ef was this?
+  * Changing quick menu button images to match active controller. Ref #280
+  * Added 'minimize to status icon on start' option. Fixes #281
+
+  [ tom ]
+  * Getting DS4 HID touchpad ready, it doesn't work at all :(
+
+  [ kozec ]
+  * DS4 touchpad over HID. Ref #280
+
+  [ tom ]
+  * DS4 over HID: Detecting touch on touchpad
+
+  [ kozec ]
+  * Reorganizing settings so I can fit more stuff there
+  * Added GUI for OSD themes, does nothing for now. Ref #256
+
+  [ Dugan Chen ]
+  * Finding config directory is more flexible.
+  * Restores check for resources in /usr/local
+
+  [ kozec ]
+  * Fixing glade broken by merge
+  * OSD style settings UI pretty-much works. Ref #259
+  * Working on OSD styles
+
+  [ tom ]
+  * Dark/reloaded green color theme can now be default. Fixes #259
+  * Disabling color buttons not used in current theme
+  * Colors, oh, glorious colors
+
+  [ kozec ]
+  * Allowed ChangeProfileAction and ShellCommandAction to be used as whole pad binding. Ref #287
+  * Allowed ChangeProfileAction and ShellCommandAction to be used as whole pad binding. Ref #287
+  * Attribute error caused by STICK->STICKPRESS rename. Fixes #286
+
+  [ tom ]
+  * Final theming touches
+  * Fix: Removed run_scheduled from slave mapper
+
+  [ kozec ]
+  * Added 'pressed' and 'released' modifiers. Fixes #290
+
+  [ tom ]
+  * Ported WIP OSD mode to v0.4. Ref #250
+  * OSD: Moving menu window when it can't fit the screen
+  * CSS opacity for OSD menus
+
+  [ kozec ]
+  * Fix: How did I managed to break SC support?
+  * Fixed rollmodifier acting up with new scheduler
+  * Added on-screen help for osd mode. Ref #250
+
+  [ tom ]
+  * Loading configured button images. Ref #280
+  * Improved loading of customized button images
+
+  [ kozec ]
+  * Working on OSD mode, a lot of stuff cannot be done with controller
+
+  [ tom ]
+  * OSD mode: fixed controlling scales (sliders)
+  * Same problem, part 2
+
+  [ kozec ]
+  * osd_mode: Fixed all remaining bugs by one fix
+  * Revert scale fixes, they are no longer needed after last fix.
+  * osd mode: Disable 'grab button' button
+  * Finished editing in OSD. Fixes #250
+  * Bumping versions
+  * After-merge fixes
+  * Added 'touched' and 'untouched' mods. Fixes #291
+
+  [ tom ]
+  * Fix: BW  icons in main window
+  * Simplified feedback settings. Fixes #294
+  * Fix: HZ -> Hz. Ref #294
+  * Fix: Load default controller image if there is no controller connected
+
+  [ kozec ]
+  * Fix: Freshly created profile is not always visible in GUI. Fixes #282
+  * Added BW images for DSx buttons
+  * Bumping all the numbers and upgrading default profiles
+  * Fix: osd-styles not being installed
+  * Fix: gamecotrollersdb not being installed
+  * Fix: config/.scc/devices folder not being created. Fixes #297
+  * Fix: creg: triggers hilighted as unmapped even when they are
+  * Version bump
+  * daemon: allow starting without python-evdev package
+  * Fix: Ring bindings radius not being loaded. Ref #296
+
+  [ tom ]
+  * Added tool for autoupdating wiki
+
+  [ kozec ]
+  * Fix: Stick to inner/outer ring binding to button doesn't work. Ref #296
+  * small docs reformatting
+  * Added more tools to 'scc' script: info, list-profiles, set-profile
+  * Fix: Unicode error when ľščťžýáíé is used as name in Action editor. Fixes #301
+  * Fixed more possible unicodedecode errors
+
+  [ KeepBotting ]
+  * Update README.md
+
+  [ tom ]
+  * Fix: syntax errors (how?) Fixes #298
+  * Don't crash and display warning when python-evdev is not available. Ref #305
+
+  [ kozec ]
+  * Fix: Hide OSD menu if controller is disconnected or turned off. Fixes #304
+  * Allowed to use stick position as modeshift modifier. Ref #318
+
+  [ tom ]
+  * Fixed saving of hold(None, ...) and doubleclick(None, ...). Fixes #317
+  * Fix: Overwrite stale PID file when needed. Fixes #303
+
+  [ kozec ]
+  * Version bump
+  * Updated README images
+  * Updated deps and pictures in README.md
+  * Implemented 'clear menu icon' button. Fixes #322
+  * Allowed to have name without action. Fixes #321
+  * Fixed editting ring in modeshift. Fixes #298 (this time for real)
+  * protocol.md grammar
+  * Added 'State.' request to protocol. Ref #323
+  * Support for actions in custom.py #323
+  * Documented 'State' request and message. Ref #323
+  * Added `scc lock-inputs` command for shell use. Ref #232
+  * And `scc print-inputs` too. Ref #232
+  * Fix: gracefully exit from `scc lock-inputs` when other side of pipe is closed. Ref #323
+  * typo
+  * Cancel rolling ball effect when profile is switched. Fixes #320
+  * fuck.
+  * Added GUI for controller autoshutdown. Ref #316
+  * Fix: stick press not displayed in GUI. Fixes #326
+  * Actually use idle timeout. Fixes #316
+  * Fix: modeshift_editor: hold time is not saved. Fixes #329
+  * typos: STICK_press -> STICKPRESS. Fixes #326
+  * Removed old debug line
+  * Unicode support in shell action. Fixes #332
+  * Added /usr/share/ as hardcoded fallback if no other .../share can be found. Fixes #314
+  * Patreon update
+
+  [ tom ]
+  * Added main to osd keyboard
+  * Trying to redo OSK keyboard in faster way...
+  * Still trying
+  * OSK rework: Loading keyboard from SVG (again)
+
+  [ kozec ]
+  * hiddrv: changed inline to static in c code. Fixes #334
+  * Fix: enumerate_children_finish can return no files in uknown circumstances. Fixes #327
+  * Fix: Names on Mode/Hold/Doubleclick/Modifier not saved. Fixes #331
+  * Rightclick->edit stickpress broken. Fixes #336
+  * Handle LIBUSB_ERROR_IO on wired SC. Hopefully fixes #293
+  * Updated AppImage code
+  * Added pylibacl to appimage deps
+  * Added GUI message for daemon failing to start. Fixes #335
+  * Clarified GPL2 version
+  * Version bump
+  * Final fixes before release. Fixes #338
+  * AppImage, version 3. Ref #339
+  * Limited SVGWidget cache size. Ref #342, ref #333
+  * Fix: binding_display storing generate image to ~. Ref #344
+  * OSK works again (and fast!), no labels yet
+
+  [ Eddy Castillo ]
+  * UI: "New Profile" dialog redesign
+  * UI: "Rename profile" dialog redesign
+  * UI: "Profile details" dialog redesign
+  * UI: Tweak main window spacing and prevent huge labels
+  * Fix missing id in glade file
+
+  [ kodkuce ]
+  * Update README.md
+
+  [ kozec ]
+  * Changed status 'semaphore' images to display hamburger lines instead of controller. Ref #346
+  * Improved 'Tap' action, now can be used for double-tapping (and playing NieR :)
+  * Why is suddendly everything purple?
+  * Gnome deprecating every fucking thing...
+  * Got text back on keyboard, missplaced
+  * Correct labels with correct font and correctly placed
+
+  [ Eddy Castillo ]
+  * Add close button to dialog
+
+  [ kozec ]
+  * Managed to center keyboard labels
+
+  [ tom ]
+  * Keyboard colors
+
+  [ kozec ]
+  * Allowed using sensitivity with tilt. Fixes #351
+
+  [ gaa-cifasis ]
+  * fix for #311
+
+  [ tom ]
+  * Trying to get overlay back
+
+  [ kozec ]
+  * Got overlay, displays nothing so far
+  * Added controller flags to 'Controller:' daemon message
+  * Correct (non-hardcoded) help with correct images on OSK + trying to use OSK with DS4
+  * New OSK pretty-much done. Fixes #333
+  * Moving images around so GUI can find them with changed code
+  * Fix: Menu not closing when last controller is disconnected
+  * fuck
+  * Fix: cemu+wine+disabled rumble = crash. Fixes #261
+  * Added 'JUMP' deadzone mode. Ref #356
+  * Posponed keyboard on DS4
+  * 'JUMP' deadzone mode renamed to 'MINIMAL' + fixed order when applied on BallModifier. Fixes #356
+  * Small cleanup
+  * Copied appimage improvements from SC-GTK
+  * Commerce
+  * Version bump
+  * Usual stuff, fixing appimage in OBS
+  * OBS fixes
+
+  [ tom ]
+  * Added support for DS4 over evdev + bluetooth. Ref #358
+
+  [ kozec ]
+  * Small cleanup
+  * Pad->click->button shenanigans. Fixes #362
+  * Added 'Repeat Button' checkbox to button settings. Fixes #361
+  * SC over Bluetooth: Got configuration and buttons working. Ref #365
+  * Fixed missing glade ID
+  * SC over BT: Decoding in C, stick & triggers. Ref #365
+  * SC over BT: Pads. Ref #365
+  * SC over BT: Gyros; all inputs done. Ref #365
+  * BT-related fixes
+  * Small cleanup
+  * Redone hotplug monitoring with eudev instead of watching for /dev/input* files
+  * Bluetooth monitoring using eudev, Ref #365
+  * Fix: Reconnect to SCbyBT if initial connection fails. Ref #365
+  * Fix: weird crash with empty config
+  * SC over BT: Added icons. Ref #365
+  * Fixed c code failing to build in travis
+  * Fix: SCbyBT PING packet interpreted as LEFT stick position. Ref #365
+  * Fix: SCbyBT pads jumping around when input rotation is applied. Ref #365
+  * Fix: Don't crash horribly on machine without bluetooth. Ref #365
+  * Final c code cleanup
+  * Bumping all the versions
+  * Ubuntu 14.04 fixes. Ref #368
+  * typo
+
+  [ Na ]
+  * Use `env` instead of an absolute path in some #!s
+
+  [ kozec ]
+  * Fix: PS4 dpad unusable with menus. Fixes #373
+  * Added default menu buttons configurable per controller
+
+  [ Wyatt Childers ]
+  * Implement best match gesture lookup
+
+  [ kozec ]
+  * Fixed missing glade IDs
+  * Added blacklist to HID driver. Fixes #379
+
+  [ Roman Hargrave ]
+  * Support mapping triggers to mouse axis
+
+  [ kozec ]
+  * Added yaw 'tilt' bindings to GUI. Fixes #377
+  * Added 'reset gyro' binding to GUI (on special actions page). Fixes #386
+  * Allowed stick tilt as gyro enable button. Fixes #385
+
+  [ FlyingWombat ]
+  * [Bugfix] gyro_action.glade: Gyro comand values in lstOutputMode were backwards; now Y axis is on Pitch, and X axis is on Yaw/Roll. Changed default X axis to Yaw.
+
+  [ kozec ]
+  * Added relXY action, for pad with relative center. Fixes #390
+  * Undid moving code to function, it ended up redundant
+  * Fixed wired SC not always working thanks it clashing with SC over BT on value of 'unknown1' constant
+  * Fix: Fixing wired SC broke wireless gyro. Fixes #391
+  * Added context menu to switch controller image & buttons in GUI. Fixes #372
+  * What the fuck, glade?
+  * Fix: cycle breaks macro editor. Fixes #395
+
+  [ Stasiek Michalski ]
+  * Fix openSUSE capitalization
+
+  [ kozec ]
+  * Fix: DS4 pad on kernel 4.17+. Fixes #393
+  * print print print :(
+  * Allowed using circular(ball(...)). Ref #398
+  * I really cannot commint cleanly  today :(
+  * Typo 156/1732
+  * Added README to tests directory. Fixes #400
+  * Little gui redesign, fixes #398
+  * creg fixes
+  * Trackball Mode toggle as checkbox. Ref #398
+  * Reenabled zero friction in GUI. Ref #398
+  * Made trackball settings blink when link is clicked. Fixes #398
+  * Fix: Crashing when USB device is busy
+  * Turned MINIMUM_MATCH_RATIO into configurable parameter. Ref #382
+  * Renamed 'minimum_match_ratio' to 'precision'. Ref #382
+  * Added GUI for gesture precision / match ratio. Ref #382
+  * Fixed missing glade ID & bumped version number
+  * Attempt to solve #401
+  * AppImage updates
+  * Wrong application name on status icon. Ref #408
+  * @rnhmjoj's fix for NixOS not finding libudev.so. Ref #401
+  * Fix: LB and RB swaped in bluetooth driver. Fixes #411
+  * Fix: Properly position long OSD menu on weird dual display configuration
+  * Don't use slow animation when scrolling from menu top to menu bottom
+  * Decreased repeat delay in menus
+  * Enabled on-screen keyboard with DS4 gamepad
+  * POC driver for Yoke
+  * Fix: crashing with device that sends _very_ broken serial no
+  * Generated hidpi icons for Kde Plasma. Fixes #408
+  * Allowed SVG menu icons. Fixes #420
+  * Backwards compatibility for icon searching
+  * OSD mode editor improvements. Ref #419
+  * Updated udev rules to better match what Steam does. Ref #414
+  * Fix: Using deadzone with Gyro. Ref #421
+  * Removed unused / breaking import
+  * Fix: OSD mode gui should never try to kill the daemon. Fixes #419
+  * Fix: osd() not able to format timeout
+
+  [ tom ]
+  * GUI editing for OSD timeout. Ref #416
+
+  [ kozec ]
+  * Allowed displaying multiple OSD messages at once. Ref #416
+  * Allowed OSD message with no timeout. Ref #416
+  * Clear only long-lasting OSD messages when profile is changed. Fixes #422
+  * Added 'clearosd' action. It clears OSD. Ref #416
+  * Documented 'clearosd'
+  * Fixed tests
+  * Implemented GUI for 'clearosd'. Ref #416
+  * Allowed changing font size in OSD message. Ref #416
+  * Added GUI for osd message size. Fixes #416
+  * Added context menu for menu. Fixes #417
+  * Fix: Sending mouse events too fast may be misinterpreted by applications. Fixes #330
+  * Version dump
+  * Revert "POC driver for Yoke"
+  * appimage fixes
+  * Fix: this test code doesn't belong here
+  * Fix: Setting wrong parent windows in action editor. Fixes #430
+
+  [ Jacalz ]
+  * Updates to TODO file and significant improvements to README.md
+  * Further refinements to readme and adressing of review
+
+  [ tom ]
+  * Backported remotepad driver
+  * Menu: Allow controlling with dpad when controller has real one
+
+  [ kozec ]
+  * Fix: Proton killing us by sending negative rumble amplitude. Fixes #435
+  * Added code to auto-convert old profiles
+  * remote pad GUI
+  * Fix: possible deadlock
+  * Removed debug print
+  * Allowed to use 'shell' as condition in 'mode'. Fixes #427
+  * tidying up
+  * Version bump
+  * Fix: 'shell' used as condition in 'mode' not returned in get_child_actions
+  * Patreon bad, deplatforming bad, editing all the READMEs
+  * I've just commited wrong link to 4 repositories at once :(
+  * Added zlib to appimage
+  * Fix: Dont' convert backups. Ref #440
+  * Fix: Don't show backups in profile selector. Fixes #440
+
+  [ Verequies ]
+  * dialog.py: Fixed crash during device enumeration
+
+  [ kozec ]
+  * Fix: Stick hangs when used simultaneously with lpad. Fixes #467
+
+  [ i-need-to-tell-you-something ]
+  * Update changed link in app.py
+
+  [ tom ]
+  * Fix: Friction resets when set to zero. Fixes #460
+
+  [ kozec ]
+  * Backported cemuhook to python code (ref #449)
+  * Added GUI for cemuhook (master branch, ref #449)
+  * Final cemuhook fixes. Fixes #449
+  * Fix: Not minimizing to tray on start. Fixes #456
+  * Fixed tests
+
+  [ tom ]
+  * Preparing normal release
+
+  [ kozec ]
+  * Fix: Broken quickmenu. Fixes #441
+
+  [ tom ]
+  * Fix: Crash in controller registration
+
+  [ kozec ]
+  * I cannot english
+  * Allow gesture recognition on CPAD. Ref #493
+  * Fix: Grabbing CPAD gestures in GUI. Ref #493
+  * Fix: Getting killed by Chinese. Fixes #492
+
+  [ Cláudio 'Patola' Sampaio ]
+  * Fixed button labels #499
+
+  [ Giumo Clanjor (哆啦比猫/兰威举) ]
+  * Fix: CemuHook did not work with Dolphin client
+
+  [ Travis Nickles ]
+  * Initial port to Python 3
+  * Action editor fixes. Importexport fixes.
+  * Fixed hotplug support
+  * Fixed type lookup for DeadzoneModifier
+
+  [ kozec ]
+  * Fix: autoswicher menu is broken. Ref #557
+
+  [ Travis Nickles ]
+  * Fixed KeyGrabber
+  * Fixed bool evaluation of NoAction. Use proper Python 3 method.
+  * Fixed dongle connections
+  * Fixed issue due to ordereddict change
+
+  [ Seil0 ]
+  * fix daemon.sh debug
+
+  [ Mathieu Comandon ]
+  * Various fixes for Python3, allows adding Xbox pad
+  * More fixes required for the daemon to run
+
+  [ Travis Nickles ]
+  * Made more Python 3 changes
+  * Made enum check change due to EnumMeta in operation deprecation in Python 3.8
+
+  [ Rémi Verschelde ]
+  * py3 port: Fix `except Exception, e` construct
+  * py3 port: Convert print statements to functions
+  * py3 port: Fix GObject.connect argument type
+
+  [ Travis Nickles ]
+  * Some changes to DS4 mapping support working
+  * Added a couple more fixes to get DS4 support working
+  * Fixed more instances of EnumMeta issues
+  * Initial attempt to convert AppImage scripts. Work in progress.
+
+  [ Alastor ]
+  * Added DualShock 4v2 udev rule for bluetooth connection
+
+  [ Travis Nickles ]
+  * Fixed some issues found with pyflakes
+  * Finally got a working AppImage running
+  * Make symlinks to libraries for AppImage package
+  * Change decoration_layout property for GtkHeaderBar. Disable window icon
+  * Fixed various problem with the OSD menu
+  * Fixed more contains checks for SCButtons
+  * Used unicode_escape to replace string_escape in some portions of code
+
+  [ Bryan Gardiner ]
+  * Fix printf format specifiers for size_t arguments.
+
+  [ Travis Nickles ]
+  * Minor update of README
+  * Updated daemon version number
+  * Changed RELEASE_URL to point to python3 repo
+  * Added DualShock 4 V1 mapping from upstream SDL_GameControllerDB
+  * Fixed several errors discovered by pyflakes
+  * Added updated Linux platform SDL GameController mappings
+  * Added appimage dir to gitignore file
+  * Version 0.4.8.1
+  * Updated odict_values indexing support for Python 3
+  * Fix more instances of action mods not being scriptable in Python 3
+  * EnumMeta in operation change
+  * Updated EnumMeta usage. Removed extra list comprehension where not needed
+
+  [ James Le Cuirot ]
+  * Fix TypeError when clicking on the status icon
+
+  [ kozec ]
+  * Fix: 'confirm with release' menu option doesn't works. Fixes #589
+  * Unicode profile names related fixes. Fixes #565
+
+  [ Rener ]
+  * Basic hipfire action
+  * Include hipfire in the gui
+  * Adjusting AE to show the hipfire action
+  * Some more corrections on hipfire and add modes [exclusive,sensible]
+  * Some cleanups and comments
+
+  [ claudius ]
+  * Init repo
+  * fix: bt address can be lowercase
+  * fix: Python3 bytes
+  * somehow float arrives here, when it should be a int (maybe my config is borked, but it works with USB)
+  * fix: crash when not a real address
+  * fix: crash when sending parse error to client
+  * fix: Python 3 in USB cable mode
+  * fix: OSD cannot open because of mangled SCByCable id
+
+  [ trigg ]
+  * - Initial wlroots OSD support (WIP)
+  * - Missed import cairo
+
+  [ Rener ]
+  * Includes the delay parameter into the GUI, rename variables and made some parameters optional
+  * Add hipfire to the documentation
+  * Revert gtk version (changed by glade editor)
+
+  [ Travis Nickles ]
+  * Remove kateconfig file and add file to gitignore
+  * Removed invalid use of namespace from Binding Display generation
+
+  [ kozec ]
+  * Fix: moving STICK and LPAD at once can cause pads or buttons to stuck. Fixes #598
+  * Fix: radial menu not respecting gdk scale factor. Fixes #587
+  * Managed to generate AppImage for Ubuntu 20.04
+  * Version 0.4.8
+
+  [ Travis Nickles ]
+  * Make sure socket is set to read and write mode rather than read-only
+  * Version 0.4.8.2
+
+  [ rnhmjoj ]
+  * Port tests to Python 3
+  * Fix failures in test_special_actions
+  * Fix `imp` deprecation warning
+  * Fix `getargspec` deprecation warnings
+
+  [ Tiana Rakoto Arimanana ]
+  * Travis Build
+
+  [ kozec ]
+  * Imported code from 'https://github.com/ynsta/steamcontroller'
+  * Tabs please
+  * Fix: I'm using another module name
+  * Added/imported setup.py, so I can compile libuinput.so
+  * Moved stuff around, as I'd like to have __init__ empty
+  * Removed any mention of 'Steam' because of... reasons
+  * Added .gitignore
+  * Added new mapper and daemon with json configuration
+  * Profile loading moved to separate module
+  * Fix: Wrong shellbang all around the place
+  * Moved *Event classes from mapper to events.py (this completly overwrites original event.py from steamcontroller project)
+  * Added action parser, so there is no longer need for eval()
+  * Merged 'pad' and 'button' action
+  * Made ActionParser throw
+  * Fix: i somehow killed right pad
+  * Added workng 'describe' method and lot of action classes
+  * Fix: Parsing negative numbers
+  * Imported (partialy completed) GUI code
+  * Merged tools.py from gui and tools.py from steamcontroller together
+  * Moved GUI code stuff to scc/gui
+  * GUI now can set button actions
+  * Action editor: respond to enter and escape
+  * Playing with UI and descriptions
+  * Added key grabing
+  * Added support to write action as string directly into UI
+  * Looks like 'enum' is not standard python package
+  * Merged 'button' and 'key' action
+  * GUI: Editing trigger bindings
+  * Merged 'button' and 'key' action
+  * Simplified code around Actions
+  * Added some comments
+  * Preparing GUI for configuring trigger-to-button mappings
+  * Action editor: enabled trigger-to-button mappings
+  * Hilighting what's already selected when opening Action editor
+  * Hilighting what's already selected when editing trigers
+  * Fix: triggers are not clickable on image in main window
+  * Working on Stick action editor
+  * Added sensitivity settings to axis
+  * Added way to specify X and Y axis actions in custom action field
+  * Added editor for dpad emulation with stick
+  * Fix: Areas in axistrigger.svg offseted
+  * Added per-axis stick editing
+  * Just moving stuff around
+  * Storing stick actions + displaying stick/pad actions in main window
+  * Editing pad actions
+  * Loading profile list and selected profile
+  * Profile saving
+  * Moved daemon to module and added control socket that does nothign so far
+  * typo
+  * Controll socket now can load profile on command
+  * Daemon: Send OK or error when profile change is requested
+  * Added 'macro' action
+  * Updating docs
+  * Added basic code for controllign daemon from GUI
+  * Moved 'C' button down
+  * Automatically apply UI changes in daemon
+  * Added working 'new profile' option
+  * Integrated libusb1 as it looks like it is not commonly packaged
+  * Fix: Prefilling axis/pad actions in editor
+  * More UI tweaks
+  * Renamed icons -> images
+  * Improved mouse handling
+  * Added 'profile' action, allows changing profiles using gamepad buttons
+  * Fix: stick translated as LPAD if RPAD is pressed
+  * Hidden 'action name' field, it has no use for now
+  * Added run.sh to run this thing from source directory
+  * Added icon, desktop file, scripts, updated setup.py, renamed stuf to sc-*
+  * Moved .pid and .socket to ~/.config/scc
+  * Save current profile into config, so program doesn't start with XBox profile all the time
+  * Glade: set min.version to 3.10
+  * Added README.md and *LICENSE* files
+  * Removed license notices from files, there is main LICENSE file in root directory
+  * Added screenshots
+  * Added screenshots into README
+  * Added PKGBUILD
+  * Hidden -Wunused-result compiler warning
+  * README: Download source -> download latest release
+  * Returned MIT license notices back, those are not related to main LICENSE file
+  * Added 'shell' action, can execute stuff
+  * Fix: UI only partialy updated when profile is changed using gamepad  button
+  * Fix: desktop file: There is no "Games" category
+
+ -- btinarako <btinarako@btinarako-System-Product-Name>  Fri, 25 Dec 2020 14:33:34 +0100
