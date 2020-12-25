@@ -2279,4 +2279,7 @@ sc-controller (0.4.9) UNRELEASED; urgency=medium
   * Fix: UI only partialy updated when profile is changed using gamepad  button
   * Fix: desktop file: There is no "Games" category
 
- -- btinarako <btinarako@btinarako-System-Product-Name>  Fri, 25 Dec 2020 14:33:34 +0100
+  [ Tiana Rakoto Arimanana ]
+  * Fixes: ModuleNotFoundError: No module named 'gi'
+
+ -- btinarako <btinarako@btinarako-System-Product-Name>  Fri, 25 Dec 2020 15:50:51 +0100
