@@ -17,4 +17,4 @@ appimage/
 *.cpp
 *.vdf
 .kateconfig
-
+debian/sc-controller*

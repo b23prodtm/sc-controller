@@ -2282,4 +2282,25 @@ sc-controller (0.4.9) UNRELEASED; urgency=medium
   [ Tiana Rakoto Arimanana ]
   * Fixes: ModuleNotFoundError: No module named 'gi'
 
- -- btinarako <btinarako@btinarako-System-Product-Name>  Fri, 25 Dec 2020 15:50:51 +0100
+  [ kozec ]
+  * Fix: 'confirm with release' menu option doesn't works. Fixes #589
+  * Unicode profile names related fixes. Fixes #565
+
+  [ Rener ]
+  * Basic hipfire action
+  * Include hipfire in the gui
+  * Adjusting AE to show the hipfire action
+  * Some more corrections on hipfire and add modes [exclusive,sensible]
+  * Some cleanups and comments
+  * Includes the delay parameter into the GUI, rename variables and made some parameters optional
+  * Add hipfire to the documentation
+  * Revert gtk version (changed by glade editor)
+
+  [ kozec ]
+  * Fix: moving STICK and LPAD at once can cause pads or buttons to stuck. Fixes #598
+  * Fix: radial menu not respecting gdk scale factor. Fixes #587
+
+  [ Tiana Rakoto Arimanana ]
+  * Test hipfire
+
+ -- btinarako <btinarako@btinarako-System-Product-Name>  Fri, 25 Dec 2020 20:16:26 +0100
