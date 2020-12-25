@@ -1,0 +1,11 @@
+ 0x000000000000000e (SONAME)             Library soname: [libscc-conversions.so]
+SCC_KEYCODE_MAX R 2
+keys D 1f20
+rels_and_abses D 1600
+rels_and_abses_cnt D 8
+scc_describe_axis T 79
+scc_get_int_constant T 16f
+scc_get_key_name T 33
+scc_get_string_constant T 43
+scc_keycode_to_hw_scan T 2a
+scc_keycode_to_x11 T 2a

@@ -1,0 +1,22 @@
+ 0x000000000000000e (SONAME)             Library soname: [libscc-client.so]
+_sccc_lock T 182
+controller_data_free T 3b
+get_data_by_handle T 87
+get_data_by_id T 122
+mark_non_alive_foreach_cb T 9
+on_command T 339
+on_controller_event T 10a
+remove_nonalive T 12
+request_controller T 8c
+sccc_connect T 21d
+sccc_dealloc T 26
+sccc_get_controller_handle T c2
+sccc_get_controller_id T 16
+sccc_get_fd T 8
+sccc_get_response T fe
+sccc_parse T 1d4
+sccc_recieve T 190
+sccc_request T 16e
+sccc_unlock_all T 50
+sccc_unref T 2a
+store_response T bc

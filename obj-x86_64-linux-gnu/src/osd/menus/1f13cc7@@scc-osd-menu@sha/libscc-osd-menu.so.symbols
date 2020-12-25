@@ -1,0 +1,23 @@
+ 0x000000000000000e (SONAME)             Library soname: [libscc-osd-menu.so]
+None B 8
+__bss_start B
+_edata D
+_end B
+osd_menu_confirm T 28a
+osd_menu_connect T 17f
+osd_menu_get_menu_data T 1e
+osd_menu_get_plugin_data T 1e
+osd_menu_get_selected T 44
+osd_menu_get_type T 60
+osd_menu_load_plugin T 8e
+osd_menu_lock_inputs T 152
+osd_menu_new T 527
+osd_menu_next_item T d9
+osd_menu_parse_args T 62e
+osd_menu_parse_event T 416
+osd_menu_select T 2c8
+osd_menu_select_index T 3f
+osd_menu_set_client T cf
+osd_menu_set_plugin_data T 2b
+stick_controller_create T 3b
+stick_controller_feed T 58

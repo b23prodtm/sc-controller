@@ -1,0 +1,49 @@
+Build started at 2021-01-03T19:51:23.047500
+Main binary: /usr/bin/python3
+Build Options: 
+Python system: Linux
+The Meson build system
+Version: 0.53.2
+Source dir: /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/build
+Build dir: /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller
+Build type: native build
+Project name: scc
+Project version: 3.14
+No CFLAGS in the environment, not changing global flags.
+No LDFLAGS in the environment, not changing global flags.
+No CPPFLAGS in the environment, not changing global flags.
+Sanity testing C compiler: cc
+Is cross compiler: False.
+Sanity check compiler command line: cc /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/meson-private/sanitycheckc.c -o /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/meson-private/sanitycheckc.exe -pipe -D_FILE_OFFSET_BITS=64
+Sanity check compile stdout:
+
+-----
+Sanity check compile stderr:
+
+-----
+Running test binary command: /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/meson-private/sanitycheckc.exe
+C compiler for the build machine: cc (gcc 9.3.0 "cc (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0")
+C linker for the build machine: cc ld.bfd 2.34
+No CFLAGS in the environment, not changing global flags.
+No LDFLAGS in the environment, not changing global flags.
+No CPPFLAGS in the environment, not changing global flags.
+Sanity testing C compiler: cc
+Is cross compiler: False.
+Sanity check compiler command line: cc /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/meson-private/sanitycheckc.c -o /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/meson-private/sanitycheckc.exe -pipe -D_FILE_OFFSET_BITS=64
+Sanity check compile stdout:
+
+-----
+Sanity check compile stderr:
+
+-----
+Running test binary command: /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/meson-private/sanitycheckc.exe
+C compiler for the host machine: cc (gcc 9.3.0 "cc (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0")
+C linker for the host machine: cc ld.bfd 2.34
+Build machine cpu family: x86_64
+Build machine cpu: x86_64
+Host machine cpu family: x86_64
+Host machine cpu: x86_64
+Target machine cpu family: x86_64
+Target machine cpu: x86_64
+
+meson.build:14:16: ERROR: Tried to access unknown option "android".
