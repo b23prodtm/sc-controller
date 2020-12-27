@@ -123,9 +123,6 @@ class DeviceMonitor(Monitor):
 			node = os.path.join("/sys/bus/hid/devices/", fname)
 			try:
 				node_addr = DeviceMonitor._find_bt_address(node)
-				#Joe: somehow my node_addr is in lowercase
-				if node_addr is not None:
-					node_addr = str.upper(node_addr)
 			except IOError:
 				continue
 			if node_addr == addr:
@@ -157,7 +154,7 @@ class DeviceMonitor(Monitor):
 		enumerator = self._eudev.enumerate()
 		subsystem_to_vp_to_callback = {}
 		
-		for key, cb in self.dev_added_cbs.items():
+		for key, cb in list(self.dev_added_cbs.items()):
 			subsystem, vendor_id, product_id = key
 			enumerator.match_subsystem(subsystem)
 			if subsystem not in subsystem_to_vp_to_callback:

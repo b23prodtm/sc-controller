@@ -88,7 +88,7 @@ class Daemon(object):
 			# Check if PID coresponds to running daemon process and fail if yes
 			try:
 				assert os.path.exists("/proc")	# Just in case of BSD...
-				cmdline = open("/proc/%s/cmdline" % (pid,), "r").read().replace("\x00", " ").strip()
+				cmdline = file("/proc/%s/cmdline" % (pid,), "r").read().replace("\x00", " ").strip()
 				if sys.argv[0] in cmdline:
 					raise Exception("already running")
 			except IOError:
@@ -148,7 +148,7 @@ class Daemon(object):
 				if os.path.exists(self.pidfile):
 					os.remove(self.pidfile)
 			else:
-				print(str(err.args))
+				print((str(err.args)))
 				sys.exit(1)
 		syslog.syslog(syslog.LOG_INFO, '{}: stopped'.format(os.path.basename(sys.argv[0])))
 

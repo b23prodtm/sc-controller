@@ -2,10 +2,10 @@
 export PATH=${APPDIR}:${APPDIR}/usr/bin:$PATH
 export LD_LIBRARY_PATH=${APPDIR}/usr/lib:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=${APPDIR}/usr/lib64:$LD_LIBRARY_PATH
-export GI_TYPELIB_PATH=${APPDIR}/usr/lib/girepository-1.0
+export GI_TYPELIB_PATH=${APPDIR}/usr/lib/girepository-1.0:/usr/lib/girepository-1.0
 export GDK_PIXBUF_MODULEDIR=${APPDIR}/usr/lib/gdk-pixbuf-2.0/2.10.0/loaders
-export PYTHONPATH=${APPDIR}/usr/lib/python3.8/site-packages:$PYTHONPATH
-export PYTHONPATH=${APPDIR}/usr/lib64/python3.8/site-packages:$PYTHONPATH
+export PYTHONPATH=${APPDIR}/usr/lib/python2.7/site-packages:$PYTHONPATH
+export PYTHONPATH=${APPDIR}/usr/lib64/python2.7/site-packages:$PYTHONPATH
 export SCC_SHARED=${APPDIR}/usr/share/scc
 export PYTHON=${APPDIR}/usr/bin/python2
 
@@ -28,7 +28,7 @@ function run_and_die() {
 }
 
 # Check dependencies 1st
-python3 ${APPDIR}/usr/bin/scc dependency-check &>/tmp/scc.depcheck.$$.txt \
+python2 ${APPDIR}/usr/bin/scc dependency-check &>/tmp/scc.depcheck.$$.txt \
 	|| dependency_check_failed
 rm /tmp/scc.depcheck.$$.txt || true
 
@@ -47,6 +47,6 @@ fi
 # Start
 export GDK_PIXBUF_MODULE_FILE=${APPDIR}/../$$-gdk-pixbuf-loaders.cache
 gdk-pixbuf-query-loaders >"$GDK_PIXBUF_MODULE_FILE"
-python3 ${APPDIR}/usr/bin/scc $ARG1 $@
+python2 ${APPDIR}/usr/bin/scc $ARG1 $@
 rm "$GDK_PIXBUF_MODULE_FILE" &>/dev/null
 

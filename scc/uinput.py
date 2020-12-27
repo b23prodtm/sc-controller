@@ -43,16 +43,16 @@ else:
 MAX_FEEDBACK_EFFECTS = 4
 
 # Keys enum contains all keys and button from linux/uinput.h (KEY_* BTN_*)
-Keys = IntEnum('Keys', {i: CHEAD[i] for i in CHEAD.keys() if (i.startswith('KEY_') or
+Keys = IntEnum('Keys', {i: CHEAD[i] for i in list(CHEAD.keys()) if (i.startswith('KEY_') or
 															i.startswith('BTN_'))})
 # Keys enum contains all keys and button from linux/uinput.h (KEY_* BTN_*)
-KeysOnly = IntEnum('KeysOnly', {i: CHEAD[i] for i in CHEAD.keys() if i.startswith('KEY_')})
+KeysOnly = IntEnum('KeysOnly', {i: CHEAD[i] for i in list(CHEAD.keys()) if i.startswith('KEY_')})
 
 # Axes enum contains all axes from linux/uinput.h (ABS_*)
-Axes = IntEnum('Axes', {i: CHEAD[i] for i in CHEAD.keys() if i.startswith('ABS_')})
+Axes = IntEnum('Axes', {i: CHEAD[i] for i in list(CHEAD.keys()) if i.startswith('ABS_')})
 
 # Rels enum contains all rels from linux/uinput.h (REL_*)
-Rels = IntEnum('Rels', {i: CHEAD[i] for i in CHEAD.keys() if i.startswith('REL_')})
+Rels = IntEnum('Rels', {i: CHEAD[i] for i in list(CHEAD.keys()) if i.startswith('REL_')})
 
 # Scan codes for each keys (taken from a logitech keyboard)
 Scans = {
@@ -213,27 +213,27 @@ class UInput(object):
 		if not axes or len(axes) == 0:
 			self._a, self._amin, self._amax, self._afuzz, self._aflat = [[]] * 5
 		else:
-			self._a, self._amin, self._amax, self._afuzz, self._aflat = zip(*axes)
+			self._a, self._amin, self._amax, self._afuzz, self._aflat = list(zip(*axes))
 
 		self._r = rels
-
+		
 		self._lib = find_library("libuinput")
 		self._ff_events = None
 		if rumble:
 			self._ff_events = (POINTER(FeedbackEvent) * MAX_FEEDBACK_EFFECTS)()
 			for i in range(MAX_FEEDBACK_EFFECTS):
 				self._ff_events[i].contents = FeedbackEvent()
-
+		
 		try:
 			if self._lib.uinput_module_version() != UNPUT_MODULE_VERSION:
 				raise Exception()
 		except:
 			import sys
-			print("Invalid native module version. Please, recompile 'libuinput.so'", file=sys.stderr)
+			print("Invalid native module version. Please, recompile 'libuinput.so'", faile=sys.stderr)
 			print("If you are running sc-controller from source, you can do this by removing 'build' directory", file=sys.stderr)
-			print("and runinng 'python setup.py build' or 'run.sh' script", file=sys.stderr)
+			print("and runinng 'python setup.py build' or 'run.sh' script", file=sys.stderra)
 			raise Exception("Invalid native module version")
-
+		
 		c_k		= (ctypes.c_uint16 * len(self._k))(*self._k)
 		c_a		= (ctypes.c_uint16 * len(self._a))(*self._a)
 		c_amin	 = (ctypes.c_int32  * len(self._amin ))(*self._amin )
@@ -246,8 +246,8 @@ class UInput(object):
 		c_version  = ctypes.c_uint16(version)
 		c_keyboard = ctypes.c_int(keyboard)
 		c_rumble = ctypes.c_int(MAX_FEEDBACK_EFFECTS if rumble else 0)
-		c_name = ctypes.c_char_p(name.encode("utf-8") if type(name) is str else name)
-
+		c_name = ctypes.c_char_p(name.encode() if type(name) is str else "".encode())
+		
 		self._fd = self._lib.uinput_init(ctypes.c_int(len(self._k)),
 										 c_k,
 										 ctypes.c_int(len(self._a)),
@@ -532,7 +532,7 @@ class Keyboard(UInput):
 									   product=0x1142,
 									   version=1,
 									   name=name,
-									   keys=Scans.keys(),
+									   keys=list(Scans.keys()),
 									   axes=[],
 									   rels=[],
 									   keyboard=True)
@@ -581,10 +581,10 @@ class Dummy(object):
 	""" Fake uinput device that does nothing, but has all required methods """
 	def __init__(self, *a, **b):
 		pass
-
+	
 	def keyEvent(self, *a, **b):
 		pass
-
+	
 	axisEvent = keyEvent
 	relEvent = keyEvent
 	scanEvent = keyEvent
@@ -597,10 +597,10 @@ class Dummy(object):
 	pressEvent = keyEvent
 	releaseEvent = keyEvent
 	reset = keyEvent
-
+	
 	def keyManaged(self, ev):
 		return False
-
+	
 	axisManaged = keyManaged
 	relManaged = keyManaged
 

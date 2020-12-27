@@ -4,7 +4,7 @@ SC-Controller - App
 
 Main application window
 """
-from __future__ import unicode_literals
+
 from scc.tools import _, set_logging_level
 
 from gi.repository import Gtk, Gdk, Gio, GLib
@@ -30,7 +30,7 @@ from scc.profile import Profile
 from scc.config import Config
 
 import scc.osd.menu_generators
-import os, sys, platform, re, json, urllib, logging
+import os, sys, platform, re, json, urllib.request, urllib.parse, urllib.error, logging
 log = logging.getLogger("App")
 
 class App(Gtk.Application, UserDataManager, BindingEditor):
@@ -41,7 +41,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 	HILIGHT_COLOR = "#FF00FF00"		# ARGB
 	OBSERVE_COLOR = "#FF60A0FF"		# ARGB
 	CONFIG = "scc.config.json"
-	RELEASE_URL = "https://github.com/Ryochan7/sc-controller/releases/tag/v%s"
+	RELEASE_URL = "https://github.com/kozec/sc-controller/releases/tag/v%s"
 	OSD_MODE_PROF_NAME = ".scc-osd.profile_editor"
 	
 	def __init__(self, gladepath="/usr/share/scc",
@@ -52,7 +52,6 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 		UserDataManager.__init__(self)
 		BindingEditor.__init__(self, self)
 		# Setup Gtk.Application
-		self.convert_old_profiles()
 		self.setup_commandline()
 		# Setup DaemonManager
 		self.dm = DaemonManager()
@@ -251,11 +250,11 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 		# TODO: Maybe not best place to do this
 		try:
 			# Dynamic modules
-			rawlist = open("/proc/modules", "r").read().split("\n")
+			rawlist = file("/proc/modules", "r").read().split("\n")
 			kernel_mods = [ line.split(" ")[0] for line in rawlist ]
 			# Built-in modules
 			release = platform.uname()[2]
-			rawlist = open("/lib/modules/%s/modules.builtin" % release, "r").read().split("\n")
+			rawlist = file("/lib/modules/%s/modules.builtin" % release, "r").read().split("\n")
 			kernel_mods += [ os.path.split(x)[-1].split(".")[0] for x in rawlist ]
 		except Exception:
 			# Maybe running on BSD or Windows...
@@ -366,7 +365,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 	def hint(self, button):
 		""" As hilight, but marks GTK Button as well """
 		active = None
-		for b in self.button_widgets.values():
+		for b in list(self.button_widgets.values()):
 			if b.widget.get_sensitive():
 				b.widget.set_state(Gtk.StateType.NORMAL)
 				if b.name == button:
@@ -458,7 +457,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 		clp = Gtk.Clipboard.get_default(Gdk.Display.get_default())
 		text = clp.wait_for_text()
 		if text:
-			a = GuiActionParser().restart(text.decode('utf-8')).parse()
+			a = GuiActionParser().restart(str(text)).parse()
 			if not isinstance(a, InvalidAction):
 				self.on_action_chosen(self.context_menu_for, a)
 	
@@ -532,7 +531,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 			self.current.clear()
 		else:
 			self.current.is_template = False
-		self.new_profile(self.current, txNewProfile.get_text())
+		self.new_profile(self.current, str(txNewProfile.get_text()))
 		dlg.hide()
 	
 	
@@ -578,7 +577,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 		self.builder.get_object("txProfileFilename").set_text(giofile.get_path().decode("utf-8"))
 		self.builder.get_object("txProfileDescription").get_buffer().set_text(self.current.description)
 		self.builder.get_object("cbProfileIsTemplate").set_active(self.current.is_template)
-		for b in self.button_widgets.values():
+		for b in list(self.button_widgets.values()):
 			b.update()
 		self.recursing = False
 	
@@ -592,7 +591,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 	
 	def on_unknown_profile(self, ps, name):
 		log.warn("Daemon reported unknown profile: '%s'; Overriding.", name)
-		if self.current_file is not None and ps.get_controller() is not None:
+		if self.current_file is not None:
 			ps.get_controller().set_profile(self.current_file.get_path())
 	
 	
@@ -782,14 +781,12 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 		y = main_area.get_allocation().height - 5
 		w = self.builder.get_object("vbC")
 		allocation = w.get_allocation()
-		x = (self.background.get_allocation().width - allocation.width) / 2
+
+		if self.background:
+			x = (self.background.get_allocation().width - allocation.width) / 2
+		else:
+			x = 0
 		y -= allocation.height
-		
-		if self.background.get_config()['gui']["no_buttons_in_gui"]:
-			# no_buttons_in_gui is used to keep image without changes
-			# This moves "C" button away so it doesn't obscure it as well
-			y = 10
-		
 		if w.get_parent():
 			main_area.move(w, x, y)
 		else:
@@ -1040,7 +1037,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 		elif "LIBUSB_ERROR_ACCESS" in error:
 			msg += "\n" + _("You don't have access to controller device.")
 			msg += "\n\n" + ( _("Consult your distribution manual, try installing Steam package or <a href='%s'>install required udev rules manually</a>.") %
-					'https://wiki.archlinux.org/index.php/Gamepad#Steam_Controller_not_pairing' )
+					'https://wiki.archlinux.org/index.php/Gamepad#Steam_Controller_Not_Pairing' )
 			# TODO: Write howto somewhere instead of linking to ArchWiki
 		elif "LIBUSB_ERROR_BUSY" in error:
 			msg += "\n" + _("Another application (most likely Steam) is using the controller.")
@@ -1173,7 +1170,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 	
 	
 	def on_txRename_changed(self, tx):
-		name = tx.get_text()
+		name = str(tx.get_text())
 		btRenameProfile = self.builder.get_object("btRenameProfile")
 		btRenameProfile.set_sensitive(find_profile(name) is None)
 	
@@ -1182,7 +1179,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 		dlg = self.builder.get_object("dlgRenameProfile")
 		txRename = self.builder.get_object("txRename")
 		old_name = dlg._name
-		new_name = txRename.get_text()
+		new_name = str(txRename.get_text())
 		old_fname = os.path.join(get_profiles_path(), old_name + ".sccprofile")
 		new_fname = os.path.join(get_profiles_path(), new_name + ".sccprofile")
 		try:
@@ -1351,11 +1348,6 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 	
 	def do_activate(self, *a):
 		self.builder.get_object("window").show()
-		if (self.config['gui']['minimize_on_start'] and self.statusicon
-					and self.statusicon.get_property("active")):
-			self.builder.get_object("window").hide()
-		else:
-			self.builder.get_object("window").show()
 	
 	
 	def remove_dot_profile(self):
@@ -1422,7 +1414,6 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 		self.current.description = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
 		self.on_profile_modified()
 	
-	
 	def on_cbProfileIsTemplate_toggled(self, widget, *a):
 		if self.recursing: return
 		self.current.is_template = widget.get_active()
@@ -1437,7 +1428,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 			o = GLib.OptionEntry()
 			if short_name:
 				o.long_name = long_name
-				o.short_name = short_name
+				o.short_name = ord(short_name)
 			o.description = description
 			o.flags = flags
 			o.arg = arg
@@ -1445,9 +1436,9 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 		
 		self.connect('handle-local-options', self.do_local_options)
 		
-		aso("verbose",	b"v", "Be verbose")
-		aso("debug",	b"d", "Be more verbose (debug mode)")
-		aso("osd",		b"o", "OSD mode (OSD-controllable editor for current profile)")
+		aso("verbose","v", "Be verbose")
+		aso("debug","d", "Be more verbose (debug mode)")
+		aso("osd","o", "OSD mode (OSD-controllable editor for current profile)")
 	
 	
 	def save_profile_selection(self, path):
@@ -1496,16 +1487,16 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 		url = App.RELEASE_URL % (App.get_release(),)
 		log.debug("Loading release notes from '%s'", url)
 		f = Gio.File.new_for_uri(url)
-		buffer = b""
+		buffer = ""
 		
 		def stream_ready(stream, task, buffer):
 			try:
 				bytes = stream.read_bytes_finish(task)
 				if bytes.get_size() > 0:
-					buffer += bytes.get_data()
+					buffer += str(bytes.get_data())
 					stream.read_bytes_async(102400, 0, None, stream_ready, buffer)
 				else:
-					self.on_got_release_notes(buffer.decode("utf-8"))
+					self.on_got_release_notes(buffer)
 			except Exception as e:
 				log.warning("Failed to read release notes")
 				log.exception(e)
@@ -1596,7 +1587,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 						.replace("https://github.com/", "https://raw.githubusercontent.com/")
 						.replace("/blob/", "/")
 					)
-				name = urllib.unquote(".".join(uri.split("/")[-1].split(".")[0:-1]))
+				name = urllib.parse.unquote(".".join(uri.split("/")[-1].split(".")[0:-1]))
 				remote = Gio.File.new_for_uri(uri)
 				tmp, stream = Gio.File.new_tmp("%s.XXXXXX" % (name,))
 				stream.close()
@@ -1608,7 +1599,7 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 					# Failed. Just do nothing
 					return
 			if giofile.get_path():
-				path = giofile.get_path().decode("utf-8")
+				path = str(giofile.get_path())
 				filetype = Dialog.determine_type(path)
 				if filetype:
 					log.info("Importing '%s'..." % (filetype))

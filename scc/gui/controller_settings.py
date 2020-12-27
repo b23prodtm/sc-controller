@@ -4,7 +4,7 @@ SC-Controller - Global Settings
 
 Currently setups only one thing...
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from gi.repository import GLib, GdkPixbuf
@@ -149,7 +149,7 @@ class ControllerSettings(Editor, UserDataManager, ComboSetter):
 		
 		# Store data
 		cfg = self.app.config.get_controller_config(self.controller.get_id())
-		cfg["name"] = txName.get_text()
+		cfg["name"] = txName.get_text().decode("utf-8")
 		cfg["led_level"] = sclLED.get_value()
 		cfg["osd_alignment"] = 1 if cbAlignOSD.get_active() else 0
 		cfg["idle_timeout"] = sclIdleTimeout.get_value()

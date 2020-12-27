@@ -8,10 +8,10 @@ mapper.set_special_actions_handler() is called to do whatever action is supposed
 to do. If handler is not set, or doesn't have reqiuired method defined,
 action only prints warning to console.
 """
-from __future__ import unicode_literals
+
 
 from scc.constants import FE_STICK, FE_TRIGGER, FE_PAD, SCButtons
-from scc.constants import LEFT, RIGHT, STICK, SAME
+from scc.constants import LEFT, RIGHT, STICK, SCButtons, SAME
 from scc.constants import STICK_PAD_MAX, DEFAULT
 from scc.actions import Action, NoAction, SpecialAction, ButtonAction
 from scc.actions import HapticEnabledAction, OSDEnabledAction
@@ -48,7 +48,8 @@ class ChangeProfileAction(Action, SpecialAction):
 	
 	
 	def to_string(self, multiline=False, pad=0):
-		return (" " * pad) + "%s('%s')" % (self.COMMAND, self.profile)
+		return (" " * pad) + "%s('%s')" % (self.COMMAND,
+				self.profile.encode('utf-8').encode('string_escape'))
 	
 	
 	def button_release(self, mapper):
@@ -66,9 +67,9 @@ class ShellCommandAction(Action, SpecialAction):
 	SA = COMMAND = "shell"
 	
 	def __init__(self, command):
-		#if type(command) == str:
-		#	command = command.decode("unicode_escape")
-		#assert type(command) == unicode
+		if type(command) == str:
+			command = command.decode("unicode_escape")
+		assert type(command) == str
 		Action.__init__(self, command)
 		self.command = command
 	
@@ -83,12 +84,12 @@ class ShellCommandAction(Action, SpecialAction):
 	
 	
 	def to_string(self, multiline=False, pad=0):
-		return (" " * pad) + "%s('%s')" % (self.COMMAND, self.parameters[0])
+		return (" " * pad) + "%s('%s')" % (self.COMMAND, self.parameters[0].encode('unicode_escape'))
 	
 	
 	def button_press(self, mapper):
-		# Executes only when button is pressed
-		return self.execute(mapper)
+		# Execute only when button is pressed
+		self.execute(mapper)
 
 
 class TurnOffAction(Action, SpecialAction):
@@ -232,7 +233,7 @@ class OSDAction(Action, SpecialAction):
 		if self.action:
 			parameters.append(self.action.to_string(multiline=multiline, pad=pad))
 		else:
-			parameters.append("'%s'" % (str(self.text),))
+			parameters.append("'%s'" % (str(self.text).encode('string_escape'),))
 		return (" " * pad) + "%s(%s)" % (self.COMMAND, ",".join(parameters))
 	
 	
@@ -514,9 +515,9 @@ class DialogAction(Action, SpecialAction):
 		self.text = _("Dialog")
 		self.x, self.y = MenuAction.DEFAULT_POSITION
 		# First and 2nd parameter may be confirm and cancel button
-		if len(pars) > 0 and pars[0] in SCButtons.__members__.values():
+		if len(pars) > 0 and pars[0] in SCButtons:
 			self.confirm_with, pars = pars[0], pars[1:]
-			if len(pars) > 0 and pars[0] in SCButtons.__members__.values():
+			if len(pars) > 0 and pars[0] in SCButtons:
 				self.cancel_with, pars = pars[0], pars[1:]
 		# 1st always present argument is title
 		if len(pars) > 0:
@@ -536,7 +537,7 @@ class DialogAction(Action, SpecialAction):
 			rv += "%s, " % (nameof(self.confirm_with),)
 			if self.cancel_with != DEFAULT:
 				rv += "%s, " % (nameof(self.cancel_with),)
-		rv += "'%s', " % (self.text,)
+		rv += "'%s', " % (self.text.encode('string_escape'),)
 		if multiline:
 			rv += "\n%s" % (" " * (pad + 2))
 		for option in self.options:
@@ -649,7 +650,7 @@ class GesturesAction(Action, OSDEnabledAction, SpecialAction):
 			stuff = stuff[1:]
 		
 		for i in stuff:
-			if gstr is None and type(i) == str:
+			if gstr is None and type(i) in (str, str):
 				gstr = i
 			elif gstr is not None and isinstance(i, Action):
 				self.gestures[gstr] = i
@@ -727,7 +728,7 @@ class GesturesAction(Action, OSDEnabledAction, SpecialAction):
 	def _find_best_match_gesture(self, gesture_string):
 		NUM_MATCHES_TO_RETURN = 1
 	
-		similar_gestures = get_close_matches(gesture_string, self.gestures.keys(), NUM_MATCHES_TO_RETURN, self.precision)
+		similar_gestures = get_close_matches(gesture_string, list(self.gestures.keys()), NUM_MATCHES_TO_RETURN, self.precision)
 		best_gesture = next(iter(similar_gestures), None)
 
 		if best_gesture is not None:
@@ -754,22 +755,5 @@ class GesturesAction(Action, OSDEnabledAction, SpecialAction):
 			self.execute(mapper, x, y, what)
 
 
-class CemuHookAction(Action, SpecialAction):
-	SA = COMMAND = "cemuhook"
-	MAGIC_GYRO = (2000.0 / 32768.0)
-	
-	def gyro(self, mapper, *pyr):
-		sa_data = (
-			pyr[0] * CemuHookAction.MAGIC_GYRO,
-			-pyr[1] * CemuHookAction.MAGIC_GYRO,
-			-pyr[2] * CemuHookAction.MAGIC_GYRO,
-		)
-		self.execute(mapper, sa_data)
-	
-	def describe(self, context):
-		if self.name: return self.name
-		return _("CemuHook")
-
 # Register actions from current module
 Action.register_all(sys.modules[__name__])
-

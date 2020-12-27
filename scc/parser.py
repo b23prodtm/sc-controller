@@ -5,7 +5,7 @@ SC Controller - ActionParser
 Parses action(s) expressed as string or in dict loaded from json file into
 one or more Action instances.
 """
-from __future__ import unicode_literals
+
 from tokenize import generate_tokens, TokenError
 from collections import namedtuple
 
@@ -193,8 +193,7 @@ class ActionParser(object):
 			return self._parse_number()
 		
 		if t.type == TokenType.STRING:
-			#return t.value[1:-1].decode('unicode_escape')
-			return t.value[1:-1]
+			return str(t.value[1:-1])
 		
 		raise ParseError("Expected parameter, got '%s'" % (t.value,))
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 """
 SC Controller - Steam Controller Wireless Receiver (aka Dongle) Driver
 
@@ -8,7 +8,7 @@ Handles one or multiple controllers connected to dongle.
 
 from scc.lib import IntEnum
 from scc.drivers.usb import USBDevice, register_hotplug_device
-from scc.constants import SCButtons, STICKTILT
+from scc.constants import SCButtons
 from scc.controller import Controller
 from scc.config import Config
 from collections import namedtuple
@@ -45,11 +45,10 @@ INPUT_FORMAT = [
 	('h',   'q3'),
 	('h',   'q4'),
 	('16x', 'ukn_07')]
-FORMATS, NAMES = zip(*INPUT_FORMAT)
+FORMATS, NAMES = list(zip(*INPUT_FORMAT))
 TUP_FORMAT = '<' + ''.join(FORMATS)
 ControllerInput = namedtuple('ControllerInput', ' '.join([ x for x in NAMES if not x.startswith('ukn_') ]))
 SCI_NULL = ControllerInput._make(struct.unpack('<' + ''.join(FORMATS), b'\x00' * 64))
-STICKPRESS = 0b1000000000000000000000000000000
 
 
 log = logging.getLogger("SCDongle")
@@ -81,7 +80,7 @@ class Dongle(USBDevice):
 	
 	def close(self):
 		# Called when dongle is removed
-		for c in self._controllers.values():
+		for c in list(self._controllers.values()):
 			self.daemon.remove_controller(c)
 		self._controllers = {}
 		USBDevice.close(self)
@@ -103,7 +102,7 @@ class Dongle(USBDevice):
 		tup = ControllerInput._make(struct.unpack(TUP_FORMAT, data))
 		if tup.status == SCStatus.HOTPLUG:
 			# Most of INPUT_FORMAT doesn't apply here
-			if ord(str(data[4])) == 2:
+			if ord(data[4]) == 2:
 				# Controller connected
 				if endpoint not in self._controllers:
 					self._add_controller(endpoint)
@@ -187,11 +186,6 @@ class SCController(Controller):
 	def input(self, idata):
 		old_state, self._old_state = self._old_state, idata
 		if self.mapper:
-			#if idata.buttons & SCButtons.LPAD:
-			#	# STICKPRESS button may signalize pressing stick instead
-			#	if (idata.buttons & STICKPRESS) and not (idata.buttons & STICKTILT):
-			#		idata = ControllerInput.replace(buttons=idata.buttons & ~SCButtons.LPAD)
-			
 			if self._input_rotation_l:
 				lx, ly = idata.lpad_x, idata.lpad_y
 				if idata.buttons & SCButtons.LPADTOUCH:
@@ -243,7 +237,7 @@ class SCController(Controller):
 		def cb(rawserial):
 			size, serial = struct.unpack(">xBx12s49x", rawserial)
 			if size > 1:
-				serial = serial.strip(b" \x00").decode('ASCII')
+				serial = serial.strip(" \x00")
 				self._serial = serial
 				self.on_serial_got()
 			else:
@@ -342,7 +336,7 @@ class SCController(Controller):
 			SCPacketType.CONFIGURE,
 			SCPacketLength.LED,
 			SCConfigType.LED,
-			int(self._led_level)
+			self._led_level
 		))
 	
 	
@@ -382,14 +376,12 @@ class SCController(Controller):
 	def _feedback(self, position, amplitude=128, period=0, count=1):
 		"""
 		Add haptic feedback to be send on next usb tick
-		
-		@param int position		haptic to use 1 for left 0 for right
+
+		@param int position	 haptic to use 1 for left 0 for right
 		@param int amplitude	signal amplitude from 0 to 65535
-		@param int period		signal period from 0 to 65535
+		@param int period	   signal period from 0 to 65535
 		@param int count		number of period to play
 		"""
-		if amplitude >= 0:
-			self._driver.send_control(self._ccidx, struct.pack('<BBBHHH',
-					SCPacketType.FEEDBACK, 0x07, position,
-					amplitude, period, count))	
-
+		self._driver.send_control(self._ccidx, struct.pack('<BBBHHH',
+				SCPacketType.FEEDBACK, 0x07, position,
+				amplitude, period, count))	

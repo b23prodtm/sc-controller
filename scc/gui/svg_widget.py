@@ -5,19 +5,14 @@ SC-Controller - Background
 Changes SVG on the fly and uptates that magnificent image on background with it.
 Also supports clicking on areas defined in SVG image.
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from gi.repository import Gtk, Gdk, GObject, GdkPixbuf, Rsvg
-#from xml.etree import ElementTree as ET
+from xml.etree import ElementTree as ET
 from math import sin, cos, pi as PI
 from collections import OrderedDict
 import os, sys, re, logging
-import importlib
-
-sys.modules.pop('xml.etree.ElementTree', None)
-sys.modules['_elementtree'] = None
-ET = importlib.import_module('xml.etree.ElementTree')
 
 log = logging.getLogger("Background")
 ET.register_namespace('', "http://www.w3.org/2000/svg")
@@ -58,20 +53,23 @@ class SVGWidget(Gtk.EventBox):
 	
 	
 	def set_image(self, filename):
-		self.current_svg = open(filename, "r").read()
 		self.cache = OrderedDict()
 		self.areas = []
-		self.parse_image()
-	
-	
-	def parse_image(self):
+		try:
+			tree = ET.parse(filename)
+			self.current_svg = ET.tostring(tree)
+			self.parse_image(tree)
+		except Exception as e:
+			print("SVGEditor file %s is invalid" % (filename))
+
+
+	def parse_image(self, tree):
 		"""
 		Goes trought SVG image, searches for all rects named
 		'AREA_SOMETHING' and generates area list from it.
 		This area list is later used to determine over which button is mouse
 		hovering.
 		"""
-		tree = ET.fromstring(self.current_svg.encode("utf-8"))
 		SVGWidget.find_areas(tree, None, self.areas)
 		self.image_width =  float(tree.attrib["width"])
 		self.image_height = float(tree.attrib["height"])
@@ -125,7 +123,7 @@ class SVGWidget(Gtk.EventBox):
 		if prefix == "AREA_":
 			return self.areas
 		lst = []
-		tree = ET.fromstring(self.current_svg.encode("utf-8"))
+		tree = ET.fromstring(self.current_svg)
 		SVGWidget.find_areas(tree, None, lst, prefix=prefix)
 		return lst
 	
@@ -170,8 +168,8 @@ class SVGWidget(Gtk.EventBox):
 		Returns x, y, width and height of rect element relative to document root.
 		element can be specified by it's id.
 		"""
-		if type(element) == str:
-			tree = ET.fromstring(self.current_svg.encode("utf-8"))
+		if type(element) in (str, str):
+			tree = ET.fromstring(self.current_svg)
 			SVGEditor.update_parents(tree)
 			element = SVGEditor.get_element(tree, element)
 		width, height = 0, 0
@@ -202,11 +200,11 @@ class SVGWidget(Gtk.EventBox):
 			# 200 images by hand;
 			if len(buttons) == 0:
 				# Quick way out - changes are not needed
-				tmp = self.current_svg.encode('utf-8') if type(self.current_svg) == str else self.current_svg
-				svg = Rsvg.Handle.new_from_data(tmp)
+				svg = Rsvg.Handle.new_from_data(str(self.current_svg).encode())
 			else:
 				# 1st, parse source as XML
-				tree = ET.fromstring(self.current_svg)
+				tree = ET.fromstring(self.
+current_svg)
 				# 2nd, change colors of some elements
 				for button in buttons:
 					el = SVGEditor.find_by_id(tree, button)
@@ -278,12 +276,12 @@ class SVGEditor(object):
 		if type(svgw) == str:
 			self._svgw = None
 			self._tree = ET.fromstring(svgw)
-		#elif type(svgw) == unicode:
-		#	self._svgw = None
-		#	self._tree = ET.fromstring(svgw.encode("utf-8"))
+		elif type(svgw) == str:
+			self._svgw = None
+			self._tree = ET.fromstring(svgw)
 		else:
 			self._svgw = svgw
-			self._tree = ET.fromstring(svgw.current_svg.encode("utf-8"))
+			self._tree = ET.fromstring(svgw.current_svg)
 	
 	
 	def commit(self):
@@ -341,7 +339,7 @@ class SVGEditor(object):
 		Returns self.
 		"""
 		
-		if type(e) == str:
+		if type(e) in (str, str):
 			e = SVGEditor.get_element(self, e)
 		if e is not None:
 			e.parent.remove(e)
@@ -381,10 +379,11 @@ class SVGEditor(object):
 			tree = tree._tree
 		def add_parent(parent):
 			for child in parent:
-				child.parent = parent
+				if hasattr(child, "parent"):
+					child.parent = parent
 				add_parent(child)
 		add_parent(tree)
-		if not hasattr(tree, "parent"):
+		if hasattr(tree, "parent"):
 			tree.parent = None
 	
 	
@@ -562,7 +561,7 @@ class SVGEditor(object):
 		if isinstance(elm_or_matrix, ET.Element):
 			elm = elm_or_matrix
 			matrix = SVGEditor.parse_transform(elm)
-			parent = elm.parent
+			parent = elm.parent if hasattr(elm, "parent") else None
 			while parent is not None:
 				matrix = SVGEditor.matrixmul(matrix, SVGEditor.parse_transform(parent))
 				parent = parent.parent

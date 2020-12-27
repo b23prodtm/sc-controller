@@ -6,16 +6,15 @@ Modifier is Action that just sits between input and actual action, changing
 way how resulting action works.
 For example, click() modifier executes action only if pad is pressed.
 """
-from __future__ import unicode_literals
+
 
 from scc.actions import Action, MouseAction, XYAction, AxisAction, RangeOP
 from scc.actions import NoAction, WholeHapticAction, HapticEnabledAction
 from scc.actions import GyroAbsAction
 from scc.constants import STICK_PAD_MIN, STICK_PAD_MAX, STICK_PAD_MAX_HALF
+from scc.constants import FE_PAD, SCButtons, HapticPos, ControllerFlags
 from scc.constants import CUT, ROUND, LINEAR, MINIMUM, FE_STICK, FE_TRIGGER
 from scc.constants import TRIGGER_MAX, LEFT, CPAD, RIGHT, STICK
-from scc.constants import FE_PAD, SCButtons, STICKTILT
-from scc.constants import HapticPos, ControllerFlags
 from scc.tools import nameof, clamp, quat2euler
 from scc.controller import HapticData
 from scc.uinput import Axes, Rels
@@ -23,7 +22,6 @@ from math import pi as PI, sqrt, copysign, atan2, sin, cos
 from collections import OrderedDict, deque
 
 import time, logging, inspect
-import itertools
 log = logging.getLogger("Modifiers")
 _ = lambda x : x
 
@@ -95,7 +93,7 @@ class Modifier(Action):
 		Overrides Action.strip_defaults; Uses defaults from _mod_init instead
 		of __init__, but does NOT include last of original parameters - action.
 		"""
-		argspec = inspect.getfullargspec(self.__class__._mod_init)
+		argspec = inspect.getargspec(self.__class__._mod_init)
 		required_count = len(argspec.args) - len(argspec.defaults) - 1
 		l = list(self.parameters[0:-1])
 		d = list(argspec.defaults)[0:len(l)]
@@ -174,19 +172,19 @@ class NameModifier(Modifier):
 class ClickModifier(Modifier):
 	# TODO: Rename to 'clicked'
 	COMMAND = "click"
-	
+
 	@staticmethod
 	def decode(data, a, *b):
 		return ClickModifier(a)
-	
-	
+
+
 	def describe(self, context):
 		if context in (Action.AC_STICK, Action.AC_PAD):
 			return _("(if pressed)") + "\n" + self.action.describe(context)
 		else:
 			return _("(if pressed)") + " " + self.action.describe(context)
-	
-	
+
+
 	def to_string(self, multiline=False, pad=0):
 		if multiline:
 			childstr = self.action.to_string(True, pad + 2)
@@ -201,28 +199,28 @@ class ClickModifier(Modifier):
 			self.COMMAND,
 			self.action.to_string()
 		)
-	
-	
+
+
 	def strip(self):
 		return self.action.strip()
-	
-	
+
+
 	def compress(self):
 		self.action = self.action.compress()
 		return self
-	
-	
+
+
 	# For button press & co it's safe to assume that they are being pressed...
 	def button_press(self, mapper):
 		return self.action.button_press(mapper)
-	
+
 	def button_release(self, mapper):
 		return self.action.button_release(mapper)
-	
+
 	def trigger(self, mapper, position, old_position):
 		return self.action.trigger(mapper, position, old_position)
-	
-	
+
+
 	def axis(self, mapper, position, what):
 		if what in (STICK, LEFT) and mapper.is_pressed(SCButtons.LPAD):
 			if what == STICK: mapper.force_event.add(FE_STICK)
@@ -241,8 +239,8 @@ class ClickModifier(Modifier):
 		elif mapper.was_pressed(SCButtons.RPAD):
 			# what == RIGHT, last option, Just released
 			return self.action.axis(mapper, 0, what)
-	
-	
+
+
 	def pad(self, mapper, position, what):
 		if what == LEFT and mapper.is_pressed(SCButtons.LPAD):
 			if what == STICK: mapper.force_event.add(FE_STICK)
@@ -261,14 +259,13 @@ class ClickModifier(Modifier):
 		elif mapper.was_pressed(SCButtons.RPAD):
 			# what == RIGHT, there are only two options, Just released
 			return self.action.pad(mapper, 0, what)
-	
-	
+
+
 	def whole(self, mapper, x, y, what):
 		if what in (STICK, LEFT) and mapper.is_pressed(SCButtons.LPAD):
 			if what == STICK: mapper.force_event.add(FE_STICK)
 			return self.action.whole(mapper, x, y, what)
-		elif (what in (STICK, LEFT) and (mapper.was_pressed(SCButtons.LPAD)
-					or mapper.was_pressed(STICKTILT))):
+		elif what in (STICK, LEFT) and mapper.was_pressed(SCButtons.LPAD):
 			# Just released
 			return self.action.whole(mapper, 0, 0, what)
 		elif what == RIGHT and mapper.is_pressed(SCButtons.RPAD):
@@ -542,7 +539,7 @@ class BallModifier(Modifier, WholeHapticAction):
 	
 	def change(self, mapper, dx, dy, what):
 		if what in (None, STICK) or (mapper.controller_flags() & ControllerFlags.HAS_RSTICK and what == RIGHT):
-			return self.action.change(mapper, dx, dy, what)
+			return self.action.change(mapper, x, y, what)
 		if mapper.is_touched(what):
 			if mapper.was_touched(what):
 				t = time.time()
@@ -613,7 +610,7 @@ class DeadzoneModifier(Modifier):
 	
 	def _mod_init(self, *params):
 		if len(params) < 1: raise TypeError("Not enough parameters")
-		if type(params[0]) is str:
+		if type(params[0]) in (str, str):
 			self.mode = params[0]
 			if hasattr(self, "mode_" + self.mode):
 				self._convert = getattr(self, "mode_" + self.mode)
@@ -794,8 +791,6 @@ class ModeModifier(Modifier):
 	PROFILE_KEY_PRIORITY = 2
 	
 	def __init__(self, *stuff):
-		# TODO: Better documentation for this. For now, using shell
-		# TODO: and range as condition is not documented
 		Modifier.__init__(self)
 		self.default = None
 		self.mods = OrderedDict()
@@ -803,57 +798,41 @@ class ModeModifier(Modifier):
 		self.held_sticks = set()
 		self.held_triggers = {}
 		self.old_action = None
-		self.shell_commands = {}
-		self.shell_timeout = 0.5
 		self.timeout = DoubleclickModifier.DEAFAULT_TIMEOUT
 		
-		# ShellCommandAction cannot be imported normally, it would create
-		# import cycle of hell
-		ShellCommandAction = Action.ALL['shell']
 		button = None
 		for i in stuff:
 			if self.default is not None:
 				# Default has to be last parameter
 				raise ValueError("Invalid parameters for 'mode'")
-			if isinstance(i, ShellCommandAction) and button is None:
-				# 'shell' can be used instead of button
-				button = i
-			elif isinstance(i, Action) and button is None:	
+			if isinstance(i, Action) and button is None:
 				self.default = i
 			elif isinstance(i, Action):
 				self.mods[button] = i
 				button = None
-			elif isinstance(i, RangeOP) or i in SCButtons.__members__.values():
+			elif isinstance(i, RangeOP) or i in SCButtons:
 				button = i
 			else:
 				raise ValueError("Invalid parameter for 'mode': %s" % (i,))
 		self.make_checks()
 		if self.default is None:
-			if isinstance(button, ShellCommandAction):
-				self.default = button
-			else:
-				self.default = NoAction()
+			self.default = NoAction()
 	
 	
 	def make_checks(self):
 		self.checks = []
-		self.shell_commands = {}
-		ShellCommandAction = Action.ALL['shell']
-		for c, action in self.mods.items():
-			if isinstance(c, RangeOP):
-				self.checks.append(( c, action ))
-			elif isinstance(c, ShellCommandAction):
-				self.shell_commands[c.command] = c
-				self.checks.append(( self.make_shell_check(c), action ))
+		for button, action in list(self.mods.items()):
+			if isinstance(button, RangeOP):
+				self.checks.append(( button, action ))
 			else:
-				self.checks.append(( self.make_button_check(c), action ))
+				self.checks.append(( self.make_button_check(button), action ))
 	
 	
 	def get_child_actions(self):
-		rv = list(self.mods.values()) + list(self.shell_commands.values())
-		if self.default is not None:
-			rv += [ self.default ]
-		return rv
+		if self.default is None:
+			return list(self.mods.values())
+		else:
+			return [ self.default ] + list(self.mods.values())
 	
 	
 	@staticmethod
@@ -872,7 +851,7 @@ class ModeModifier(Modifier):
 	
 	def get_compatible_modifiers(self):
 		rv = 0
-		for action in self.mods.values():
+		for action in list(self.mods.values()):
 			rv |= action.get_compatible_modifiers()
 		if self.default:
 			rv |= self.default.get_compatible_modifiers()
@@ -884,7 +863,7 @@ class ModeModifier(Modifier):
 		if self.default:
 			return self.default.strip()
 		if len(self.mods):
-			return next(itertools.islice(self.mods.values(), 0, 1)).strip()
+			return list(self.mods.values())[0].strip()
 		# Empty ModeModifier
 		return NoAction()
 	
@@ -948,7 +927,7 @@ class ModeModifier(Modifier):
 	
 	
 	def cancel(self, mapper):
-		for action in self.mods.values():
+		for action in list(self.mods.values()):
 			action.cancel(mapper)
 		self.default.cancel(mapper)
 	
@@ -982,62 +961,10 @@ class ModeModifier(Modifier):
 		return cb
 	
 	
-	@staticmethod
-	def make_shell_check(c):
-		def cb(mapper):
-			try:
-				return c.__proc.poll() == 0
-			except:
-				return False
-		
-		c.name = cb.name = c.to_string()	# So nameof() still works on keys in self.mods
-		c.__proc = None
-		return cb
-	
-	
 	def button_press(self, mapper):
-		if len(self.shell_commands) > 0:
-			# https://github.com/kozec/sc-controller/issues/427
-			# If 'shell' is used as any condition, all shell commands
-			# are executed and ModeShift waits up to 500ms for them
-			# to terminate. Then, if command returned zero exit code
-			# it's considered as 'true' condition.
-			for c in self.shell_commands.values():
-				c.__proc = c.button_press(mapper)
-			self.shell_timeout = 0.5
-			mapper.schedule(0, self.check_shell_commands)
-			return
-		
 		sel = self.select(mapper)
 		self.held_buttons.add(sel)
 		return sel.button_press(mapper)
-	
-	
-	def check_shell_commands(self, mapper):
-		for c in self.shell_commands.values():
-			if c.__proc and c.__proc.poll() == 0:
-				sel = self.select(mapper)
-				self.kill_shell_commands()
-				self.held_buttons.add(sel)
-				return sel.button_press(mapper)
-		
-		self.shell_timeout -= 0.05
-		if self.shell_timeout > 0:
-			mapper.schedule(0.05, self.check_shell_commands)
-		else:
-			# time is up, kill all processes and execute what's left
-			self.kill_shell_commands()
-			sel = self.select(mapper)
-			self.held_buttons.add(sel)
-			return sel.button_press(mapper)
-	
-	
-	def kill_shell_commands(self):
-		for c in self.shell_commands.values():
-			try:
-				if c.__proc: c.__proc.kill()
-			except: pass
-			c.__proc = None
 	
 	
 	def button_release(self, mapper):
@@ -1553,7 +1480,7 @@ class CircularModifier(Modifier, HapticEnabledAction):
 	
 	def __init__(self, *params):
 		# Piece of backwards compatibility
-		if len(params) >= 1 and params[0] in Rels.__members__.values():
+		if len(params) >= 1 and params[0] in Rels:
 			params = [ MouseAction(params[0]) ]
 		self._haptic_counter = 0
 		Modifier.__init__(self, *params)

@@ -4,7 +4,7 @@ SC-Controller - OSD Menu
 
 Display menu that user can navigate through and prints chosen item id to stdout
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from gi.repository import Gtk, GLib, Gio, Gdk, GdkX11, GdkPixbuf
@@ -67,7 +67,6 @@ class Menu(OSDWindow):
 		self._use_cursor = False
 		self._eh_ids = []
 		self._control_with = STICK
-		self._control_with_dpad = False
 		self._confirm_with = 'A'
 		self._cancel_with = 'B'
 	
@@ -314,8 +313,6 @@ class Menu(OSDWindow):
 	
 	
 	def _check_on_screen_position(self, quick=False):
-		if self.using_wlroots:
-			return
 		x, y = Menu._get_on_screen_position(self._selected.widget)
 		try:
 			m = self.get_window().get_display().get_monitor_at_window(self.get_window())
@@ -384,27 +381,26 @@ class Menu(OSDWindow):
 	
 	def use_controller(self, controller):
 		ccfg = self.config.get_controller_config(controller.get_id())
-		self._control_with = getattr(self.args, "control_with", DEFAULT)
-		self._cancel_with = getattr(self.args, "cancel_with", DEFAULT)
-		if self._control_with == DEFAULT: self._control_with = ccfg["menu_control"]
-		if self._cancel_with == DEFAULT: self._cancel_with = ccfg["menu_cancel"]
+		self._control_with = ccfg["menu_control"] if self.args.control_with == DEFAULT else self.args.control_with
+		self._cancel_with = ccfg["menu_cancel"] if self.args.cancel_with == DEFAULT else self.args.cancel_with
 		
-		self._confirm_with = getattr(self.args, "confirm_with", DEFAULT)
-		if self._confirm_with == DEFAULT:
+		if self.args.confirm_with == DEFAULT:
 			self._confirm_with = ccfg["menu_confirm"]
-		elif self._confirm_with == SAME:
+		elif self.args.confirm_with == SAME:
 			if self._control_with == RIGHT:
 				self._confirm_with = SCButtons.RPADTOUCH.name
 			else:
 				self._confirm_with = SCButtons.LPADTOUCH.name
+		else:
+			self._confirm_with = self.args.confirm_with
 		
-		if getattr(self.args, "use_cursor", False):
+		if self.args.use_cursor:
 			# As special case, using LEFT pad on controller with
 			# actual DPAD should not display cursor
 			if self._control_with != LEFT or (controller.get_flags() & ControllerFlags.HAS_DPAD) == 0:
 				self.enable_cursor()
 		
-		if getattr(self.args, "feedback_amplitude", None):
+		if self.args.feedback_amplitude:
 			side = "LEFT"
 			if self._control_with == "RIGHT":
 				side = "RIGHT"
@@ -417,10 +413,6 @@ class Menu(OSDWindow):
 		def success(*a):
 			log.error("Sucessfully locked input")
 		locks = [ self._control_with, self._confirm_with, self._cancel_with ]
-		if self._control_with == "STICK":
-			if self.controller.get_flags() & ControllerFlags.HAS_DPAD != 0:
-				self._control_with_dpad = True
-				locks += [ "LEFT" ]
 		self.controller.lock(success, self.on_failed_to_lock, *locks)
 	
 	
@@ -522,7 +514,7 @@ class Menu(OSDWindow):
 	def on_event(self, daemon, what, data):
 		if self._submenu:
 			return self._submenu.on_event(daemon, what, data)
-		if what == self._control_with or what == "LEFT" and self._control_with_dpad:
+		if what == self._control_with:
 			x, y = data
 			if self._use_cursor:
 				# Special case, both confirm_with and cancel_with
@@ -546,6 +538,9 @@ class Menu(OSDWindow):
 						self.select(self.items.index(i))
 			else:
 				self._scon.set_stick(x, y)
+		elif what == self._cancel_with:
+			if data[0] == 0:	# Button released
+				self.quit(-1)
 		elif what == self._confirm_with:
 			if data[0] == 0:	# Button released
 				if self._selected and self._selected.callback:
@@ -554,9 +549,6 @@ class Menu(OSDWindow):
 					self.quit(0)
 				else:
 					self.quit(-1)
-		elif what == self._cancel_with:
-			if data[0] == 0:	# Button released
-				self.quit(-1)
 	
 	
 class MenuIcon(Gtk.DrawingArea):

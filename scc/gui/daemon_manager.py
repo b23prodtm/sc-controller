@@ -8,7 +8,7 @@ I'd call it DaemonController normally, but having something with
 full name of "Steam Controller Controller Daemon Controller" sounds
 probably too crazy even for me.
 """
-from __future__ import unicode_literals
+
 
 from scc.tools import find_binary, find_button_image, nameof
 from scc.paths import get_daemon_socket
@@ -60,15 +60,15 @@ class DaemonManager(GObject.GObject):
 	"""
 	
 	__gsignals__ = {
-			"alive"					: (GObject.SignalFlags.RUN_FIRST, None, ()),
-			"controller-count-changed"	: (GObject.SignalFlags.RUN_FIRST, None, (int,)),
-			"dead"						: (GObject.SignalFlags.RUN_FIRST, None, ()),
-			"error"					: (GObject.SignalFlags.RUN_FIRST, None, (object,)),
-			"event"					: (GObject.SignalFlags.RUN_FIRST, None, (object,object,object)),
-			"profile-changed"			: (GObject.SignalFlags.RUN_FIRST, None, (object,)),
-			"reconfigured"				: (GObject.SignalFlags.RUN_FIRST, None, ()),
-			"unknown-msg"				: (GObject.SignalFlags.RUN_FIRST, None, (object,)),
-			"version"					: (GObject.SignalFlags.RUN_FIRST, None, (object,)),
+		"alive"					: (GObject.SignalFlags.RUN_FIRST, None, ()),
+		"controller-count-changed"	: (GObject.SignalFlags.RUN_FIRST, None, (int,)),
+		"dead"						: (GObject.SignalFlags.RUN_FIRST, None, ()),
+		"error"					: (GObject.SignalFlags.RUN_FIRST, None, (object,)),
+		"event"					: (GObject.SignalFlags.RUN_FIRST, None, (object,object,object)),
+		"profile-changed"			: (GObject.SignalFlags.RUN_FIRST, None, (object,)),
+		"reconfigured"				: (GObject.SignalFlags.RUN_FIRST, None, ()),
+		"unknown-msg"				: (GObject.SignalFlags.RUN_FIRST, None, (object,)),
+		"version"					: (GObject.SignalFlags.RUN_FIRST, None, (object,)),
 	}
 	
 	RECONNECT_INTERVAL = 5
@@ -78,7 +78,7 @@ class DaemonManager(GObject.GObject):
 		self.alive = None
 		self.connection = None
 		self.connecting = False
-		self.buffer = b""
+		self.buffer = ""
 		self._connect()
 		self._requests = []
 		self._controllers = []			# Ordered as daemon says
@@ -149,7 +149,7 @@ class DaemonManager(GObject.GObject):
 		except Exception as e:
 			self._on_daemon_died()
 			return
-		self.buffer = b""
+		self.buffer = ""
 		self.connection.get_input_stream().read_bytes_async(102400,
 			1, None, self._on_read_data)
 	
@@ -164,15 +164,14 @@ class DaemonManager(GObject.GObject):
 			# Broken sonnection, daemon was probbaly terminated
 			self._on_daemon_died()
 			return
-		data = response.get_data()
+		data = response.get_data().decode("utf-8")
 		if len(data) == 0:
 			# Connection terminated
 			self._on_daemon_died()
 			return
 		self.buffer += data
-		while b"\n" in self.buffer:
-			line, self.buffer = self.buffer.split(b"\n", 1)
-			line = line.decode("utf-8")
+		while "\n" in self.buffer:
+			line, self.buffer = self.buffer.split("\n", 1)
 			if line.startswith("Version:"):
 				version = line.split(":", 1)[-1].strip()
 				log.debug("Connected to daemon, version %s", version)
@@ -253,10 +252,9 @@ class DaemonManager(GObject.GObject):
 		Creates request and remembers callback for next 'Ok' or 'Fail' message.
 		"""
 		if self.alive and self.connection is not None:
-			tmp = message if type(message) == bytes else bytes(message, "utf-8")
 			self._requests.append(( success_cb, error_cb ))
 			(self.connection.get_output_stream()
-				.write_all(tmp + b'\n', None))
+				.write_all(message.encode('utf-8') + b'\n', None))
 		else:
 			# Instant failure
 			error_cb("Not connected.")
@@ -338,9 +336,9 @@ class ControllerManager(GObject.GObject):
 	"""
 	
 	__gsignals__ = {
-			"event"			: (GObject.SignalFlags.RUN_FIRST, None, (object,object)),
-			"lost"				: (GObject.SignalFlags.RUN_FIRST, None, ()),
-			"profile-changed"	: (GObject.SignalFlags.RUN_FIRST, None, (object,)),
+		"event"			: (GObject.SignalFlags.RUN_FIRST, None, (object,object)),
+		"lost"				: (GObject.SignalFlags.RUN_FIRST, None, ()),
+		"profile-changed"	: (GObject.SignalFlags.RUN_FIRST, None, (object,)),
 	}
 	
 	DEFAULT_ICONS = [ "A", "B", "X", "Y", "BACK", "C", "START",

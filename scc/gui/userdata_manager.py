@@ -7,7 +7,7 @@ user-editable data - that are profiles, menus and controller-icons.
 
 Main App class interits from this.
 """
-from __future__ import unicode_literals
+
 from scc.tools import _, set_logging_level
 
 from gi.repository import Gtk, Gio, GLib
@@ -121,8 +121,8 @@ class UserDataManager(object):
 				for pdir, enumerator in data:
 					if pdir is not None:
 						for finfo in enumerator:
-							name = finfo.get_name().decode("utf-8")
-							if name and not name.endswith("~"):
+							name = finfo.get_name()
+							if name:
 								files[name] = pdir.get_child(name)
 			except Exception as e:
 				# https://github.com/kozec/sc-controller/issues/50
@@ -135,7 +135,7 @@ class UserDataManager(object):
 				files = self._sync_load([ pdir for pdir, enumerator in data
 											if pdir is not None])
 			
-			callback(files.values())
+			callback(list(files.values()))
 	
 	
 	def _sync_load(self, pdirs):
@@ -146,7 +146,7 @@ class UserDataManager(object):
 		files = {}
 		for pdir in pdirs:
 			for name in os.listdir(pdir.get_path()):
-				files[name.decode("utf-8")] = pdir.get_child(name)
+				files[name] = pdir.get_child(name)
 		return files
 	
 	

@@ -7,7 +7,7 @@ or pad.
 
 Wraps around actual button defined in glade file.
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from gi.repository import Gtk, Gdk, Pango
@@ -18,7 +18,6 @@ from scc.modifiers import DoubleclickModifier
 from scc.profile import Profile
 from scc.tools import nameof
 import os, sys, logging
-import itertools
 
 log = logging.getLogger("ControllerWidget")
 
@@ -39,7 +38,7 @@ class ControllerWidget:
 	def __init__(self, app, id, use_icon, widget):
 		self.app = app
 		self.id = id
-		self.name = id if type(id) in (str,) else id.name
+		self.name = id if type(id) in (str, str) else id.name
 		self.widget = widget
 		
 		self.label = Gtk.Label()
@@ -101,7 +100,7 @@ class ControllerButton(ControllerWidget):
 	
 	
 	def update(self):
-		if self.id in SCButtons.__members__.values() and self.id in self.app.current.buttons:
+		if self.id in SCButtons and self.id in self.app.current.buttons:
 			txt = self.app.current.buttons[self.id].describe(self.ACTION_CONTEXT)
 			if len(txt) > LONG_TEXT or "\n" in txt:
 				txt = "\n".join(txt.split("\n")[0:2])
@@ -271,7 +270,7 @@ class ControllerGyro(ControllerWidget):
 	
 	def _set_label(self, action):
 		if is_gyro_enable(action):
-			action = next(itertools.islice(action.mods.values(), 0, 1)) or action.default
+			action = list(action.mods.values())[0] or action.default
 		if isinstance(action, MultiAction):
 			rv = []
 			for a in action.actions:

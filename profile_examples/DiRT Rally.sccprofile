@@ -10,11 +10,15 @@
             "name": "Handbreak"
         }, 
         "BACK": {
-            "action": "resetgyro()", 
+            "action": "resetgyro()",
             "name": "Reset Gyro"
         }, 
         "C": {
-            "action": "hold(menu('Default.menu'), menu('Default.menu'))"
+            "action": "menu('Default.menu')", 
+            "doubleclick": {}, 
+            "hold": {
+                "action": "menu('Default.menu')"
+            }
         }, 
         "LB": {
             "action": "button(Keys.BTN_TL)", 
@@ -53,9 +57,9 @@
             "name": "Recover Vehicle"
         }
     }, 
-    "cpad": {}, 
     "gyro": {
-        "action": "feedback(BOTH, gyroabs(None, Axes.ABS_X))", 
+        "action": "gyroabs(None, Axes.ABS_X)",
+        "feedback": ["BOTH"],
         "name": "Steering"
     }, 
     "is_template": false, 
@@ -63,7 +67,19 @@
     "pad_left": {}, 
     "pad_right": {}, 
     "stick": {
-        "action": "dpad(hatup(Axes.ABS_HAT0Y), hatdown(Axes.ABS_HAT0Y), hatleft(Axes.ABS_HAT0X), hatright(Axes.ABS_HAT0X))", 
+        "dpad": [{
+            "action": "hatup(Axes.ABS_HAT0Y)", 
+            "name": "Navigation Up"
+        }, {
+            "action": "hatdown(Axes.ABS_HAT0Y)", 
+            "name": "Navigation Down"
+        }, {
+            "action": "hatleft(Axes.ABS_HAT0X)", 
+            "name": "Navigation Left"
+        }, {
+            "action": "hatright(Axes.ABS_HAT0X)", 
+            "name": "Navigation Right"
+        }], 
         "name": "Menu Navigation"
     }, 
     "trigger_left": {
@@ -73,6 +89,6 @@
     "trigger_right": {
         "action": "axis(Axes.ABS_RZ)", 
         "name": "Accelerate"
-    }, 
-    "version": 1.4
+    },
+    "version": 1.2
 }

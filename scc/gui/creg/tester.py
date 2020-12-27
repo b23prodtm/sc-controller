@@ -33,23 +33,23 @@ class Tester(GObject.GObject):
 		"axis"			: (GObject.SignalFlags.RUN_FIRST, None, (int, int)),
 		"button"		: (GObject.SignalFlags.RUN_FIRST, None, (int, bool)),
 	}
-
+	
 	def __init__(self, driver, device_id):
 		GObject.GObject.__init__(self)
-		self.buffer = b""
+		self.buffer = ""
 		self.buttons = []
 		self.axes = []
 		self.subprocess = None
 		self.driver = driver
 		self.device_id = device_id
 		self.errorred = False	# To prevent sending 'error' signal multiple times
-
-
+	
+	
 	def __del__(self):
 		if self.subprocess:
 			self.subprocess.send_signal(9)
-
-
+	
+	
 	def start(self):
 		""" Starts driver test subprocess """
 		cmd = [find_binary("scc")] + ["test_" + self.driver, self.device_id]
@@ -57,13 +57,13 @@ class Tester(GObject.GObject):
 		self.subprocess.wait_async(None, self._on_finished)
 		self.subprocess.get_stdout_pipe().read_bytes_async(
 			32, 0, None, self._on_read)
-
-
+	
+	
 	def stop(self):
 		if self.subprocess:
 			self.subprocess.send_signal(2)	# Sigint
-
-
+	
+	
 	def _on_finished(self, subprocess, result):
 		subprocess.wait_finish(result)
 		if self.errorred:
@@ -73,8 +73,8 @@ class Tester(GObject.GObject):
 		else:
 			self.errorred = True
 			self.emit('error', subprocess.get_exit_status())
-
-
+	
+	
 	def _on_read(self, stream, result):
 		try:
 			data = stream.read_bytes_finish(result).get_data()
@@ -86,31 +86,31 @@ class Tester(GObject.GObject):
 				self.emit('error', 1)
 			return
 		if len(data) > 0:
-			self.buffer += data
-			while b"\n" in self.buffer:
-				line, self.buffer = self.buffer.split(b"\n", 1)
+			self.buffer += str(data)
+			while "\n" in self.buffer:
+				line, self.buffer = self.buffer.split("\n", 1)
 				try:
 					self._on_line(line)
 				except Exception as e:
 					log.exception(e)
 			self.subprocess.get_stdout_pipe().read_bytes_async(
 				32, 0, None, self._on_read)
-
-
+	
+	
 	def _on_line(self, line):
-		if line.startswith(b"Axis"):
-			trash, number, value = line.split(b" ")
+		if line.startswith("Axis"):
+			trash, number, value = line.split(" ")
 			number, value = int(number), int(value)
 			self.emit('axis', number, value)
-		elif line.startswith(b"ButtonPress"):
-			trash, code = line.split(b" ")
+		elif line.startswith("ButtonPress"):
+			trash, code = line.split(" ")
 			self.emit('button', int(code), True)
-		elif line.startswith(b"ButtonRelease"):
-			trash, code = line.split(b" ")
+		elif line.startswith("ButtonRelease"):
+			trash, code = line.split(" ")
 			self.emit('button', int(code), False)
-		elif line.startswith(b"Ready"):
+		elif line.startswith("Ready"):
 			self.emit('ready')
-		elif line.startswith(b"Axes:"):
-			self.axes = [int(x) for x in line.split(b" ")[1:] if len(x.strip())]
-		elif line.startswith(b"Buttons:"):
-			self.buttons = [int(x) for x in line.split(b" ")[1:] if len(x.strip())]
+		elif line.startswith("Axes:"):
+			self.axes = [ int(x) for x in line.split(" ")[1:] if len(x.strip()) ]
+		elif line.startswith("Buttons:"):
+			self.buttons = [ int(x) for x in line.split(" ")[1:] if len(x.strip()) ]

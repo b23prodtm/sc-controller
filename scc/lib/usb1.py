@@ -57,7 +57,7 @@ import collections
 import functools
 import contextlib
 import inspect
-from scc.lib import libusb1
+from . import libusb1
 if sys.version_info[:2] >= (2, 6):
 # pylint: disable=wrong-import-order,ungrouped-imports
     if sys.platform == 'win32':
@@ -84,7 +84,7 @@ STATUS_TO_EXCEPTION_DICT = {}
 def __bindConstants():
     global_dict = globals()
     PREFIX = 'LIBUSB_'
-    for name, value in libusb1.__dict__.items():
+    for name, value in list(libusb1.__dict__.items()):
         if name.startswith(PREFIX):
             name = name[len(PREFIX):]
             # Gah.
@@ -94,7 +94,7 @@ def __bindConstants():
             global_dict[name] = value
             __all__.append(name)
     # Finer-grained exceptions.
-    for name, value in libusb1.libusb_error.forward_dict.items():
+    for name, value in list(libusb1.libusb_error.forward_dict.items()):
         if value:
             assert name.startswith(PREFIX + 'ERROR_'), name
             if name == 'LIBUSB_ERROR_IO':
@@ -133,6 +133,7 @@ else:
 if sys.version_info[0] == 3:
     BYTE = bytes([0])
     # pylint: disable=redefined-builtin
+    xrange = range
     long = int
     # pylint: enable=redefined-builtin
 else:
@@ -195,7 +196,7 @@ def create_binary_buffer(init_or_size):
     # - int or long is a length
     # - str or unicode is an initialiser
     # Testing the latter confuses 2to3, so test the former.
-    if isinstance(init_or_size, (int, long)):
+    if isinstance(init_or_size, int):
         result = create_string_buffer(init_or_size)
     else:
         result = create_string_buffer(init_or_size, len(init_or_size))
@@ -360,7 +361,7 @@ class USBTransfer(object):
             raise ValueError('Cannot alter a submitted transfer')
         if self.__doomed:
             raise DoomedTransferError('Cannot reuse a doomed transfer')
-        if isinstance(buffer_or_len, (int, long)):
+        if isinstance(buffer_or_len, int):
             length = buffer_or_len
             # pylint: disable=undefined-variable
             string_buffer = create_binary_buffer(length + CONTROL_SETUP_SIZE)
@@ -2078,7 +2079,7 @@ class USBContext(object):
     def _exit(self):
         context_p = self.__context_p
         if context_p:
-            for handle in self.__hotplug_callback_dict.keys():
+            for handle in list(self.__hotplug_callback_dict.keys()):
                 self.hotplugDeregisterCallback(handle)
             pop = self.__close_set.pop
             while True:
