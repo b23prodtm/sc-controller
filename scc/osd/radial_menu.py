@@ -4,7 +4,7 @@ SC-Controller - OSD Menu
 
 Display menu that user can navigate through
 """
-from __future__ import unicode_literals
+
 from scc.tools import _, set_logging_level
 
 from gi.repository import Gtk, Gdk, GLib, GdkX11
@@ -65,7 +65,7 @@ class RadialMenu(Menu):
 		
 		for k in RadialMenu.RECOLOR_STROKES:
 			if k in config['osd_colors'] and k in source_colors:
-				print( "REC", source_colors[k], config['osd_colors'][k])
+				print("REC", source_colors[k], config['osd_colors'][k])
 				editor.recolor_strokes(source_colors[k], config['osd_colors'][k])
 		
 		editor.commit()
@@ -193,14 +193,14 @@ class RadialMenu(Menu):
 	
 	def show(self):
 		OSDWindow.show(self)
-		
+
 		from ctypes import byref
-		
+
 		pb = self.b.get_pixbuf()
 		win = X.XID(self.get_window().get_xid())
 		
-		width = int(pb.get_width() * self.scale * self.get_scale_factor())
-		height = int(pb.get_height() * self.scale * self.get_scale_factor())
+		width = int(pb.get_width() * self.scale)
+		height = int(pb.get_height() * self.scale)
 		pixmap = X.create_pixmap(self.xdisplay, win, width, height, 1)
 		self.f.move(self.cursor, int(width / 2), int(height / 2))
 		
@@ -283,6 +283,7 @@ if __name__ == "__main__":
 	gi.require_version('GdkX11', '3.0')
 	
 	from scc.tools import init_logging
+	from scc.paths import get_share_path
 	init_logging()
 	
 	m = RadialMenu()
@@ -292,4 +293,3 @@ if __name__ == "__main__":
 	if m.get_exit_code() == 0:
 		print(m.get_selected_item_id())
 	sys.exit(m.get_exit_code())
-

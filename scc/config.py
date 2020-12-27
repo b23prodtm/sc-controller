@@ -4,7 +4,7 @@ SC-Controller - Config
 
 Handles loading, storing and querying config file
 """
-from __future__ import unicode_literals
+
 
 from scc.paths import get_config_path
 from scc.profile import Encoder

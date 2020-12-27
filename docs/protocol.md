@@ -61,18 +61,18 @@ List of possible events:
 
 #### `Error: message`
 Sent to every client when error is detected. May be sent repeatedly to indicate
-multiple errors.
+multiple errors, until all error condition is cleared.
 
-After all error conditions are cleared, `Ready.` is sent to indicate that emulation works again.
+After all errors are cleared, `Ready.` is sent to indicate that emulation works again.
 
 #### `Fail: text`
-Indicates error as response to client's request.
+Indicates error client that sent request.
 
 #### `Gesture: side gesturestring`
 Sent to client that requested gesture to be detected.
 
 #### `OK.`
-Indicates sucess as response to client's request.
+Indicates sucess to client that sent request.
 
 ### `OSD: tool param1 param2...`
 Send to scc-osd-daemon when osd-related action is requested.
@@ -112,6 +112,10 @@ Otherwise, `Fail: no such controller` error message is sent.
 
 #### `Controller.`
 Restores default state after controller is chosen.
+Daemon responds with `OK.`
+
+#### `Exit.`
+Asks daemon to exit ASAP. Used on Windows instead of sending SIGTERM.
 Daemon responds with `OK.`
 
 #### `Gesture: side up_angle`
@@ -171,7 +175,7 @@ Otherwise daemon responds with `OK.`. Note that doesn't necessary mean that OSD 
 that scc-daemon managed to send request to scc-osd-daemon.
 
 #### `Profile: filename.sccprofile`
-Asks daemon to load another profile. No escaping or quoting is needed, everything after colon is used as filename. Additional spaces and tabs are stripped.
+Asks daemon to load another profile. No escaping or quoting is needed, everything after colon is used as filename, only spaces and tabs are stripped.
 
 If profile is sucessfully loaded, daemon responds with `OK.` to client that initiated loading and sends `Current profile: ...` message to all clients.
 
@@ -197,7 +201,7 @@ Asks daemon to rescan for new devices. Drivers may re-read its configuration if 
 Daemon responds with `OK.`
 
 #### `Restart.`
-Restarts daemon. This has same effect as calling "scc-daemon restart", as that's exactly what
+Restarts daemon. This has same effect as calling "scc-daemon None restart", as that's exactly what
 gets called. All clients are disconnected immediately, so there is no response.
 
 #### `Selected: menu_id item_id`

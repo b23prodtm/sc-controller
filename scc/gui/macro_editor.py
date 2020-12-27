@@ -4,7 +4,7 @@ SC-Controller - Action Editor
 
 Allows to edit button or trigger action.
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from scc.gui.controller_widget import ControllerButton
@@ -70,7 +70,7 @@ class MacroEditor(Editor):
 			action = NoAction()
 		elif cbMacroType.get_active() == 2:
 			# Cycle
-			pars = filter(lambda a : not isinstance(a, SleepAction), pars)
+			pars = [a for a in pars if not isinstance(a, SleepAction)]
 			action = Cycle(*pars)
 		elif cbMacroType.get_active() == 1:
 			# Repeating macro
@@ -82,8 +82,8 @@ class MacroEditor(Editor):
 		else:
 			# Macro
 			action = Macro(*pars)
-		if entName.get_text().strip() != "":
-			action.name = entName.get_text().strip()
+		if entName.get_text().decode("utf-8").strip() != "":
+			action.name = entName.get_text().decode("utf-8").strip()
 		return action
 	
 	
@@ -355,7 +355,7 @@ class MacroEditor(Editor):
 		cbMacroType = self.builder.get_object("cbMacroType")
 		self.id = id
 		self.mode = mode
-		self.set_title("Macro for %s" % (id.name if id in SCButtons.__members__.values() else str(id),))
+		self.set_title("Macro for %s" % (id.name if id in SCButtons else str(id),))
 		if isinstance(action, Cycle):
 			cbMacroType.set_active(2)
 		elif action.repeat:

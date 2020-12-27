@@ -239,7 +239,7 @@ def parse_item(it, page):
 			elif isize == 3:			 # 4 bytes (usage page: usage id)
 				uid = it[2] * 256 + it[1]
 				upg = it[4] * 256 + it[3]
-				page = enum_or_reserved(UsagePage, upg)
+				page = enum_or_reserved(hidparse_data.UsagePage, upg)
 				try:
 					return item, page(uid)
 				except ValueError:
@@ -373,7 +373,7 @@ def make_parsers(data):
 	parsers = []
 	axis_id, buttons_id = 0, 0
 	for x in parse_report_descriptor(data, True):
-		# print(x)
+		# print x
 		if x[0] == GlobalItem.ReportSize:
 			size = x[1]
 		elif x[0] == GlobalItem.ReportCount:

@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python2
 """
 Python wrapper for some X-related stuff.
@@ -19,7 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 """
 
 from ctypes import CDLL, POINTER, c_void_p, Structure, byref, cast
-from ctypes import c_long, c_ulong, c_int, c_uint, c_short
+from ctypes import c_long, c_ulong, c_int, c_uint, c_short, c_char_p
 from ctypes import c_ushort, c_ubyte, c_char_p, c_bool
 
 
@@ -331,7 +332,7 @@ def get_window_prop(dpy, window, prop_name, max_size=2):
 	Returns (nitems, property) of specified window or (-1, None) if anything fails.
 	Returned 'property' is POINTER(c_void_p) and has to be freed using X.free().
 	"""
-	prop_atom = intern_atom(dpy, prop_name.encode("utf-8"), False)
+	prop_atom = intern_atom(dpy, prop_name, False)
 	type_return, format_return = Atom(), Atom()
 	nitems, bytes_after = c_ulong(), c_ulong()
 	prop = c_void_p()

@@ -1,0 +1,26 @@
+[{
+    "separator": true,
+    "name": "Switch profile"
+}, {
+    "generator": "recent",
+    "rows": 3
+}, {
+    "submenu": "Profiles.menu",
+    "icon": "system/profiles",
+    "name": "All Profiles"
+}, {
+    "separator": true,
+    "id": "separator-after-profile-list",
+    "name": "Options"
+}, {
+    "action": "keyboard()",
+    "id": "keyboard_item",
+    "icon": "system/keyboard",
+    "name": "Display Keyboard"
+}, {
+    "action": "turnoff()",
+    "id": "turnoff_item",
+    "icon": "system/turn-off",
+    "name": "Turn Controller OFF",
+    "osd": true
+}]

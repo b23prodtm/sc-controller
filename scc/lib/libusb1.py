@@ -58,7 +58,7 @@ class Enum(object):
         forward_dict = {}
         reverse_dict = {}
         next_value = 0
-        for name, value in member_dict.items():
+        for name, value in list(member_dict.items()):
             if value is None:
                 value = next_value
                 next_value += 1

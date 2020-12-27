@@ -4,7 +4,7 @@ SC-Controller - OSD
 
 Common methods for OSD-related stuff
 """
-from __future__ import unicode_literals
+
 from scc.tools import _, set_logging_level
 
 from gi.repository import Gtk, Gdk, GLib, GObject, GdkX11
@@ -14,7 +14,6 @@ from scc.paths import get_share_path
 from scc.lib import xwrappers as X
 from scc.config import Config
 
-import cairo
 import os, argparse, traceback, logging
 log = logging.getLogger("osd")
 
@@ -51,24 +50,12 @@ class OSDWindow(Gtk.Window):
 		self._controller = None
 		self.set_name(wmclass)
 		self.set_wmclass(wmclass, wmclass)
-		self.using_wlroots = False
-		try:
-			from gi.repository import GtkLayerShell
-			if GtkLayerShell.is_supported():
-				self.using_wlroots=True
-				GtkLayerShell.init_for_window(self)
-				GtkLayerShell.set_layer(self, GtkLayerShell.Layer.TOP)
-				GtkLayerShell.set_anchor(self, GtkLayerShell.Edge.LEFT, True)
-				GtkLayerShell.set_anchor(self, GtkLayerShell.Edge.BOTTOM, True)
-		except (ImportError):
-			pass
-		if not self.using_wlroots:
-			self.set_decorated(False)
-			self.stick()
-			self.set_skip_taskbar_hint(True)
-			self.set_skip_pager_hint(True)
-			self.set_keep_above(True)
-			self.set_type_hint(Gdk.WindowTypeHint.NOTIFICATION)
+		self.set_decorated(False)
+		self.stick()
+		self.set_skip_taskbar_hint(True)
+		self.set_skip_pager_hint(True)
+		self.set_keep_above(True)
+		self.set_type_hint(Gdk.WindowTypeHint.NOTIFICATION)
 	
 	
 	@staticmethod
@@ -83,7 +70,7 @@ class OSDWindow(Gtk.Window):
 		colors = OSDCssMagic(colors)
 		try:
 			css_file = os.path.join(get_share_path(), "osd-styles", config["osd_style"])
-			css = open(css_file, "r").read()
+			css = file(css_file, "r").read()
 			if ((Gtk.get_major_version(), Gtk.get_minor_version()) > (3, 20)):
 				css += OSDWindow.CSS_3_20
 			OSDWindow.css_provider = Gtk.CssProvider()
@@ -99,7 +86,7 @@ class OSDWindow(Gtk.Window):
 			
 			OSDWindow.css_provider = Gtk.CssProvider()
 			css_file = os.path.join(get_share_path(), "osd-styles", "Classic.gtkstyle.css")
-			css = open(css_file, "r").read()
+			css = file(css_file, "r").read()
 			if ((Gtk.get_major_version(), Gtk.get_minor_version()) > (3, 20)):
 				css += OSDWindow.CSS_3_20
 			OSDWindow.css_provider.load_from_data((css % colors).encode("utf-8"))
@@ -157,15 +144,12 @@ class OSDWindow(Gtk.Window):
 	
 	
 	def make_window_clicktrough(self):
-		(width, height) = self.get_size()
-		surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
-		surface_ctx = cairo.Context(surface)
-		surface_ctx.set_source_rgba(0.0, 0.0, 0.0, 0.0)
-		surface_ctx.set_operator(cairo.OPERATOR_SOURCE)
-		surface_ctx.paint()
-		reg = Gdk.cairo_region_create_from_surface(surface)
-		self.input_shape_combine_region(reg)
-
+		dpy = X.Display(hash(GdkX11.x11_get_default_xdisplay()))		# I have no idea why this works...
+		win = X.XID(self.get_window().get_xid())
+		reg = X.create_region(dpy, None, 0)
+		X.set_window_shape_region (dpy, win, X.SHAPE_BOUNDING, 0, 0, 0)
+		X.set_window_shape_region (dpy, win, X.SHAPE_INPUT, 0, 0, reg)
+		X.destroy_region (dpy, reg)
 	
 	
 	def get_active_screen_geometry(self):
@@ -306,7 +290,7 @@ class StickController(GObject.GObject, TimerManager):
 	  Both values are one of -1, 0, 1 for left/none/right.
 	"""
 	__gsignals__ = {
-			"direction"			: (GObject.SignalFlags.RUN_FIRST, None, (int, int)),
+		"direction"			: (GObject.SignalFlags.RUN_FIRST, None, (int, int)),
 	}
 	REPEAT_DELAY = 0.2
 	DIRECTION_TO_XY = {

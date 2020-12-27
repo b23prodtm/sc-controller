@@ -4,7 +4,7 @@ SC-Controller - Autoswitch Daemon
 
 Observes active window and commands scc-daemon to change profiles as needed.
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from scc.menu_data import MenuGenerator, MenuItem, Separator, MENU_GENERATORS
@@ -24,7 +24,7 @@ class AutoSwitcher(object):
 	INTERVAL = 1
 	
 	def __init__(self):
-		self.dpy = X.open_display(os.environ["DISPLAY"].encode("utf-8"))
+		self.dpy = X.open_display(os.environ["DISPLAY"])
 		self.lock = threading.Lock()
 		self.thread = threading.Thread(target=self.connect_daemon)
 		self.config = Config()
@@ -76,7 +76,7 @@ class AutoSwitcher(object):
 		count, cmpwith = 0, None
 		if action is not None:
 			cmpwith = action.to_string()
-		for c in conds.copy().keys():
+		for c in list(conds.keys()):
 			if action is None or conds[c].to_string() == cmpwith:
 				if c.matches(title, wm_class):
 					del conds[c]
@@ -102,7 +102,7 @@ class AutoSwitcher(object):
 				log.error("Connection to daemon lost")
 				os._exit(2)
 				return
-			buffer += r.decode("utf-8")
+			buffer += r
 			while "\n" in buffer:
 				line, buffer = buffer.split("\n", 1)
 				if line.startswith("Version:"):
@@ -156,14 +156,14 @@ class AutoSwitcher(object):
 					try:
 						if self.config['autoswitch_osd']:
 							msg = (_("Switched to profile") + " " + profile_name)
-							self.socket.send(b"OSD: " + msg.encode('utf-8') + b"\n")
-						self.socket.send(b"Profile: " + path.encode('utf-8') + b"\n")
+							self.socket.send(b"OSD: " + msg.encode('utf-8') +"\n")
+						self.socket.send(b"Profile: " + path.encode('utf-8') +"\n")
 					except:
 						log.error("Socket write failed")
 						os._exit(2)
 						return
 		else:
-			log.error("Cannot switch to profile '%s', profile file not found", profile_name)
+			log.error("Cannot switch to profile '%s', profile file not found", self.conds[c])
 	
 	
 	def on_sa_turnoff(self, mapper, action):
@@ -218,7 +218,7 @@ class Condition(object):
 		self.exact_title = exact_title
 		self.title = title
 		self.regexp = regexp
-		if type(self.regexp) is str:
+		if type(self.regexp) in (str, str):
 			self.regexp = re.compile(self.regexp)
 		self.wm_class = wm_class
 		self.empty = not ( title or title or regexp or wm_class )
@@ -312,8 +312,8 @@ class AutoswitchOptsMenuGenerator(MenuGenerator):
 			if menuitem.id == "as::unassign":
 				AutoSwitcher.unassign(self.conds, self.title, self.wm_class, self.assigned_prof)
 			else:
-				if controller.get_profile():
-					profile = os.path.split(controller.get_profile())[-1]
+				if menu.daemon.get_profile():
+					profile = os.path.split(menu.daemon.get_profile())[-1]
 					if profile.endswith(".mod"):
 						profile = profile[0:-4]
 					if profile.endswith(".sccprofile"):

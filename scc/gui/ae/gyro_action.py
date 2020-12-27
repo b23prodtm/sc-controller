@@ -2,12 +2,11 @@
 """
 SC-Controller - Action Editor - Gyro -> Joystick or Mouse component
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from scc.actions import Action, NoAction, MouseAction, MultiAction, RangeOP
 from scc.actions import GyroAction, GyroAbsAction, MouseAbsAction
-from scc.special_actions import CemuHookAction
 from scc.modifiers import ModeModifier, SensitivityModifier
 from scc.uinput import Axes, Rels
 from scc.constants import SCButtons, STICK, YAW, ROLL
@@ -16,7 +15,6 @@ from scc.gui.ae import AEComponent
 from scc.tools import nameof
 
 import logging, re
-import itertools
 log = logging.getLogger("AE.GyroAction")
 
 __all__ = [ 'GyroActionComponent' ]
@@ -81,7 +79,7 @@ class GyroActionComponent(AEComponent):
 				self._recursing = True
 				self.builder.get_object("cbInvertGyro").set_active(bool(action.default))
 				self._recursing = False
-				b = next(itertools.islice(action.mods.keys(), 0, 1))
+				b = list(action.mods.keys())[0]
 				action = action.mods[b] or action.default
 				self.select_gyro_button(b)
 			else:
@@ -120,8 +118,6 @@ class GyroActionComponent(AEComponent):
 						self.select_gyro_output("right")
 				elif ap[0] == Rels.REL_Y and ap[-1] == Rels.REL_X:
 					self.select_gyro_output("mouse_stick")
-			elif isinstance(action, CemuHookAction):
-					self.select_gyro_output("cemuhook")
 			self.modifier_updated()
 	
 	
@@ -133,8 +129,6 @@ class GyroActionComponent(AEComponent):
 			self._recursing = True
 			cbInvertY.set_active(inverted)
 			self._recursing = False
-
-		self.update()
 	
 	
 	def cbInvertY_toggled_cb(self, cb, *a):
@@ -157,7 +151,7 @@ class GyroActionComponent(AEComponent):
 		if isinstance(action, NoAction):
 			return True
 		if is_gyro_enable(action):
-			action = next(itertools.islice(action.mods.values(), 0, 1)) or action.default
+			action = list(action.mods.values())[0] or action.default
 			if isinstance(action, SensitivityModifier):
 				action = action.action
 		if isinstance(action, GyroAction):	# Takes GyroAbsAction as well
@@ -170,7 +164,7 @@ class GyroActionComponent(AEComponent):
 				elif ap[0] == Rels.REL_Y and ap[-1] == Rels.REL_X:
 					return True
 			return False
-		if isinstance(action, (MouseAction, MouseAbsAction, CemuHookAction)):
+		if isinstance(action, (MouseAction, MouseAbsAction)):
 			return True
 		return False
 	
@@ -238,12 +232,7 @@ class GyroActionComponent(AEComponent):
 	
 	
 	def update(self, *a):
-		cbMode = self.builder.get_object("cbMode")
-		cbYawRoll = self.builder.get_object("cbYawRoll")
-		lblYawRoll = self.builder.get_object("lblYawRoll")
-		key = cbMode.get_model().get_value(cbMode.get_active_iter(), 2)
-		cbYawRoll.set_sensitive(key != "cemuhook")
-		lblYawRoll.set_sensitive(key != "cemuhook")	
+		pass
 	
 	
 	def hidden(self):
@@ -258,7 +247,6 @@ class GyroActionComponent(AEComponent):
 		rvSoftLevel = self.builder.get_object("rvSoftLevel")
 		sclSoftLevel = self.builder.get_object("sclSoftLevel")
 		cbGyroButton = self.builder.get_object("cbGyroButton")
-		cbInvertGyro = self.builder.get_object("cbInvertGyro")
 		cbInvertGyro = self.builder.get_object("cbInvertGyro")
 		action = cbMode.get_model().get_value(cbMode.get_active_iter(), 0)
 		key = cbMode.get_model().get_value(cbMode.get_active_iter(), 2)
@@ -291,7 +279,6 @@ class GyroActionComponent(AEComponent):
 		else:
 			self.editor.set_default_sensitivity(1, 1, 1)
 		
-		self.update()
 		self.editor.set_action(action)
 
 

@@ -4,7 +4,7 @@ SC-Controller - Controller Image
 
 Big, SVGWidget based widget with interchangeable controller and button images.
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from scc.gui.svg_widget import SVGWidget, SVGEditor
@@ -50,7 +50,7 @@ class ControllerImage(SVGWidget):
 	
 	def _make_controller_image_path(self, img):
 		return os.path.join(self.app.imagepath,
-			"controller-images/%s.svg" % (img, ))
+			"controller-images/%s.svg" % img)
 	
 	
 	def get_config(self):
@@ -65,7 +65,6 @@ class ControllerImage(SVGWidget):
 		data['gui'] = data.get('gui', {})
 		data['gui']['background'] = data['gui'].get("background", "sc")
 		data['gui']['buttons'] = data['gui'].get("buttons") or self._get_default_images()
-		data["gui"]["no_buttons_in_gui"] = data["gui"].get("no_buttons_in_gui") or False
 		data['buttons'] = data.get("buttons") or ControllerImage.DEFAULT_BUTTONS
 		data['axes'] = data.get("axes") or ControllerImage.DEFAULT_AXES
 		data['gyros'] = data.get("gyros", data['gui']["background"] == "sc")
@@ -82,7 +81,7 @@ class ControllerImage(SVGWidget):
 			return dict_or_tuple
 		return [
 			(x["axis"] if type(x) == dict else x)
-			for x in dict_or_tuple.values()
+			for x in list(dict_or_tuple.values())
 		]
 	
 	
@@ -95,8 +94,7 @@ class ControllerImage(SVGWidget):
 		self.current = self._ensure_config(config or {})
 		self.set_image(os.path.join(self.app.imagepath,
 			"controller-images/%s.svg" % (self.current["gui"]["background"], )))
-		if not self.current["gui"]["no_buttons_in_gui"]:
-			self._fill_button_images(self.current["gui"]["buttons"])
+		self._fill_button_images(self.current["gui"]["buttons"])
 		self.hilight({})
 		return self.current
 	

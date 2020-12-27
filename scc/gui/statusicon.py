@@ -4,7 +4,7 @@
 Syncthing-GTK - StatusIcon
 
 """
-from __future__ import unicode_literals
+
 
 import locale
 import os
@@ -42,11 +42,11 @@ class StatusIcon(GObject.GObject):
 	TRAY_TITLE     = _("SC-Controller")
 	
 	__gsignals__ = {
-		"clicked": (GObject.SignalFlags.RUN_FIRST, None, ()),
+	"clicked": (GObject.SignalFlags.RUN_FIRST, None, ()),
 	}
 	
 	__gproperties__ = {
-		"active": (
+	"active": (
 			GObject.TYPE_BOOLEAN,
 			"is the icon user-visible?",
 			"does the icon back-end think that anything is might be shown to the user?",
@@ -312,8 +312,8 @@ class StatusIconProxy(StatusIcon):
 		try:
 			# Try loading GTK native status icon
 			self._status_gtk = StatusIconGTK3(*args, **kwargs)
-			self._status_gtk.connect("clicked",        self._on_click)
-			self._status_gtk.connect("notify::active", self._on_notify_active_gtk)
+			self._status_gtk.connect(b"clicked",        self._on_click)
+			self._status_gtk.connect(b"notify::active", self._on_notify_active_gtk)
 			self._on_notify_active_gtk()
 			
 			log.info("Using backend StatusIconGTK3 (primary)")
@@ -322,7 +322,7 @@ class StatusIconProxy(StatusIcon):
 			self._load_fallback()
 	
 	def _on_click(self, *args):
-		self.emit("clicked")
+		self.emit(b"clicked")
 	
 	def _on_notify_active_gtk(self, *args):
 		if self._status_fb:
@@ -419,4 +419,3 @@ def get_status_icon(*args, **kwargs):
 	
 	# Use proxy backend to determine the correct backend while the application is running
 	return StatusIconProxy(*args, **kwargs)
-

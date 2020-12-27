@@ -6,7 +6,7 @@ Action describes what should be done when event from physical controller button,
 stick, pad or trigger is generated - typicaly what emulated button, stick or
 trigger should be pressed.
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from scc.tools import ensure_size, quat2euler, anglediff
@@ -15,7 +15,6 @@ from scc.uinput import Keys, Axes, Rels
 from scc.lib import xwrappers as X
 from scc.constants import STICK_PAD_MIN, STICK_PAD_MAX, STICK_PAD_MIN_HALF
 from scc.constants import STICK_PAD_MAX_HALF, TRIGGER_MIN, TRIGGER_HALF
-from scc.constants import HIPFIRE_NORMAL, HIPFIRE_SENSIBLE, HIPFIRE_EXCLUSIVE
 from scc.constants import LEFT, RIGHT, CPAD, STICK, PITCH, YAW, ROLL
 from scc.constants import PARSER_CONSTANTS, ControllerFlags
 from scc.constants import FE_STICK, FE_TRIGGER, FE_PAD
@@ -356,9 +355,9 @@ class Action(object):
 		cetera until first non-default parameter is reached.
 		
 		if as_strings is set to True, all parameters are converted to apropriate
-		strings (x.name for enums, x.encode('unicode_escape') for strings,
+		strings (x.name for enums, x.encode('string_escape') for strings, 
 		"""
-		argspec = inspect.getfullargspec(self.__class__.__init__)
+		argspec = inspect.getargspec(self.__class__.__init__)
 		required_count = len(argspec.args) - len(argspec.defaults) - 1
 		d = list(argspec.defaults)
 		l = list(self.parameters)
@@ -373,7 +372,7 @@ class Action(object):
 		Returns list with parameters encoded to strings in following way:
 		- x.name for enums
 		- str(x) numbers
-		- '%s' % (x.encode('unicode_escape'),) for strings
+		- '%s' % (x.encode('string_escape'),) for strings
 		"""
 		return [ Action._encode_parameter(p) for p in parameters ]
 	
@@ -383,8 +382,8 @@ class Action(object):
 		""" Encodes one parameter. Used by encode_parameters """
 		if parameter in PARSER_CONSTANTS:
 			return parameter
-		if type(parameter) == str:
-			return "'%s'" % (str(parameter),)
+		if type(parameter) in (str, str):
+			return "'%s'" % (str(parameter).encode('string_escape'),)
 		return nameof(parameter)
 	
 	
@@ -536,7 +535,6 @@ class SpecialAction(object):
 	to actually do something.
 	"""
 	SA = ""
-	
 	def execute_named(self, name, mapper, *a):
 		sa = mapper.get_special_actions_handler()
 		h_name = "on_sa_%s" % (name,)
@@ -548,7 +546,7 @@ class SpecialAction(object):
 			log.warning("Mapper can't handle '%s' action" % (name,))
 	
 	def execute(self, mapper, *a):
-		return self.execute_named(self.SA, mapper, *a)
+		self.execute_named(self.SA, mapper, *a)
 	
 	# Prevent warnings when special action is bound to button
 	def button_press(self, mapper): pass
@@ -1205,7 +1203,7 @@ class GyroAction(Action):
 		for i in (0, 1, 2):
 			axis = self.axes[i]
 			# 'gyro' cannot map to mouse, but 'mouse' does that.
-			if axis in Axes.__members__.values() or type(axis) == int:
+			if axis in Axes or type(axis) == int:
 				mapper.gamepad.axisEvent(axis, AxisAction.clamp_axis(axis, pyr[i] * self.speed[i] * -10))
 				mapper.syn_list.add(mapper.gamepad)
 	
@@ -1256,6 +1254,7 @@ class GyroAbsAction(HapticEnabledAction, GyroAction):
 			pyr = [q1 / 10430.37, q2 / 10430.37, q3 / 10430.37]	# 2**15 / PI
 		else:
 			pyr = list(quat2euler(q1 / 32768.0, q2 / 32768.0, q3 / 32768.0, q4 / 32768.0))
+		print(pyr)
 		for i in self.GYROAXES:
 			self.ir[i] = self.ir[i] or pyr[i]
 			pyr[i] = anglediff(self.ir[i], pyr[i]) * (2**15) * self.speed[2] * 2 / PI
@@ -1427,7 +1426,7 @@ class TrackballAction(Action):
 	COMMAND = "trackball"
 	
 	def __new__(cls, speed=None):
-		from scc.modifiers import BallModifier
+		from .modifiers import BallModifier
 		return BallModifier(MouseAction(speed=speed))
 
 
@@ -2466,200 +2465,6 @@ class TriggerAction(Action, HapticEnabledAction):
 	
 	__repr__ = __str__
 
-class HipfireAction(Action, HapticEnabledAction):
-	"""
-	Hip fire style trigger setting the two ranges for two different actions
-	allowing activating the fully pressed action without activating partially pressed one
-	"""
-
-	COMMAND = "hipfire"
-	PROFILE_KEYS = "levels",
-	DEFAULT_TIMEOUT = 0.15
-	DEFAULT_PARTIALPRESS_LEVEL = 50
-	DEFAULT_FULLPRESS_LEVEL = 254
-	DEFAULT_MODE = HIPFIRE_NORMAL
-	TIMEOUT_KEY = "time"
-	PROFILE_KEY_PRIORITY = -5
-	
-	def __init__(self, *params):
-		Action.__init__(self, *params)
-		HapticEnabledAction.__init__(self)
-		# set default values in case is not provided
-		self.partialpress_level = HipfireAction.DEFAULT_PARTIALPRESS_LEVEL
-		self.fullpress_level = HipfireAction.DEFAULT_FULLPRESS_LEVEL
-		self.mode = HipfireAction.DEFAULT_MODE
-		self.timeout = HipfireAction.DEFAULT_TIMEOUT
-
-		if len(params) >= 2:
-			if type(params[0]) in (int, float):
-				self.partialpress_level = int(params[0])
-				if type(params[1]) in (int, float):
-					self.fullpress_level = int(params[1])
-					params = params[2:]
-				else:
-					params = params[1:]
-
-			self.partialpress_action = params[0]
-			self.fullpress_action = params[1]
-			if len(params) >= 3:
-				self.mode = params[2]
-			if len(params) == 4:
-				self.timeout = params[3]
-		else:
-			raise TypeError("Invalid number of parameters")
-
-		if self.mode not in (HIPFIRE_NORMAL, HIPFIRE_EXCLUSIVE, HIPFIRE_SENSIBLE):
-			raise ValueError("Invalid hipfire mode")
-		self.partialpress_active = False
-		self.range = "None"
-		self.waiting_task = None
-		self.sensible_state = "READY"
-		self._partialpress_level = self.partialpress_level
-
-	
-	@staticmethod
-	def decode(data, a, parser, *b):
-		args = [ parser.from_json_data(data[HipfireAction.COMMAND]), a ]
-		a = HipfireAction(*args)
-		if HipfireAction.TIMEOUT_KEY in data:
-			a.timeout = data[HipfireAction.TIMEOUT_KEY]
-		return a
-
-			
-	def get_compatible_modifiers(self):
-		return Action.MOD_FEEDBACK
-	
-	
-	def compress(self):
-		self.partialpress_action = self.partialpress_action.compress()
-		self.fullpress_action = self.fullpress_action.compress()
-		return self
-	
-	def on_timeout(self, mapper, *a):
-		if self.waiting_task:
-			self.waiting_task = None
-			if self.range == "PARTIALPRESS":
-				# Timeouted while inside partial press range
-				if self.haptic:
-					mapper.send_feedback(self.haptic)
-				self._partial_press(mapper)
-	
-	def _partial_press(self, mapper):
-		self.partialpress_active = True
-		if self.haptic:
-			mapper.send_feedback(self.haptic)
-		self.partialpress_action.button_press(mapper)
-	
-	
-	def _partial_release(self, mapper):
-		self.partialpress_active = False
-		if self.haptic:
-			mapper.send_feedback(self.haptic)
-		self.partialpress_action.button_release(mapper)
-	
-	def _full_press(self, mapper):
-		if self.haptic:
-			mapper.send_feedback(self.haptic)
-		self.fullpress_action.button_press(mapper)
-	
-	def _full_release(self, mapper):
-		if self.haptic:
-			mapper.send_feedback(self.haptic)
-		self.fullpress_action.button_release(mapper)
-	
-	
-	def trigger(self, mapper, position, old_position):
-		# Checks the current position of the trigger and apply the action based on three possible range: [None, PARTIALPRESS, FULLPRESS]
-
-		# Checks full press first to prevent unnecessary conditional evaluation
-		if position >= self.fullpress_level and old_position < self.fullpress_level:
-			self.range = "FULLPRESS"
-			# Entered now in full press range and activate fully pressed action
-			
-			# Checks if it's in exclusive mode and if partial press is active before activating
-			if (self.mode == HIPFIRE_EXCLUSIVE) and self.partialpress_active: return
-
-			self._full_press(mapper)
-			# Cancel any pending timer to prevent partially pressed action from activating
-			if self.waiting_task:
-				mapper.cancel_task(self.waiting_task)
-				self.waiting_task = None
-		
-		elif position < self.fullpress_level and old_position >= self.fullpress_level:
-			self.range = "PARTIALPRESS"
-			# left the full press range and released the fully pressed action
-			self._full_release(mapper)	
-		
-		elif position >= self.partialpress_level:
-			self.range = "PARTIALPRESS"
-			# Entered now in partial press range and should start the timer
-			# normal behavior. without the sensible trigger 
-			if old_position < self.partialpress_level:
-				# Cancels previous timer
-				if self.waiting_task:
-					mapper.cancel_task(self.waiting_task)
-					self.waiting_task = None
-				# Start the timer to execute the action if the full press range is not reached before timeout
-				self.waiting_task = mapper.schedule(self.timeout, self.on_timeout)
-
-			# Spliting conditional for treating the sensible mode
-			# in this mode after reaching the partial press level, releasing the trigger a little will cause it to deactivate the action
-			# allowing fast repeatly presses without needing to release the trigger the all the way back
-			if self.mode == HIPFIRE_SENSIBLE:
-				if position > old_position and self.sensible_state == "READY":
-					## Create the new partial press point while pressing the trigger and the trigger is in its initial state
-					self.new_partialpress_level = max(old_position, self.new_partialpress_level) - 45 # using a arbitrary value just for tests
-				
-				if self.sensible_state != "RELEASED" and position < self.new_partialpress_level and old_position >= self.new_partialpress_level:
-					# Leaving the sensible range deactivating the action if it's already activated otherwise just schedule a short press
-					self.sensible_state = "RELEASED"
-					if self.waiting_task:
-						mapper.cancel_task(self.waiting_task)
-						self.waiting_task = None
-						self._partial_press(mapper)
-						mapper.schedule(0.02, self._partial_release)
-					else:
-						self._partial_release(mapper)
-
-				elif self.sensible_state != "PRESSED" and position >= self.new_partialpress_level and old_position < self.new_partialpress_level:
-					# Activate the action (schedule) again without needed to release the action until the partial press level
-					self.sensible_state = "PRESSED"
-					if self.waiting_task:
-						mapper.cancel_task(self.waiting_task)
-						self.waiting_task = None
-					#start the timer to execute the action if the full press is not reached before timeout
-					self.waiting_task = mapper.schedule(self.timeout, self.on_timeout)
-
-		## Normal release of the partial press, deactivates the partially pressed action if it was active or if the time was still going schedule a short press 
-		elif position < self.partialpress_level and old_position >= self.partialpress_level:
-			self.range = "NONE"
-			if self.waiting_task:
-				mapper.cancel_task(self.waiting_task)
-				self.waiting_task = None
-				self._partial_press(mapper)
-				mapper.schedule(0.02, self._partial_release)
-			else:
-				self._partial_release(mapper)
-
-			# reset the sensible state
-			self.sensible_state = "READY"
-			self.new_partialpress_level = self.partialpress_level
-
-	
-	def describe(self, context):
-		l = [ ]
-		if self.partialpress_action:
-			l += [ self.partialpress_action ]
-		if self.fullpress_action:
-			l += [ self.fullpress_action ]
-		return "\n".join([ x.describe(context) for x in l ])
-	
-	
-	def __str__(self):
-		return "<Hipfire %s-%s %s %s %s >" % (self.partialpress_level, self.fullpress_level, self.partialpress_action, self.fullpress_action, self.mode)
-	
-	__repr__ = __str__
-
 
 class NoAction(Action):
 	"""
@@ -2678,8 +2483,6 @@ class NoAction(Action):
 	
 	def __bool__(self):
 		return False
-
-	__nonzero__ = __bool__
 	
 	
 	def encode(self):

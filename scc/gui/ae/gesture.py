@@ -5,7 +5,7 @@ SC-Controller - Action Editor - Gesture Component
 
 Handles gesture recognition settings.
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from gi.repository import Gtk, Gdk, GLib, GdkX11, GObject
@@ -293,8 +293,6 @@ class GestureGrabber(object):
 	def start_over(self, *a):
 		if self.editor.get_id() == "RPAD":
 			self.lblGestureGrabberTitle.set_text(_("Draw gesture on RIGHT pad..."))
-		elif self.editor.get_id() == "CPAD":
-			self.lblGestureGrabberTitle.set_text(_("Draw gesture on Touchpad..."))
 		else:
 			self.lblGestureGrabberTitle.set_text(_("Draw gesture on LEFT pad..."))
 		self.lblGestureStatus.set_label("")
@@ -311,8 +309,6 @@ class GestureGrabber(object):
 		self._gd = GestureDisplay(self.editor.app.config)
 		if self.editor.get_id() == "RPAD":
 			self._gd.parse_argumets([ "GestureDisplay", "--control-with", "RIGHT" ])
-		elif self.editor.get_id() == "CPAD":
-			self._gd.parse_argumets([ "GestureDisplay", "--control-with", "CPAD" ])
 		else:
 			self._gd.parse_argumets([ "GestureDisplay", "--control-with", "LEFT" ])
 		self._gd.use_daemon(self.editor.app.dm)

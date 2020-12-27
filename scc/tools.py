@@ -4,7 +4,7 @@ SC-Controller - tools
 
 Various stuff that I don't care to fit anywhere else.
 """
-from __future__ import unicode_literals
+
 
 from scc.paths import get_controller_icons_path, get_default_controller_icons_path
 from scc.paths import get_menuicons_path, get_default_menuicons_path
@@ -12,11 +12,7 @@ from scc.paths import get_profiles_path, get_default_profiles_path
 from scc.paths import get_menus_path, get_default_menus_path
 from scc.paths import get_button_images_path
 from math import pi as PI, sin, cos, atan2, sqrt
-import os
-import ctypes
-import shlex
-import logging
-import importlib.machinery
+import os, sys, ctypes, imp, shlex, gettext, logging
 
 HAVE_POSIX1E = False
 try:
@@ -54,10 +50,10 @@ def init_logging(prefix="", suffix=""):
 	old_log = logging.Logger._log
 	def _log(self, level, msg, args, exc_info=None, extra=None):
 		args = tuple([
-			(c.decode("utf-8") if type(c) is bytes else c)
+			(str(c) if type(c) is str else c)
 			for c in args
 		])
-		#msg = msg if type(msg) is str else msg.decode("utf-8")
+		msg = msg if type(msg) is str else str(msg)
 		old_log(self, level, msg, args, exc_info, extra)
 	logging.Logger._log = _log
 
@@ -127,20 +123,20 @@ def nameof(e):
 
 def shjoin(lst):
 	""" Joins list into shell-escaped, utf-8 encoded string """
-	s = [ x.encode("utf-8") for x in lst ]
+	s = [ str(x).encode("utf-8") for x in lst ]
 	#   - escape quotes
-	s = [ x.encode('unicode_escape') if (b'"' in x or b"'" in x) else x for x in s ]
+	s = [ x.encode('string_escape') if (b'"' in x or"'" in x) else x for x in s ]
 	#   - quote strings with spaces
-	s = [ b"'%s'" % (x,) if b" " in x else x for x in s ]
-	return b" ".join(s)
+	s = ["'%s'" % (x,) if" " in x else x for x in s ]
+	return" ".join(s)
 
 
 def shsplit(s):
 	""" Returs original list from what shjoin returned """
 	lex = shlex.shlex(s, posix=True)
-	lex.escapedquotes = '"\''
+	lex.escapedquotes = b'"\''
 	lex.whitespace_split = True
-	return [ x for x in list(lex) ]
+	return [ x.decode('utf-8') for x in list(lex) ]
 
 
 def static_vars(**kwargs):
@@ -327,7 +323,8 @@ def find_library(libname):
 	"""
 	base_path = os.path.dirname(__file__)
 	lib, search_paths = None, []
-	so_extensions = importlib.machinery.EXTENSION_SUFFIXES
+	so_extensions = [ ext for ext, _, typ in imp.get_suffixes()
+			if typ == imp.C_EXTENSION ]
 	for extension in so_extensions:
 		search_paths += [
 			os.path.abspath(os.path.normpath(

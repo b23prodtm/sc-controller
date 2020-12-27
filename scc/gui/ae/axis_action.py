@@ -4,7 +4,7 @@ SC-Controller - Action Editor - Axis Component
 
 Assigns emulated axis to trigger
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from gi.repository import Gdk, GdkX11, GLib
@@ -482,7 +482,7 @@ class AxisActionComponent(AEComponent, TimerManager):
 			action = self.make_circular_action()
 		elif key == 'mouse':
 			stActionData.set_visible_child(self.builder.get_object("vbMose"))
-			if not self._recursing and self.editor.friction == 0:
+			if self.editor.friction == 0:
 				# When switching to mouse, enable trackball by default
 				self.editor.friction = 10
 			action = self.make_mouse_action()

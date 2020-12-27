@@ -4,7 +4,7 @@ SC-Controller - Action Editor
 
 Also doubles as Menu Item Editor in some cases
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from gi.repository import Gtk, Gdk, GLib
@@ -295,7 +295,7 @@ class ActionEditor(Editor):
 		
 		Returns 'component'
 		"""
-		if type(component) is str:
+		if type(component) in (str, str):
 			component = self.load_component(component)
 			return self.force_page(component, remove_rest)
 		
@@ -324,7 +324,7 @@ class ActionEditor(Editor):
 	def get_name(self):
 		""" Returns action name as set in editor entry """
 		entName = self.builder.get_object("entName")
-		return entName.get_text().strip(" \t")
+		return entName.get_text().decode("utf-8").strip(" \t")
 	
 	
 	def get_current_page(self):
@@ -335,13 +335,13 @@ class ActionEditor(Editor):
 	def _set_title(self):
 		""" Copies title from text entry into action instance """
 		entName = self.builder.get_object("entName")
-		name = entName.get_text().strip(" \t\r\n")
+		name = entName.get_text().decode("utf-8").strip(" \t\r\n")
 		if len(name) < 1:
 			self._action.name = None
 		elif not self._action:
 			self._action = NameModifier(name, self._action)
 		else:
-			#print(">>>", "_set_title", self._action, entName)
+			#print ">>>", "_set_title", self._action, entName
 			self._action.name = name
 	
 	
@@ -1103,10 +1103,10 @@ class ActionEditor(Editor):
 		Also sets title, but that can be overriden by calling set_title after.
 		"""
 		self.id = id
-		if id in SCButtons.__members__.values() or mode in (Action.AC_MENU, Action.AC_BUTTON):
+		if id in SCButtons or mode in (Action.AC_MENU, Action.AC_BUTTON):
 			if id in PRESSABLE:
 				self.set_title(_("%s Press") % (nameof(id),))
-			elif id in SCButtons.__members__.values():
+			elif id in SCButtons:
 				self.set_title(nameof(id),)
 			self._set_mode(action, mode or Action.AC_BUTTON)
 			self.hide_modifiers()
@@ -1183,4 +1183,3 @@ class ActionEditor(Editor):
 			rvMore.set_reveal_child(False)
 		exMore.set_sensitive(enabled)
 		self._modifiers_enabled = enabled
-
