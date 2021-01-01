@@ -1,0 +1,300 @@
+Build started at 2021-01-02T13:37:41.260275
+Main binary: /usr/bin/python3
+Build Options: 
+Python system: Linux
+The Meson build system
+Version: 0.53.2
+Source dir: /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller
+Build dir: /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile
+Build type: native build
+Project name: scc
+Project version: 3.14
+No CFLAGS in the environment, not changing global flags.
+No LDFLAGS in the environment, not changing global flags.
+No CPPFLAGS in the environment, not changing global flags.
+Sanity testing C compiler: cc
+Is cross compiler: False.
+Sanity check compiler command line: cc /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/sanitycheckc.c -o /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/sanitycheckc.exe -pipe -D_FILE_OFFSET_BITS=64
+Sanity check compile stdout:
+
+-----
+Sanity check compile stderr:
+
+-----
+Running test binary command: /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/sanitycheckc.exe
+C compiler for the build machine: cc (gcc 9.3.0 "cc (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0")
+C linker for the build machine: cc ld.bfd 2.34
+No CFLAGS in the environment, not changing global flags.
+No LDFLAGS in the environment, not changing global flags.
+No CPPFLAGS in the environment, not changing global flags.
+Sanity testing C compiler: cc
+Is cross compiler: False.
+Sanity check compiler command line: cc /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/sanitycheckc.c -o /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/sanitycheckc.exe -pipe -D_FILE_OFFSET_BITS=64
+Sanity check compile stdout:
+
+-----
+Sanity check compile stderr:
+
+-----
+Running test binary command: /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/sanitycheckc.exe
+C compiler for the host machine: cc (gcc 9.3.0 "cc (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0")
+C linker for the host machine: cc ld.bfd 2.34
+Build machine cpu family: x86_64
+Build machine cpu: x86_64
+Host machine cpu family: x86_64
+Host machine cpu: x86_64
+Target machine cpu family: x86_64
+Target machine cpu: x86_64
+Running compile:
+Working directory:  /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/tmp6bzacgmj
+Command line:  cc /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/tmp6bzacgmj/testfile.c -o /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/tmp6bzacgmj/output.exe -pipe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -ldl -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library dl found: YES
+Running compile:
+Working directory:  /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/tmpl4k8b7lz
+Command line:  cc /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/tmpl4k8b7lz/testfile.c -pipe -E -P -D_FILE_OFFSET_BITS=64 -P -O0 -std=gnu11 
+
+Code:
+ 
+        #ifdef __has_include
+         #if !__has_include("execinfo.h")
+          #error "Header 'execinfo.h' could not be found"
+         #endif
+        #else
+         #include <execinfo.h>
+        #endif
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Has header "execinfo.h" : YES 
+Running compile:
+Working directory:  /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/tmpe4fl6qe5
+Command line:  cc /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/tmpe4fl6qe5/testfile.c -o /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/tmpe4fl6qe5/output.exe -pipe -D_FILE_OFFSET_BITS=64 -O0 -std=gnu11 
+
+Code:
+ #include <execinfo.h>
+#include <limits.h>
+
+        #if defined __stub_backtrace || defined __stub___backtrace
+        fail fail fail this function is not going to work
+        #endif
+        
+int main(void) {
+            void *a = (void*) &backtrace;
+            long b = (long) a;
+            return (int) b;
+        }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Checking for function "backtrace" : YES 
+Running compile:
+Working directory:  /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/tmpzx94n3kf
+Command line:  cc /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/tmpzx94n3kf/testfile.c -o /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/tmpzx94n3kf/output.exe -pipe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lm -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library m found: YES
+Running command: /usr/bin/find src/actions/parameter -maxdepth 1 -name *.c
+--- stdout ---
+src/actions/parameter/_invalid.c
+src/actions/parameter/_parameter.c
+src/actions/parameter/action.c
+src/actions/parameter/float.c
+src/actions/parameter/int.c
+src/actions/parameter/none.c
+src/actions/parameter/range.c
+src/actions/parameter/string.c
+src/actions/parameter/tuple.c
+
+--- stderr ---
+
+
+Running command: /usr/bin/find src/actions/param_checker -maxdepth 1 -name *.c
+--- stdout ---
+src/actions/param_checker/default.c
+src/actions/param_checker/init.c
+src/actions/param_checker/check.c
+
+--- stderr ---
+
+
+Running command: /usr/bin/find src/actions/ -name *.c
+--- stdout ---
+src/actions/actions.c
+src/actions/axis.c
+src/actions/ball.c
+src/actions/button.c
+src/actions/clicked.c
+src/actions/cycle.c
+src/actions/deadzone.c
+src/actions/dpad.c
+src/actions/error.c
+src/actions/feedback.c
+src/actions/hold_doubleclick.c
+src/actions/macro.c
+src/actions/mode.c
+src/actions/mouse_abs.c
+src/actions/multiaction.c
+src/actions/name.c
+src/actions/noaction.c
+src/actions/param_checker/default.c
+src/actions/param_checker/init.c
+src/actions/param_checker/check.c
+src/actions/parameter/_invalid.c
+src/actions/parameter/_parameter.c
+src/actions/parameter/action.c
+src/actions/parameter/float.c
+src/actions/parameter/int.c
+src/actions/parameter/none.c
+src/actions/parameter/range.c
+src/actions/parameter/string.c
+src/actions/parameter/tuple.c
+src/actions/ring.c
+src/actions/sa_cemuhook.c
+src/actions/sa_keyboard.c
+src/actions/sa_profile.c
+src/actions/sa_turnoff.c
+src/actions/sensitivity.c
+src/actions/tap.c
+src/actions/tilt.c
+src/actions/trigger.c
+src/actions/type.c
+src/actions/xy.c
+src/actions/_stubs.c
+src/actions/gyro.c
+src/actions/mouse.c
+src/actions/press_touch_release.c
+src/actions/repeat_sleep.c
+src/actions/rotate_input.c
+src/actions/sa_menu.c
+src/actions/smooth.c
+
+--- stderr ---
+
+
+Library m found: YES
+Library m found: YES
+Pkg-config binary for MachineChoice.HOST is not cached.
+Pkg-config binary missing from cross or native file, or env var undefined.
+Trying a default pkg-config fallback at pkg-config
+Trying pkg-config binary pkg-config for machine MachineChoice.HOST at ['/usr/bin/pkg-config']
+Found pkg-config: /usr/bin/pkg-config (0.29.1)
+Determining dependency 'glib-2.0' with pkg-config executable '/usr/bin/pkg-config'
+PKG_CONFIG_PATH: 
+Called `/usr/bin/pkg-config --modversion glib-2.0` -> 0
+2.64.3
+PKG_CONFIG_PATH: 
+Called `/usr/bin/pkg-config --cflags glib-2.0` -> 0
+-I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+PKG_CONFIG_PATH: 
+Called `/usr/bin/pkg-config glib-2.0 --libs` -> 0
+-L/usr/lib/x86_64-linux-gnu -lglib-2.0
+PKG_CONFIG_PATH: 
+Called `/usr/bin/pkg-config glib-2.0 --libs` -> 0
+-lglib-2.0
+Running compile:
+Working directory:  /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/tmpjp0sgyge
+Command line:  cc /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/tmpjp0sgyge/testfile.c -o /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/tmpjp0sgyge/output.exe -pipe -D_FILE_OFFSET_BITS=64 -O0 
+
+Code:
+ #include<stdio.h>
+        
+        int main(void) {
+            printf("%ld\n", (long)(sizeof(void *)));
+            return 0;
+        };
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Program stdout:
+
+8
+
+Program stderr:
+
+
+Running compile:
+Working directory:  /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/tmp08wpk8ec
+Command line:  cc /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/tmp08wpk8ec/testfile.c -o /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/tmp08wpk8ec/output.obj -pipe -c -D_FILE_OFFSET_BITS=64 -O0 --print-search-dirs 
+
+Code:
+ 
+Compiler stdout:
+ install: /usr/lib/gcc/x86_64-linux-gnu/9/
+programs: =/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../x86_64-linux-gnu/bin/
+libraries: =/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../x86_64-linux-gnu/lib/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../x86_64-linux-gnu/lib/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../x86_64-linux-gnu/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib/:/lib/x86_64-linux-gnu/9/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/9/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../x86_64-linux-gnu/lib/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../:/lib/:/usr/lib/
+
+Compiler stderr:
+ 
+Run-time dependency glib-2.0 found: YES 2.64.3
+Running compile:
+Working directory:  /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/tmpa8yr1toa
+Command line:  cc /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/tmpa8yr1toa/testfile.c -o /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/compile/meson-private/tmpa8yr1toa/output.exe -pipe -D_FILE_OFFSET_BITS=64 -O0 -Wl,--start-group -lc -Wl,--end-group -Wl,--allow-shlib-undefined 
+
+Code:
+ int main(void) { return 0; }
+Compiler stdout:
+ 
+Compiler stderr:
+ 
+Library c found: YES
+Pkg-config binary for MachineChoice.HOST is cached.
+Determining dependency 'libevdev' with pkg-config executable '/usr/bin/pkg-config'
+PKG_CONFIG_PATH: 
+Called `/usr/bin/pkg-config --modversion libevdev` -> 0
+1.9.0
+PKG_CONFIG_PATH: 
+Called `/usr/bin/pkg-config --cflags libevdev` -> 0
+-I/usr/include/libevdev-1.0/
+PKG_CONFIG_PATH: 
+Called `/usr/bin/pkg-config libevdev --libs` -> 0
+-L/usr/lib/x86_64-linux-gnu -levdev
+PKG_CONFIG_PATH: 
+Called `/usr/bin/pkg-config libevdev --libs` -> 0
+-levdev
+Run-time dependency libevdev found: YES 1.9.0
+Pkg-config binary for MachineChoice.HOST is cached.
+Determining dependency 'zlib' with pkg-config executable '/usr/bin/pkg-config'
+PKG_CONFIG_PATH: 
+Called `/usr/bin/pkg-config --modversion zlib` -> 0
+1.2.11
+PKG_CONFIG_PATH: 
+Called `/usr/bin/pkg-config --cflags zlib` -> 0
+
+PKG_CONFIG_PATH: 
+Called `/usr/bin/pkg-config zlib --libs` -> 0
+-L/usr/lib/x86_64-linux-gnu -lz
+PKG_CONFIG_PATH: 
+Called `/usr/bin/pkg-config zlib --libs` -> 0
+-lz
+Run-time dependency zlib found: YES 1.2.11
+Library dl found: YES
+Pkg-config binary for MachineChoice.HOST is cached.
+Determining dependency 'x11' with pkg-config executable '/usr/bin/pkg-config'
+PKG_CONFIG_PATH: 
+Called `/usr/bin/pkg-config --modversion x11` -> 1
+
+CMake binary for MachineChoice.HOST is not cached
+CMake binary missing from cross or native file, or env var undefined.
+Trying a default CMake fallback at cmake
+Trying CMake binary cmake for machine MachineChoice.HOST at [None]
+Did not find CMake 'cmake'
+Found CMake: NO
+No CMake binary for machine MachineChoice.HOST not found. Giving up.
+Run-time dependency x11 found: NO (tried pkgconfig)
+
+src/daemon/meson.build:8:1: ERROR: Dependency "x11" not found, tried pkgconfig

@@ -43,7 +43,7 @@ Macros
 Modifiers
 =========
 [x] NameModifier
-[x] ClickModifier
+[x] ClickedModifier
 [ ] TouchedModifier
 [ ] UntouchedModifier
 [ ] PressedModifier

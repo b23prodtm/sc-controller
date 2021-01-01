@@ -8,6 +8,10 @@ Also supports clicking on areas defined in SVG image.
 
 from scc.tools import _
 
+# `gi.repository` is a special Python package that dynamically generates objects
+import gi
+gi.require_version('Gtk', '3.0') 
+gi.require_version('Rsvg', '2.0') 
 from gi.repository import Gtk, Gdk, GObject, GdkPixbuf, Rsvg
 from xml.etree import ElementTree as ET
 from math import sin, cos, pi as PI
@@ -21,7 +25,7 @@ ET.register_namespace('', "http://www.w3.org/2000/svg")
 class SVGWidget(Gtk.EventBox):
 	FILENAME = "background.svg"
 	CACHE_SIZE = 50
-	
+
 	__gsignals__ = {
 			# Raised when mouse is over defined area
 			"hover"	: (GObject.SignalFlags.RUN_FIRST, None, (object,)),
@@ -30,37 +34,38 @@ class SVGWidget(Gtk.EventBox):
 			# Raised user clicks on defined area
 			"click"	: (GObject.SignalFlags.RUN_FIRST, None, (object,)),
 	}
-	
-	
+
+
 	def __init__(self, filename, init_hilighted=True):
 		Gtk.EventBox.__init__(self)
 		self.cache = OrderedDict()
 		self.areas = []
-		
+
 		self.connect("motion-notify-event", self.on_mouse_moved)
 		self.connect("button-press-event", self.on_mouse_click)
 		self.set_events(Gdk.EventMask.POINTER_MOTION_MASK | Gdk.EventMask.BUTTON_PRESS_MASK)
-		
+
 		self.size_override = None
 		self.image_width = 1
 		self.image_height = 1
+		self.current_svg = ""
 		self.set_image(filename)
 		self.image = Gtk.Image()
 		if init_hilighted:
 			self.hilight({})
 		self.add(self.image)
 		self.show_all()
-	
-	
+
+
 	def set_image(self, filename):
 		self.cache = OrderedDict()
 		self.areas = []
 		try:
-			tree = ET.parse(filename)
-			self.current_svg = ET.tostring(tree)
+			tree = ET.parse(filename).getroot()
+			self.current_svg = ET.tostring(tree).lower()
 			self.parse_image(tree)
 		except Exception as e:
-			print("SVGEditor file %s is invalid" % (filename))
+			print("SVGEditor file %s is invalid: %s" % (filename, e))
 
 
 	def parse_image(self, tree):
@@ -73,8 +78,8 @@ class SVGWidget(Gtk.EventBox):
 		SVGWidget.find_areas(tree, None, self.areas)
 		self.image_width =  float(tree.attrib["width"])
 		self.image_height = float(tree.attrib["height"])
-	
-	
+
+
 	def resize(self, width, height):
 		"""
 		Overrides image size.
@@ -83,14 +88,14 @@ class SVGWidget(Gtk.EventBox):
 		"""
 		self.size_override = width, height
 		self.cache = OrderedDict()
-	
-	
+
+
 	def on_mouse_click(self, trash, event):
 		area = self.on_mouse_moved(trash, event)
 		if area is not None:
 			self.emit('click', area)
-	
-	
+
+
 	def on_mouse_moved(self, trash, event):
 		"""
 		Not actual signal handler, just called from App.
@@ -104,15 +109,15 @@ class SVGWidget(Gtk.EventBox):
 				return a.name
 		self.emit('leave')
 		return None
-	
-	
+
+
 	def get_area(self, id):
 		for a in self.areas:
 			if a.name == id:
 				return a
 		return None
-	
-	
+
+
 	def get_all_by_prefix(self, prefix):
 		"""
 		Searchs for areas using specific prefix.
@@ -126,8 +131,8 @@ class SVGWidget(Gtk.EventBox):
 		tree = ET.fromstring(self.current_svg)
 		SVGWidget.find_areas(tree, None, lst, prefix=prefix)
 		return lst
-	
-	
+
+
 	def get_area_position(self, area_id):
 		"""
 		Computes and returns area position on image as (x, y, width, height).
@@ -138,8 +143,8 @@ class SVGWidget(Gtk.EventBox):
 		if a:
 			return a.x, a.y, a.w, a.h
 		raise ValueError("Area '%s' not found" % (area_id, ))
-	
-	
+
+
 	@staticmethod
 	def find_areas(xml, parent_transform, areas, get_colors=False, prefix="AREA_"):
 		"""
@@ -161,8 +166,8 @@ class SVGWidget(Gtk.EventBox):
 				areas.append(a)
 			else:
 				SVGWidget.find_areas(child, child_transform, areas, get_colors=get_colors, prefix=prefix)
-	
-	
+
+
 	def get_rect_area(self, element):
 		"""
 		Returns x, y, width and height of rect element relative to document root.
@@ -176,10 +181,10 @@ class SVGWidget(Gtk.EventBox):
 		x, y = SVGEditor.get_translation(element, absolute=True)
 		if 'width' in element.attrib:  width = float(element.attrib['width'])
 		if 'height' in element.attrib: height = float(element.attrib['height'])
-		
+
 		return x, y, width, height
-	
-	
+
+
 	@staticmethod
 	def color_to_float(colorstr):
 		"""
@@ -190,32 +195,27 @@ class SVGWidget(Gtk.EventBox):
 		if b:
 			return color.red_float, color.green_float, color.blue_float, 1
 		return 1, 0, 1, 1	# uggly purple
-	
-	
+
+
 	def hilight(self, buttons):
 		""" Hilights specified button, if same ID is found in svg """
 		cache_id = "|".join([ "%s:%s" % (x, buttons[x]) for x in buttons ])
 		if not cache_id in self.cache:
-			# Ok, this is close to madness, but probably better than drawing
-			# 200 images by hand;
+			# 1st, parse source as XML
+			tree = ET.fromstring(self.current_svg)
 			if len(buttons) == 0:
 				# Quick way out - changes are not needed
-				svg = Rsvg.Handle.new_from_data(str(self.current_svg).encode())
+				pass
 			else:
-				# 1st, parse source as XML
-				tree = ET.fromstring(self.
-current_svg)
 				# 2nd, change colors of some elements
 				for button in buttons:
 					el = SVGEditor.find_by_id(tree, button)
 					if el is not None:
 						SVGEditor.recolor(el, buttons[button])
-					
-				# 3rd, turn it back into XML string......
-				xml = ET.tostring(tree)
-				
-				# ... and now, parse that as XML again......
-				svg = Rsvg.Handle.new_from_data(xml)
+			# 3rd, turn it back into XML string......
+			xml = ET.tostring(tree)
+			# ... and now, parse that as XML again......
+			svg = Rsvg.Handle.new_from_data(xml)
 			while len(self.cache) >= self.CACHE_SIZE:
 				self.cache.popitem(False)
 			if self.size_override:
@@ -224,15 +224,15 @@ current_svg)
 						w, h, GdkPixbuf.InterpType.BILINEAR)
 			else:
 				self.cache[cache_id] = svg.get_pixbuf()
-		
+
 		self.image.set_from_pixbuf(self.cache[cache_id])
-	
-	
+
+
 	def get_pixbuf(self):
 		""" Returns pixbuf of current image """
 		return self.image.get_pixbuf()
-	
-	
+
+
 	def edit(self):
 		""" Returns new Editor instance bound to this widget """
 		return SVGEditor(self)
@@ -241,7 +241,7 @@ current_svg)
 class Area:
 	SPECIAL_CASES = ( "LSTICK", "RSTICK", "DPAD", "ABS", "MOUSE",
 		"MINUSHALF", "PLUSHALF", "KEY" )
-	
+
 	""" Basicaly just rectangle with name """
 	def __init__(self, element, transform):
 		self.name = element.attrib['id'].split("_")[1]
@@ -250,13 +250,13 @@ class Area:
 		self.x, self.y = SVGEditor.get_translation(transform)
 		self.w = float(element.attrib.get('width', 0))
 		self.h = float(element.attrib.get('height', 0))
-	
-	
+
+
 	def contains(self, x, y):
-		return (x >= self.x and y >= self.y 
+		return (x >= self.x and y >= self.y
 			and x <= self.x + self.w and y <= self.y + self.h)
-	
-	
+
+
 	def __str__(self):
 		return "<Area %s,%s %sx%s>" % (self.x, self.y, self.w, self.h)
 
@@ -265,13 +265,13 @@ class SVGEditor(object):
 	"""
 	Allows some basic edit operations by parsing SVG into dom tree and doing
 	unholly mess on that.
-	
+
 	Constructed by SVGWidget.edit(), updates original SVGWidget when commit()
 	is called.
 	"""
 	RE_PARSE_TRANSFORM = re.compile(r"([a-z]+)\(([-0-9\.,]+)\)(.*)")
 	IDENTITY = ( (1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0) )
-	
+
 	def __init__(self, svgw):
 		if type(svgw) == str:
 			self._svgw = None
@@ -282,26 +282,26 @@ class SVGEditor(object):
 		else:
 			self._svgw = svgw
 			self._tree = ET.fromstring(svgw.current_svg)
-	
-	
+
+
 	def commit(self):
 		"""
 		Sends modified SVG back to original SVGWidget instance.
-		
+
 		Return self.
 		"""
 		self._svgw.current_svg = ET.tostring(self._tree)
 		self._svgw.cache = OrderedDict()
 		self._svgw.hilight({})
-		
+
 		return self
-	
-	
+
+
 	def to_string(self):
 		""" Returns modivied SVG as string """
 		return ET.tostring(self._tree)
-	
-	
+
+
 	@staticmethod
 	def _deep_copy(element):
 		""" Creates deep copy of XML element """
@@ -312,13 +312,13 @@ class SVGEditor(object):
 			e.append(copy)
 			copy.parent = e
 		return e
-	
-	
+
+
 	def clone_element(self, id):
 		"""
 		Grabs element with specified ID, duplicates it and returns created
 		element. Returned element may get invalidated when commit() is called.
-		
+
 		Returns None if element cannot be found
 		"""
 		SVGEditor.update_parents(self)
@@ -329,34 +329,34 @@ class SVGEditor(object):
 			copy.parent = e.parent
 			return copy
 		return None
-	
-	
+
+
 	def remove_element(self, e):
 		"""
 		Removes element with specified ID, or, if element is passed,
 		removed that element. If  'id' is None, does nothing.
-		
+
 		Returns self.
 		"""
-		
+
 		if type(e) in (str, str):
 			e = SVGEditor.get_element(self, e)
 		if e is not None:
 			e.parent.remove(e)
 		return self
-	
-	
+
+
 	def keep(self, *ids):
 		"""
 		Removes all elements but ones with ID specified.
 		Keeps child elements as well.
-		
+
 		Returns self.
 		"""
-		
+
 		def recursive(element):
 			for child in list(element):
-				if (child.tag.endswith("metadata") 
+				if (child.tag.endswith("metadata")
 						or child.tag.endswith("defs")
 						or child.tag.endswith("defs")
 						or child.tag.endswith("namedview")
@@ -364,12 +364,12 @@ class SVGEditor(object):
 					recursive(child)
 				elif child.attrib.get('id') not in ids:
 					element.remove(child)
-		
-		
+
+
 		recursive(self._tree)
 		return self
-	
-	
+
+
 	@staticmethod
 	def update_parents(tree):
 		"""
@@ -385,26 +385,26 @@ class SVGEditor(object):
 		add_parent(tree)
 		if hasattr(tree, "parent"):
 			tree.parent = None
-	
-	
+
+
 	@staticmethod
 	def get_element(tree, id):
 		"""
 		Recursively searches throught XML until element with specified ID is found.
-		
+
 		Returns element or None, if there is not any.
 		"""
 		if isinstance(tree, SVGEditor):
 			tree = tree._tree
-		
+
 		return SVGEditor.find_by_id(tree, id)
-	
-	
+
+
 	@staticmethod
 	def find_by_id(tree, id):
 		"""
 		Recursively searches throught XML until element with specified ID is found.
-		
+
 		Returns element or None, if there is not any.
 		"""
 		for child in tree:
@@ -414,14 +414,14 @@ class SVGEditor(object):
 			r = SVGEditor.find_by_id(child, id)
 			if r is not None:
 				return r
-		return None	
-	
-	
+		return None
+
+
 	@staticmethod
 	def find_by_tag(tree, tag):
 		"""
 		Recursively searches throught XML until element with specified tag is found.
-		
+
 		Returns element or None, if there is not any.
 		"""
 		for child in tree:
@@ -430,15 +430,15 @@ class SVGEditor(object):
 			r = SVGEditor.find_by_tag(child, tag)
 			if r is not None:
 				return r
-		return None	
-	
-	
+		return None
+
+
 	@staticmethod
 	def recolor(element, color):
 		"""
 		Changes background color of element.
 		If element is group, descends into first element with fill set.
-		
+
 		Returns True on success, False if element cannot be recolored.
 		"""
 		if element.tag.endswith("path") or element.tag.endswith("rect") or element.tag.endswith("circle") or element.tag.endswith("ellipse") or element.tag.endswith("text"):
@@ -460,8 +460,8 @@ class SVGEditor(object):
 				SVGEditor.recolor(child, color)
 			return True
 		return False
-	
-	
+
+
 	@staticmethod
 	def _recolor(tree, s_from, s_to):
 		""" Recursive part of recolor_strokes and recolor_background """
@@ -470,41 +470,41 @@ class SVGEditor(object):
 				if s_from in child.attrib['style']:
 					child.attrib['style'] = child.attrib['style'].replace(s_from, s_to)
 			SVGEditor._recolor(child, s_from, s_to)
-	
-	
+
+
 	def recolor_background(self, change_from, change_to):
 		"""
 		Recursively travels entire DOM tree and changes every matching
 		background color into specified color.
-		
+
 		Returns self.
 		"""
 		s_from = "fill:#%s" % (change_from,)
 		s_to   = "fill:#%s" % (change_to,)
 		SVGEditor._recolor(self._tree, s_from, s_to)
 		return self
-	
-	
+
+
 	def recolor_strokes(self, change_from, change_to):
 		"""
 		Recursively travels entire DOM tree and changes every matching
 		line (stroke) color into specified color.
-		
+
 		Returns self.
 		"""
 		s_from = "stroke:#%s" % (change_from,)
 		s_to   = "stroke:#%s" % (change_to,)
 		SVGEditor._recolor(self._tree, s_from, s_to)
 		return self
-	
-	
+
+
 	@staticmethod
 	def matrixmul(X, Y, *a):
 		if len(a) > 0:
 			return SVGEditor.matrixmul(SVGEditor.matrixmul(X, Y), a[0], *a[1:])
 		return [[ sum(a*b for a,b in zip(x,y)) for y in zip(*Y) ] for x in X ]
-	
-	
+
+
 	@staticmethod
 	def scale(xml, sx, sy=None):
 		"""
@@ -516,8 +516,8 @@ class SVGEditor(object):
 			SVGEditor.parse_transform(xml),
 			[ [ sx, 0.0, 0.0 ], [ 0.0, sy, 0.0 ], [ 0.0, 0.0, 1.0 ] ],
 		))
-	
-	
+
+
 	@staticmethod
 	def rotate(xml, a, x, y):
 		"""
@@ -531,8 +531,8 @@ class SVGEditor(object):
 			[ [ cos(a), -sin(a), 0 ], [ sin(a), cos(a), 0 ], [ 0.0, 0.0, 1.0 ] ],
 			[ [ 1.0, 0.0, -x ], [ 0.0, 1.0, -y ], [ 0.0, 0.0, 1.0 ] ],
 		))
-	
-	
+
+
 	@staticmethod
 	def translate(xml, x, y):
 		"""
@@ -543,8 +543,8 @@ class SVGEditor(object):
 			SVGEditor.parse_transform(xml),
 			[ [ 1.0, 0.0, x ], [ 0.0, 1.0, y ], [ 0.0, 0.0, 1.0 ] ],
 		))
-	
-	
+
+
 	@staticmethod
 	def set_transform(xml, matrix):
 		"""
@@ -554,8 +554,8 @@ class SVGEditor(object):
 			matrix[0][0], matrix[1][0], matrix[0][1],
 			matrix[1][1], matrix[0][2], matrix[1][2],
 		)
-	
-	
+
+
 	@staticmethod
 	def get_translation(elm_or_matrix, absolute=False):
 		if isinstance(elm_or_matrix, ET.Element):
@@ -567,10 +567,10 @@ class SVGEditor(object):
 				parent = parent.parent
 		else:
 			matrix = elm_or_matrix
-		
+
 		return matrix[0][2], matrix[1][2]
-	
-	
+
+
 	@staticmethod
 	def get_size(elm):
 		width, height = 1, 1
@@ -579,8 +579,8 @@ class SVGEditor(object):
 		if 'height' in elm.attrib:
 			height = float(elm.attrib['height'])
 		return width, height
-	
-	
+
+
 	@staticmethod
 	def parse_transform(xml):
 		"""
@@ -627,12 +627,12 @@ class SVGEditor(object):
 					matrix = SVGEditor.matrixmul(matrix,
 						[ [ a, c, e], [b, d, f], [0, 0, 1] ]
 					)
-				
+
 				match = SVGEditor.RE_PARSE_TRANSFORM.match(transform.strip())
-		
+
 		return matrix
-	
-	
+
+
 	@staticmethod
 	def set_text(xml, text):
 		has_valid_children = False
@@ -642,13 +642,13 @@ class SVGEditor(object):
 				SVGEditor.set_text(child, text)
 		if not has_valid_children:
 			xml.text = text
-	
-	
+
+
 	def set_labels(self, labels):
 		"""
 		Replaces text on every element named LABEL_something with coresponding
 		value from 'labels' dict.
-		
+
 		Returns self.
 		"""
 		def walk(xml):
@@ -659,17 +659,17 @@ class SVGEditor(object):
 						if id in labels:
 							SVGEditor.set_text(child, labels[id])
 				walk(child)
-		
+
 		walk(self._tree)
 		return self
-	
-	
+
+
 	@staticmethod
 	def add_element(parent, e, **attributes):
 		"""
 		Creates new element as child of specified parent or, if 1st argument
 		is ET.Element, adds that element.
-		
+
 		Returns created or passed element.
 		"""
 		if not isinstance(e, ET.Element):
@@ -677,8 +677,8 @@ class SVGEditor(object):
 			e = ET.Element(e, attributes)
 		parent.append(e)
 		return e
-	
-	
+
+
 	@staticmethod
 	def load_from_file(filename):
 		tree = ET.fromstring(open(filename, "r").read())

@@ -3,6 +3,9 @@
 
 from scc.tools import _
 
+# `gi.repository` is a special Python package that dynamically generates objects
+import gi
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GLib
 from scc.actions import Action, NoAction, XYAction
 from scc.gui.editor import ComboSetter

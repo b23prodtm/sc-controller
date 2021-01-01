@@ -1,6 +1,7 @@
 from scc.constants import SCButtons, HapticPos
-from scc.actions import DoubleclickModifier, SensitivityModifier, FeedbackModifier
-from scc.actions import Action, AxisAction, Macro
+from scc.modifiers import DoubleclickModifier, SensitivityModifier, FeedbackModifier
+from scc.actions import Action, AxisAction
+from scc.macros import Macro
 from scc.parser import ActionParser
 import pytest
 
@@ -121,7 +122,7 @@ class TestCompress(object):
 	Tests Aciton.compress method.
 	Basically, tests how various combinations of modifiers interacts together.
 	"""
-	
+
 	@pytest.mark.skip
 	def test_hold_doubleclick(self):
 		"""
@@ -132,7 +133,7 @@ class TestCompress(object):
 			'hold' : { 'action' : "axis(ABS_X)" },
 			'doubleclick' : { 'action' : "axis(ABS_Z)" }
 		}).compress()
-		
+
 		assert isinstance(a, DoubleclickModifier)
 		assert isinstance(a.normalaction, AxisAction)
 		assert isinstance(a.action, AxisAction)
@@ -140,7 +141,7 @@ class TestCompress(object):
 		assert a.normalaction.axis == Axes.ABS_RX
 		assert a.action.axis == Axes.ABS_Z
 		assert a.holdaction.axis == Axes.ABS_X
-	
+
 	def test_sensitivity(self):
 		"""
 		Tests if all sensitivity setting are parsed and applied
@@ -148,7 +149,7 @@ class TestCompress(object):
 		"""
 		for case in CASES:
 			if 'sensitivity' in CASES[case]:
-				print "Testing 'sensitivity' on %s" % (case,)
+				print("Testing 'sensitivity' on %s" % (case,))
 				a = parser.restart(CASES[case]["action"]).parse()
 				params = list(CASES[case]['sensitivity'])
 				params += [ a ]
@@ -158,21 +159,19 @@ class TestCompress(object):
 					or
 					a.strip().get_speed() == CASES[case]['sensitivity']
 				)
-	
+
 	def test_feedback(self):
 		"""
 		Tests if all feedback setting are parsed and applied
 		after .compress() is called.
 		"""
 		for case in CASES:
-			if 'feedback' in CASES[case]:
-				print "Testing 'feedback' on %s" % (case,)
+			if FeedbackModifier.COMMAND in CASES[case]:
+				print("Testing %s on %s" % (FeedbackModifier.COMMAND, case,))
 				a = parser.restart(CASES[case]["action"]).parse()
-				params = list(CASES[case]['feedback'])
-				params += [ a ]
-				a = FeedbackModifier(*params).compress()
-				assert a.get_haptic().get_position().name == CASES[case]['feedback'][0]
-	
+				a = FeedbackModifier.decode(CASES[case], a, parser, 0).compress()
+				assert a.get_haptic().get_position().name == CASES[case][FeedbackModifier.COMMAND][0]
+
 	@pytest.mark.skip
 	def test_multi(self):
 		"""
@@ -187,7 +186,7 @@ class TestCompress(object):
 		assert a.actions[0].get_haptic().get_position().name == "BOTH"
 		for action in a.actions:
 			assert action.get_speed()[0] == 2.0
-	
+
 	@pytest.mark.skip
 	def test_macro(self):
 		"""
@@ -207,4 +206,3 @@ class TestCompress(object):
 if __name__ == "__main__":
 	t = TestCompress()
 	t.test_sensitivity()
-

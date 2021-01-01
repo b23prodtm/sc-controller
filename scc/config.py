@@ -37,7 +37,7 @@ class Config(object):
 			"evdevdrv": True,
 			"ds4drv": True,			# At least one of hiddrv or evdevdrv has to be enabled as well
 		},
-		"fix_xinput" : True,		# If True, attempt is done to deatach emulated controller 
+		"fix_xinput" : True,		# If True, attempt is done to deatach emulated controller
 									# from 'Virtual core pointer' core device.
 		"gui": {
 			# GUI-only settings
@@ -110,7 +110,7 @@ class Config(object):
 		# See drivers/sc_dongle.py, read_serial method
 		"ignore_serials" : True,
 	}
-	
+
 	CONTROLLER_DEFAULTS = {
 		# Defaults for controller config
 		"name":					None,	# Filled with controller ID on runtime
@@ -124,13 +124,16 @@ class Config(object):
 		"menu_confirm":			"A",
 		"menu_cancel":			"B",
 	}
-	
-	
-	def __init__(self):
-		self.filename = os.path.join(get_config_path(), "config.json")
+
+
+	def __init__(self, filename = ""):
+		if filename != "":
+			self.filename = filename
+		else:
+			self.filename = os.path.join(get_config_path(), "config.json")
 		self.reload()
-	
-	
+
+
 	def reload(self):
 		""" (Re)loads configuration. Works as load(), but handles exceptions """
 		try:
@@ -141,13 +144,13 @@ class Config(object):
 			self.create()
 		if self.check_values():
 			self.save()
-	
-	
+
+
 	def _check_dict(self, values, defaults):
 		"""
 		Recursivelly checks if 'config' contains all keys in 'defaults'.
 		Creates keys with default values where missing.
-		
+
 		Returns True if anything was changed.
 		"""
 		rv = False
@@ -158,13 +161,13 @@ class Config(object):
 			if type(values[d]) == dict:
 				rv = self._check_dict(values[d], defaults[d]) or rv
 		return rv
-	
-	
+
+
 	def check_values(self):
 		"""
 		Check if all required values are in place and fill by default
 		whatever is missing.
-		
+
 		Returns True if anything gets changed.
 		"""
 		rv = self._check_dict(self.values, self.DEFAULTS)
@@ -176,8 +179,8 @@ class Config(object):
 					del a["profile"]
 					rv = True
 		return rv
-	
-	
+
+
 	def get_controller_config(self, controller_id):
 		"""
 		Returns self['controllers'][controller_id], creating new node populated
@@ -200,19 +203,19 @@ class Config(object):
 		}
 		rv["name"] = controller_id
 		return rv
-	
-	
+
+
 	def load(self):
 		self.values = json.loads(open(self.filename, "r").read())
-	
-	
+
+
 	def create(self):
 		""" Creates new, empty configuration """
 		self.values = {}
 		self.check_values()
 		self.save()
-	
-	
+
+
 	def save(self):
 		""" Saves configuration file """
 		# Check & create directory
@@ -223,22 +226,21 @@ class Config(object):
 		jstr = Encoder(sort_keys=True, indent=4).encode(data)
 		open(self.filename, "w").write(jstr)
 		log.debug("Configuration saved")
-	
-	
+
+
 	def __iter__(self):
 		for k in self.values:
 			yield k
-	
+
 	def get(self, key, default=None):
 		return self.values.get(key, default)
-	
+
 	def set(self, key, value):
 		self.values[key] = value
-	
+
 	__getitem__ = get
 	__setitem__ = set
-	
+
 	def __contains__(self, key):
 		""" Returns true if there is such value """
 		return key in self.values
-

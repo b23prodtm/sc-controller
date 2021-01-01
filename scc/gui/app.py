@@ -359,7 +359,8 @@ class App(Gtk.Application, UserDataManager, BindingEditor):
 		for color in self.hilights:
 			for i in self.hilights[color]:
 				h[i] = color
-		self.background.hilight(h)
+		if self.background is not None:
+			self.background.hilight(h)
 	
 	
 	def hint(self, button):

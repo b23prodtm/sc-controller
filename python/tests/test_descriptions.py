@@ -4,7 +4,7 @@ from scc.parser import ActionParser
 parser = ActionParser()
 
 class TestDescriptions(object):
-	
+
 	DESCRIPTIONS = {
 		"button(Keys.KEY_ENTER)":			"ENTER",
 		"button(Keys.KEY_ESC)":				"ESC",
@@ -21,10 +21,8 @@ class TestDescriptions(object):
 		"dpad(button(Keys.KEY_UP), button(Keys.KEY_DOWN))":							"DPad",
 		# TODO: WSAD, Arrows
 	}
-	
-	def test_noaction_is_false(self):
-		for a_str, desc in TestDescriptions.DESCRIPTIONS.items():
-			a = parser.restart(a_str).parse()
-			assert a.describe() == desc
-		
 
+	def test_noaction_is_false(self):
+		for a_str, desc in list(TestDescriptions.DESCRIPTIONS.items()):
+			a = parser.restart(a_str).parse()
+			assert a.describe(a_str) == desc
