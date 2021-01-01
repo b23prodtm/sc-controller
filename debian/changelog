@@ -1,6 +1,6 @@
 sc-controller (0.4.9) UNRELEASED; urgency=medium
 
-  [ btinarako ]
+  [ bnopod ]
   * Initial release. (Closes: #XXXXXX) 
 
   [ kozec ]
@@ -2523,4 +2523,16 @@ sc-controller (0.4.9) UNRELEASED; urgency=medium
   [ Tiana Rakoto Arimanana ]
   * Fixes: dict string keys
 
- -- btinarako <btinarako@btinarako-System-Product-Name>  Sun, 27 Dec 2020 22:19:08 +0100
+  [ BOPOD ]
+  * Fixes: FileNotFoundError: [Errno 2]
+  * Fixes: FileNotFoundError: [Errno 2]
+  * Fixes: FileNotFoundError: [Errno 2]
+  * Fixes: FileNotFoundError: [Errno 2]
+  * Fixes: FileNotFoundError: [Errno 2]
+  * Fixes: FileNotFoundError: [Errno 2]
+  * Fixes: FileNotFoundError: [Errno 2]
+  * Fixes: FileNotFoundError: [Errno 2]
+  * Fixes: FileNotFoundError: [Errno 2]
+  * Fixes: FileNotFoundError: [Errno 2]
+
+ -- btinarako <btinarako@btinarako-System-Product-Name>  Fri, 01 Jan 2021 14:45:39 +0100

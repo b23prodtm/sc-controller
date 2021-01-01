@@ -4,6 +4,7 @@ SC-Controller - Daemon class
 """
 
 
+import ctypes
 from scc.lib import xwrappers as X
 from scc.lib import xinput
 from scc.lib.daemon import Daemon
@@ -420,7 +421,8 @@ class SCCDaemon(Daemon):
 			self.xdisplay = None
 			return
 		
-		self.xdisplay = X.open_display(os.environ["DISPLAY"])
+		xdisplay_b = ctypes.c_char_p(os.environ["DISPLAY"].encode())
+		self.xdisplay = X.open_display(xdisplay_b)
 		if self.xdisplay:
 			log.debug("Connected to XServer %s", os.environ["DISPLAY"])
 			
