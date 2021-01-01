@@ -12,6 +12,7 @@ C_FILES = '*.c'
 libexecinfo = []
 
 if host_machine.system() == 'windows'
+	add_global_link_arguments('-lpython3.8', '-lcrypt', '-lpthread', '-ldl', '-lutil', '-lm', language: 'c')
 	add_global_arguments('-D_POSIX', '-DNO_X11', '-mno-ms-bitfields', language: 'c')
 	add_global_arguments('-DNO_TRACEBACKS', language: 'c')
 	# add_global_arguments('-DUSE_LIBUSB', language: 'c') # Disabled; not needed for now
@@ -22,9 +23,11 @@ elif get_option('android').enabled()
 	add_global_arguments('-DANDROID', language: 'c')
 	add_global_arguments('-DNO_TRACEBACKS', language: 'c')
 elif host_machine.system() == 'linux'
+	add_global_link_arguments('-lpython3.8', '-lcrypt', '-lpthread', '-ldl', '-lutil', '-lm', language: 'c')
 	add_global_arguments('-DUSE_LIBUSB', language: 'c')
 	tools_library_deps = [ meson.get_compiler('c').find_library('dl') ]
 elif host_machine.system() == 'openbsd' or host_machine.system() == 'netbsd'
+	add_global_link_arguments('-lpython3.8', '-lcrypt', '-lpthread', '-ldl', '-lutil', '-lm', language: 'c')
 	add_global_link_arguments('-lc', language: 'c')
 	add_global_arguments('-D__BSD__', language: 'c')
 endif
@@ -177,3 +180,4 @@ endif
 subdir('src/gui')
 subdir('tests')
 
+meson.add_install_script('meson-custom-install.sh')

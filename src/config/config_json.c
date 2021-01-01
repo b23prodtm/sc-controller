@@ -87,9 +87,9 @@ Config* config_load() {
 	c->filename = strbuilder_consume(sb);
 	int fd = open(c->filename, O_RDONLY);
 	if (fd < 0) {
-		WARN("Failed to open config file: %s. Starting with defaults.", strerror(errno));
+		WARN("Failed to open config file %s: %s. Starting with defaults.", c->filename, strerror(errno));
 	} else if (!config_load_json_file(c, fd, error_return)) {
-		WARN("Failed to parse config file: %s. Starting with defaults", error_return);
+		WARN("Failed to parse config file %s: %s. Starting with defaults", c->filename, error_return);
 	}
 	if (c->ctx == NULL) {
 		c->ctx = aojls_deserialize("{}", 2, NULL);

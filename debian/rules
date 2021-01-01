@@ -1,6 +1,6 @@
 #! /usr/bin/make -f
 #export DH_VERBOSE=1
-export PYBUILD_NAME=sc-controller
 
 %:
-	dh $@ --with=python3 --buildsystem=pybuild
+	#dh $@ --with=python3 --buildsystem=pybuild
+	dh $@ --with=python3 --buildsystem=meson

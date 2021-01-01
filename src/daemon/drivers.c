@@ -95,11 +95,20 @@ void sccd_drivers_init(Daemon* d, enum DirverInitMode mode) {
 	DIR *dir;
 	struct dirent *ent;
 	ASSERT(NULL != (loaded_drivers = hashmap_new()));
-	if ((dir = opendir(scc_drivers_path())) == NULL) {
-		// Failed to open directory
-		LERROR("Failed to enumerate '%s': %s", scc_drivers_path(), strerror(errno));
+	StrBuilder* sb = strbuilder_new();
+	char error_return[256];
+	if(!make_path(SCLT_DRIVER, sb, error_return)) {
+		LERROR("Failed to make drivers path: %s", error_return);
+		strbuilder_free(sb);
 		return;
 	}
+	char* scc_drivers_path = strbuilder_consume(sb);
+	if ((dir = opendir(scc_drivers_path)) == NULL) {
+		// Failed to open directory
+		LERROR("Failed to enumerate '%s': %s", scc_drivers_path, strerror(errno));
+		return;
+	}
+	free(scc_drivers_path);
 	while ((ent = readdir(dir)) != NULL) {
 		bool is_driver = (strstr(ent->d_name, FILENAME_SUFFIX) == ent->d_name + strlen(ent->d_name) - strlen(FILENAME_SUFFIX));
 		is_driver = is_driver && (strstr(ent->d_name, FILENAME_PREFIX) == ent->d_name);

@@ -51,7 +51,6 @@ static char default_menuicons_path[PATH_MAX + 128] = {0};
 static char default_button_images_path[PATH_MAX + 128] = {0};
 static char default_controller_icons_path[PATH_MAX + 128] = {0};
 static char pid_file_path[PATH_MAX] = {0};
-static char drivers_path[PATH_MAX] = {0};
 
 extern char** environ;
 
@@ -252,21 +251,6 @@ const char* scc_get_pid_file() {
 	return pid_file_path;
 }
 
-const char* scc_drivers_path() {
-	if (drivers_path[0] != 0)
-		// Return cached value
-		return drivers_path;
-	// TODO: This path should be somehow configurable or determined on runtime
-#ifdef _WIN32
-	snprintf(drivers_path, PATH_MAX, "%s\\..\\drivers", scc_get_share_path());
-#else
-	strncpy(drivers_path, "src/daemon/drivers", PATH_MAX);
-#endif
-	return drivers_path;
-}
-
-
-#ifdef _WIN32
 static char exe_path[PATH_MAX] = {0};
 
 const char* scc_get_exe_path() {
@@ -274,20 +258,21 @@ const char* scc_get_exe_path() {
 		// Return cached value
 		return exe_path;
 	char path[PATH_MAX];
+#ifdef _WIN32
 	snprintf(path, PATH_MAX, "%s\\..", scc_get_share_path());
 	ASSERT(exe_path == scc_realpath(path, exe_path));
+#else
+	ASSERT(getcwd(exe_path, PATH_MAX) != NULL);
+#endif
 	return exe_path;
 }
-#endif
 
 // TODO: This, but properly
 char* scc_find_binary(const char* name) {
 	const char* paths[] = {
-#ifdef _WIN32
 		scc_get_exe_path(),
-#else
-		"./",
-		"./tools",
+#ifndef _WIN32
+		"tools",
 #endif
 		"src/osd",
 		"src/daemon",
@@ -541,7 +526,7 @@ const char* scc_get_python_src_path() {
 	if (access(path, F_OK) != -1) {
 		snprintf(path, PATH_MAX, "%s/../python", scc_get_share_path());
 	} else {
-		snprintf(path, PATH_MAX, "/usr/lib/python2.7/site-packages");
+		snprintf(path, PATH_MAX, "/usr/lib/python3.8/site-packages");
 	}
 #endif
 	ASSERT(python_path == scc_realpath(path, python_path));

@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 typedef struct StrBuilder StrBuilder;
 
@@ -172,6 +173,13 @@ static inline const char* strbuilder_get_value(StrBuilder* b) {
 	return b->value;
 }
 
+/** Returns wide char value without deallocating builder. Returned string should not be changed or deallocated */
+static inline const wchar_t* strbuilder_get_value_wc(StrBuilder* b) {
+	size_t length = strlen(b->value) + 1;
+	const wchar_t value[length];
+	mbstowcs(value, b->value, length);
+	return (wchar_t*)value;
+}
 /** Returns length of builder value */
 static inline size_t strbuilder_len(StrBuilder* b) {
 	return b->length;
@@ -183,4 +191,3 @@ static inline size_t strbuilder_len(StrBuilder* b) {
 char* strbuilder_cpy(const char* src);
 /** Shortcut to create new string out of given format. Returns NULL if memory cannot be allocated */
 char* strbuilder_fmt(const char* format, ...);
-

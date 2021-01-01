@@ -2303,4 +2303,34 @@ sc-controller (0.4.9) UNRELEASED; urgency=medium
   [ Tiana Rakoto Arimanana ]
   * Test hipfire
 
- -- btinarako <btinarako@btinarako-System-Product-Name>  Fri, 25 Dec 2020 20:48:12 +0100
+  [ BOPOD ]
+  * Fixes: python3 tests
+
+  [ b23prodtm ]
+  * Issue: test_menu_generators #2
+
+  [ BOPOD ]
+  * Fixes: python3 tests
+
+  [ b23prodtm ]
+  * Issue: test_menu_generators #2
+
+  [ BOPOD ]
+  * Fixes: python3 tests
+
+  [ b23prodtm ]
+  * Issue: test_menu_generators #2
+
+  [ BOPOD ]
+  * Fixes: python3 tests
+
+  [ b23prodtm ]
+  * Issue: test_menu_generators #2
+
+  [ BOPOD ]
+  * Fixes: python3 tests
+
+  [ b23prodtm ]
+  * Issue: test_menu_generators #2
+
+ -- btinarako <btinarako@btinarako-System-Product-Name>  Wed, 06 Jan 2021 20:31:07 +0100

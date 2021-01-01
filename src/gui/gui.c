@@ -8,7 +8,7 @@
  * python file.
  */
 #define LOG_TAG "GUI"
-#include "Python.h"
+#include <Python.h>
 #include "scc/utils/strbuilder.h"
 #include "scc/utils/traceback.h"
 #include "scc/utils/logging.h"
@@ -16,10 +16,10 @@
 #include "scc/tools.h"
 #include "../daemon/version.h"
 
-#define LIB_PYTHON_PATH ":/usr/lib/python2.7" \
-						":/usr/lib/python2.7/plat-linux2" \
-						":/usr/lib/python2.7/lib-dynload" \
-						":/usr/lib/python2.7/site-packages"
+#define LIB_PYTHON_PATH ":/usr/lib/python3.8" \
+						":/usr/lib/python3.8/plat-linux2" \
+						":/usr/lib/python3.8/lib-dynload" \
+						":/usr/lib/python3.8/site-packages"
 
 #ifdef _WIN32
 #ifdef FORCE_CONSOLE
@@ -45,16 +45,16 @@ int main(int argc, char** argv) {
 	// try to get rid of old daemon automatically
 	traceback_set_argv0(argv[0]);
 #endif	// _WIN32
-	
+
 	DEBUG("Initializing python...");
 	StrBuilder* sys_path = strbuilder_new();
 	strbuilder_add(sys_path, scc_get_python_src_path());
 #ifdef _WIN32
 	Py_SetProgramName("sc-controller.exe");
-	
+
 	// When running from release, this directory will exists and in so it will
 	// be part of our PYTHONPATH.
-	char* test = strbuilder_fmt("%s\\..\\lib\\python2.7", scc_get_python_src_path());
+	char* test = strbuilder_fmt("%s\\..\\lib\\python3.8", scc_get_python_src_path());
 	ASSERT(test != NULL);
 	if (access(test, F_OK) == 0) {
 		free(test);
@@ -67,15 +67,15 @@ int main(int argc, char** argv) {
 		Py_SetPythonHome((char*)python_home);
 		Py_InitializeEx(0);
 		strbuilder_addf(sys_path, ";%s\\python\\scc\\lib", python_home);
-		strbuilder_addf(sys_path, ";%s\\lib\\python2.7", python_home);
-		strbuilder_addf(sys_path, ";%s\\lib\\python2.7\\lib-dynload", python_home);
-		strbuilder_addf(sys_path, ";%s\\lib\\python2.7\\site-packages", python_home);
+		strbuilder_addf(sys_path, ";%s\\lib\\python3.8", python_home);
+		strbuilder_addf(sys_path, ";%s\\lib\\python3.8\\lib-dynload", python_home);
+		strbuilder_addf(sys_path, ";%s\\lib\\python3.8\\site-packages", python_home);
 	} else {
 		Py_SetPythonHome("C:/msys32/mingw32/");
 		Py_InitializeEx(0);
-		strbuilder_add(sys_path, ";C:/msys32/mingw32/lib/python2.7");
-		strbuilder_add(sys_path, ";C:/msys32/mingw32/lib/python2.7/lib-dynload");
-		strbuilder_add(sys_path, ";C:/msys32/mingw32/lib/python2.7/site-packages");
+		strbuilder_add(sys_path, ";C:/msys32/mingw32/lib/python3.8");
+		strbuilder_add(sys_path, ";C:/msys32/mingw32/lib/python3.8/lib-dynload");
+		strbuilder_add(sys_path, ";C:/msys32/mingw32/lib/python3.8/site-packages");
 	}
 	DDEBUG("Python path: %s", strbuilder_get_value(sys_path));
 #else
@@ -83,8 +83,8 @@ int main(int argc, char** argv) {
 	strbuilder_add(sys_path, LIB_PYTHON_PATH);
 #endif
 	ASSERT(!strbuilder_failed(sys_path));
-	PySys_SetPath((char*)strbuilder_get_value(sys_path));
-	
+	PySys_SetPath(strbuilder_get_value_wc(sys_path));
+
 	PyObject* gui = PyImport_ImportModule("gui_loader");
 	if (PyErr_Occurred()) {
 		LERROR("Failed to initialize gui_loader.py:");
@@ -96,10 +96,9 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 	Py_DECREF(gui);
-	
+
 	strbuilder_free(sys_path);
 	DEBUG("Python code finished.");
-	
+
 	return 0;
 }
-

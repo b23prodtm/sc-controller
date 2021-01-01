@@ -27,3 +27,4 @@ appimage/
 *.vdf
 .kateconfig
 debian/sc-controller*
+obj-*

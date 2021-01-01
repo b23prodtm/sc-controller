@@ -6,6 +6,7 @@
  */
 #pragma once
 #include "scc/controller.h"
+#include "scc/utils/strbuilder.h"
 #include <stdbool.h>
 #ifdef _WIN32
 	#include <windows.h>
@@ -117,14 +118,6 @@ const char* scc_get_python_src_path();
  * script extracted from source tarball
  */
 const char* scc_get_default_menus_path();
-
-/**
- * Returns directory where drivers are located.
- * Usually /usr/lib/scc/drivers or $SCC_SHARED/drivers
- * if program is being started from script extracted from source tarball
- */
-const char* scc_drivers_path();
-
 
 /**
  * Returns path to scc-daemon PID file.
@@ -246,10 +239,10 @@ size_t scc_path_fix_slashes(char* path);
  * Works as scc_path_fix_slashes, but replaces forward slashes with backslashes.
  */
 size_t scc_path_break_slashes(char* path);
+#endif
 
 /** Returns path to directory where sc-controller.exe is located */
 const char* scc_get_exe_path();
-#endif
 
 
 /**
@@ -285,6 +278,8 @@ typedef enum {
 	SCLT_GENERATOR			= 2,
 	SCLT_OSD_MENU_PLUGIN	= 3,
 } SCCLibraryType;
+
+int make_path(SCCLibraryType type, StrBuilder* sb, char* error_return);
 
 /**
  * Loads library with given name (no extension).

@@ -1,7 +1,7 @@
 #!/bin/bash
 LIBS=(libwinpthread-1.dll libsystre-0.dll libtre-5.dll libusb-1.0.dll
 		libintl-8.dll libgcc_s_dw2-1.dll libiconv-2.dll libstdc++-6.dll
-		libpython2.7.dll libgirepository-1.0-1.dll)
+		libpython3.8.dll libgirepository-1.0-1.dll)
 GTK_LIBS=(libgtk-3-0.dll libgdk-3-0.dll libharfbuzz-0.dll libfreetype-6.dll
 		libepoxy-0.dll libcairo-gobject-2.dll libpng16-16.dll
 		libgraphite2.dll libbz2-1.dll libcairo-2.dll libatk-1.0-0.dll
@@ -48,7 +48,7 @@ mkdir -p release-win32/python
 mkdir -p release-win32/lib
 cp -vnur share/* release-win32/share
 cp -vur python/scc release-win32/python
-cp -vnur /mingw32/lib/python2.7 release-win32/lib
+cp -vnur /mingw32/lib/python3.8 release-win32/lib
 cp -vu python/gui_loader.py release-win32/python/
 cp -vnur /mingw32/lib/girepository-1.0/ release-win32/lib
 cp -vnur /mingw32/lib/gdk-pixbuf-2.0/ release-win32/lib

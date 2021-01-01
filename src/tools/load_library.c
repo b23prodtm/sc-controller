@@ -3,12 +3,12 @@
 #include "scc/tools.h"
 #include <stdlib.h>
 #include <string.h>
+#include <dirent.h>
 
 #ifdef _WIN32
 #include <windows.h>
 #include <stdio.h>
 #include <sys/types.h>
-#include <dirent.h>
 #define FILENAME_SUFFIX ".dll"
 #else
 #include <dlfcn.h>
@@ -17,7 +17,6 @@
 #endif
 
 
-#ifdef _WIN32
 static bool dir_exists(const char* path) {
 	DIR* f = opendir(path);
 	if (f != NULL) {
@@ -26,37 +25,54 @@ static bool dir_exists(const char* path) {
 	}
 	return false;
 }
-#endif
 
 
 /** Returns 1 on success */
-static int make_path(SCCLibraryType type, StrBuilder* sb, char* error_return) {
+int make_path(SCCLibraryType type, StrBuilder* sb, char* error_return) {
+	strbuilder_add(sb, scc_get_exe_path());	
 	switch (type) {
 	case SCLT_GENERATOR:
 #ifdef _WIN32
-		strbuilder_add(sb, scc_get_exe_path());
 		strbuilder_add_path(sb, "menu-generators");
 		if (!dir_exists(sb->value) && dir_exists("src\\menu-generators")) {
 			strbuilder_clear(sb);
-			strbuilder_add(sb, "src\\menu-generators");
+			strbuilder_add_path(sb, "src\\menu-generators");
 		}
 #else
-		strbuilder_add(sb, "src/menu-generators");
+		strbuilder_add_path(sb, "build");	
+		strbuilder_add_path(sb, "src/menu-generators");
+		if (!dir_exists(sb->value) && dir_exists("src/menu-generators")) {
+			strbuilder_clear(sb);
+			strbuilder_add_path(sb, "src/menu-generators");
+		}
 #endif
 		return 1;
 	case SCLT_DRIVER:
-		strbuilder_add(sb, scc_drivers_path());
+#ifdef _WIN32
+		strbuilder_add_path(sb,"drivers");
+#else
+		strbuilder_add_path(sb, "build");	
+		if (!dir_exists(sb->value) && dir_exists("src/daemon/drivers")) {
+			strbuilder_clear(sb);
+			strbuilder_add(sb, "src/daemon/drivers");
+		}
+
+#endif
 		return 1;
 	case SCLT_OSD_MENU_PLUGIN:
 #ifdef _WIN32
-		strbuilder_add(sb, scc_get_exe_path());
 		strbuilder_add_path(sb, "menu-plugins");
 		if (!dir_exists(sb->value) && dir_exists("src\\osd\\menus")) {
 			strbuilder_clear(sb);
 			strbuilder_add(sb, "src\\osd\\menus");
 		}
 #else
-		strbuilder_add(sb, "src/osd/menus");
+		strbuilder_add_path(sb, "build");	
+		strbuilder_add_path(sb, "src/osd/menus");
+		if (!dir_exists(sb->value) && dir_exists("src/osd/menus")) {
+			strbuilder_clear(sb);
+			strbuilder_add_path(sb, "src/osd/menus");
+		}
 #endif
 		return 1;
 	}
@@ -69,8 +85,9 @@ static int make_path(SCCLibraryType type, StrBuilder* sb, char* error_return) {
 extlib_t scc_load_library(SCCLibraryType type, const char* prefix, const char* lib_name, char* error_return) {
 	// Build filename
 	StrBuilder* sb = strbuilder_new();
-	if (!make_path(type, sb, error_return))
+	if (!make_path(type, sb, error_return)) {
 		return NULL;
+	}
 	if (prefix != NULL) {
 		strbuilder_add_path(sb, prefix);
 		strbuilder_add(sb, lib_name);
@@ -89,7 +106,6 @@ extlib_t scc_load_library(SCCLibraryType type, const char* prefix, const char* l
 	// Load library
 #ifdef _WIN32
 	extlib_t lib = LoadLibrary(filename);
-	free(filename);
 	if (lib == NULL) {
 		DWORD err = GetLastError();
 		if (error_return != NULL) {
@@ -98,17 +114,20 @@ extlib_t scc_load_library(SCCLibraryType type, const char* prefix, const char* l
 			else
 				snprintf(error_return, 255, "%s: Windows error 0x%x", filename, (int)err);
 		}
+		free(filename);
 		return NULL;
 	}
 #else
 	extlib_t lib = dlopen(filename, RTLD_LAZY);
-	free(filename);
 	if (lib == NULL) {
 		if (error_return != NULL)
 			strncpy(error_return, dlerror(), 255);
+		snprintf(error_return, 255, "Dynamic Library %s not loaded: %s%s%s", filename, prefix, lib_name, FILENAME_SUFFIX);
+		free(filename);
 		return NULL;
 	}
 #endif
+	free(filename);
 	return lib;
 }
 

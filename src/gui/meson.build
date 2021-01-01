@@ -1,4 +1,4 @@
-deps = [ dependency('python-2.7') ]
+deps = [ dependency('python3') ]
 link = [ utils_lib, tools_lib ]
 sources = [ 'gui.c' ]
 link_args = []
