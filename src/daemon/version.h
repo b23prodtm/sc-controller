@@ -1,2 +1,1 @@
-#define DAEMON_VERSION "0.4.5"
-
+#define DAEMON_VERSION "0.4.9"
