@@ -185,12 +185,12 @@
         <col id="1">gridmenu</col>
       </row>
       <row>
-        <col id="0" translatable="yes">Radial</col>
-        <col id="1">radialmenu</col>
-      </row>
-      <row>
         <col id="0" translatable="yes">Horizontal Menu</col>
         <col id="1">hmenu</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Radial</col>
+        <col id="1">radialmenu</col>
       </row>
     </data>
   </object>
@@ -952,6 +952,30 @@
                         <property name="width">2</property>
                       </packing>
                     </child>
+                    <child>
+                      <object class="GtkCheckButton" id="cbMenuAlwaysActive">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="margin_top">5</property>
+                        <property name="draw_indicator">True</property>
+                        <signal name="toggled" handler="on_cbMenus_changed" swapped="no"/>
+                        <signal name="toggled" handler="prevent_confirm_cancel_nonsense" swapped="no"/>
+                        <child>
+                          <object class="GtkLabel" id="lblMenuAlwaysActive">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label" translatable="yes">Selection is always active</property>
+                            <property name="xalign">0</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">5</property>
+                        <property name="width">2</property>
+                      </packing>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -963,7 +987,8 @@
             </child>
             <child>
               <object class="GtkExpander" id="exMenuPosition">
-                <property name="visible">True</property>
+                <property name="visible">False</property>
+                <property name="no_show_all">True</property>
                 <property name="can_focus">True</property>
                 <property name="margin_top">10</property>
                 <signal name="activate" handler="on_exMenuPosition_activate" swapped="no"/>
@@ -989,11 +1014,13 @@
             </child>
             <child>
               <object class="GtkRevealer" id="rvMenuPosition">
-                <property name="visible">True</property>
+                <property name="visible">False</property>
+                <property name="no_show_all">True</property>
                 <property name="can_focus">False</property>
                 <child>
                   <object class="GtkGrid" id="grid7">
                     <property name="visible">True</property>
+                    <property name="sensitive">False</property>
                     <property name="can_focus">False</property>
                     <property name="margin_left">20</property>
                     <property name="margin_right">20</property>

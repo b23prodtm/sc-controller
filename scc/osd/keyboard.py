@@ -5,7 +5,7 @@ SC-Controller - OSD Menu
 
 Display menu that user can navigate through and print chosen item id to stdout
 """
-from __future__ import unicode_literals
+
 from scc.tools import _, set_logging_level
 
 from gi.repository import Gtk, Gdk, GdkX11, GObject, GLib, GdkPixbuf, cairo
@@ -110,11 +110,10 @@ class KeyboardImage(Gtk.DrawingArea):
 	def set_labels(self, labels):
 		for b in self.buttons:
 			label = labels.get(b)
-			if type(label) in (int,):
+			if type(label) in (int, int):
 				pass
 			elif label:
-				#b.label = label.encode("utf-8")
-				b.label = label
+				b.label = label.encode("utf-8")
 		self.queue_draw()
 	
 	
@@ -135,7 +134,7 @@ class KeyboardImage(Gtk.DrawingArea):
 		into "symbolic" image by inverting colors of pixels where opacity is
 		greater than threshold.
 		"""
-		pixels = [ x for x in buf.get_pixels() ]
+		pixels = [ ord(x) for x in buf.get_pixels() ]
 		bpp = 4 if buf.get_has_alpha() else 3
 		w, h = buf.get_width(), buf.get_height()
 		stride = buf.get_rowstride()
@@ -145,7 +144,7 @@ class KeyboardImage(Gtk.DrawingArea):
 				pixels[i + 1] = 255 - pixels[i + 1]
 				pixels[i + 2] = 255 - pixels[i + 2]
 		
-		pixels = b"".join([ chr(x).encode('latin-1') for x in pixels])
+		pixels ="".join([ chr(x) for x in pixels])
 		rv = GdkPixbuf.Pixbuf.new_from_data(
 			pixels,
 			buf.get_colorspace(),
@@ -652,8 +651,8 @@ class Keyboard(OSDWindow, TimerManager):
 		Updates hilighted keys on bacgkround image.
 		"""
 		self.background.hilight(
-			set([ a for a in self._hovers.values() if a ]),
-			set([ a for a in self._pressed_areas.values() if a ])
+			set([ a for a in list(self._hovers.values()) if a ]),
+			set([ a for a in list(self._pressed_areas.values()) if a ])
 		)
 	
 	

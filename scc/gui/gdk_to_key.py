@@ -5,7 +5,7 @@ SC-Controller - GDK_TO_KEY
 Maps Gdk.KEY_* constants into Keys.KEY_* constants.
 Used by ActionEditor (when grabbing the key)
 """
-from __future__ import unicode_literals
+
 
 from gi.repository import Gdk
 from scc.uinput import Keys

@@ -1,54 +1,53 @@
-# SC Controller [![Build Status](https://travis-ci.org/b23prodtm/sc-controller.svg?branch=travisobs)](https://travis-ci.org/kozec/sc-controller)
+# SC Controller [![Build Status](https://travis-ci.org/b23prodtm/sc-controller.svg?branch=travisobs)](https://travis-ci.org/b23prodtm/sc-controller)
 
-
-User-mode driver, mapper and GTK3 based GUI for Steam Controller, DS4 and similar controllers.
+User-mode driver and mapper for Steam Controller, DS4 and similar controllers.
 
 [![screenshot1](docs/screenshot1-tn.png?raw=true)](docs/screenshot1.png?raw=true)
 [![screenshot2](docs/screenshot2-tn.png?raw=true)](docs/screenshot2.png?raw=true)
 [![screenshot3](docs/screenshot3-tn.png?raw=true)](docs/screenshot3.png?raw=true)
 [![screenshot3](docs/screenshot4-tn.png?raw=true)](docs/screenshot4.png?raw=true)
 
-## Features
-- Allows to setup, configure and use Steam Controller(s) without ever launching Steam
-- Supports profiles switchable in GUI or with controller button
-- Stick, Pads and Gyroscope input
-- Haptic Feedback and in-game Rumble support
-- OSD, Menus, On-Screen Keyboard for desktop *and* in games.
-- Automatic profile switching based on active window.
-- Macros, button cycling, rapid fire, modeshift, mouse regions...
-- Emulates Xbox360 controller, mouse, trackball and keyboard.
+-----------
 
-Based on [Standalone Steam Controller Driver](https://github.com/ynsta/steamcontroller) by [Ynsta](https://github.com/ynsta).
+## WIP Windows/BSD/Linux/android port in c
 
-## Like what I'm doing?
+Hi there. What you are browsing is WIP branch in which I'm rewriting major parts of SCC into much more portable and much less python requiring code.
+
+It should be somehow usable, but there is no GUI and only very basic OSD menu right now.
+See this [wiki page](https://github.com/kozec/sc-controller/wiki/Running-SC-Controller-on-Windows) for how to run it.
+
+-----------
+
+#### Like what I'm doing?
 
 [![Help me become filthy rich on Liberapay](https://img.shields.io/badge/Help%20me%20become%20filthy%20rich%20on-Liberapay-yellow.svg)](https://liberapay.com/kozec) <sup>or</sup> [![donate anything with PayPal](https://img.shields.io/badge/donate_anything_with-Paypal-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=77DQD3L9K8RPU&lc=SK&item_name=kozec&item_number=scc&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted)
 
-## Packages
 
- - **Ubuntu (deb-based distros):** Found in [openSUSE Build Service](https://software.opensuse.org/download.html?project=home%3Akozec&package=sc-controller).
- - **Fedora, SUSE (rpm-based distros):** Found in [openSUSE Build Service](https://software.opensuse.org/download.html?project=home%3Akozec&package=sc-controller).
- - **Arch, Manjaro (arch-based distros):** Found in [AUR](https://aur.archlinux.org/packages/sc-controller-git/)
- - **Solus:** Search for `sc-controller` in Software Center or run `sudo eopkg it sc-controller` from a terminal.
- - **Exherbo:** Found in [hardware](https://git.exherbo.org/summer/packages/input/sc-controller)
- - **Void Linux:** Run `xbps-install -S sc-controller` in a terminal.
+#### Building
 
+Navigate to directory with sources and use meson to compile:
 
-## Building the package by yourself
+###### on Linux
+```
+$ meson build
+$ ninja -C build
+$ ninja -C build scc-daemon
+```
 
-### Dependencies
-  - python 3, GTK 3.22 or newer and [PyGObject](https://live.gnome.org/PyGObject)
-  - [python-gi-cairo](https://packages.debian.org/sid/python-gi-cairo) and [gir1.2-rsvg-2.0](https://packages.debian.org/sid/gir1.2-rsvg-2.0) on debian based distros (included in PyGObject elsewhere)
-  - [setuptools](https://pypi.python.org/pypi/setuptools)
-  - [python-pylibacl](http://pylibacl.k1024.org/) is recommended
-  - [python-evdev](https://python-evdev.readthedocs.io/en/latest/) is strongly recommended
+###### on Windows
+```
+# (you'll need mingw)
+$ pacman -S --needed mingw-w64-i686-pkg-config mingw-w64-i686-meson mingw-w64-i686-gcc mingw-w64-i686-python2 mingw-w64-i686-gtk3 mingw-w64-i686-libusb mingw-w64-i686-libmicroutils
+$ export PROCESSOR_ARCHITEW6432=x86
+$ meson build
+$ ninja -C build sc-controller  # start GUI
+$ ninja -C build scc-daemon     # start without gui to check why it doesn't work
+```
 
-### Installing
-  - Download and extract  [latest release](https://github.com/kozec/sc-controller/releases/latest)
-  - `python3 setup.py build`
-  - `python3 setup.py install`
-
-
-## Running with non distro-specific package          
-  - Download and extract [latest release](https://github.com/kozec/sc-controller/releases/latest)
-  - Navigate to extracted directory and execute `./run.sh`
+###### on OpenBSD or NetBSD
+```
+# (install pkg-config, ninja-build and meson packages first. Meson is available as pip package)
+$ meson build
+$ ninja -C build
+$ ninja -C build scc-daemon
+```

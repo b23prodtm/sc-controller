@@ -1,10 +1,8 @@
 #!/bin/bash
-C_MODULES=(uinput hiddrv sc_by_bt remotepad cemuhook)
+C_MODULES=(uinput hiddrv sc_by_bt)
 C_VERSION_uinput=9
 C_VERSION_hiddrv=5
 C_VERSION_sc_by_bt=3
-C_VERSION_remotepad=1
-C_VERSION_cemuhook=1
 
 function rebuild_c_modules() {
 	echo "lib$1.so is outdated or missing, building one"
@@ -13,11 +11,10 @@ function rebuild_c_modules() {
 	
 	# Next line generates string like 'lib.linux-x86_64-2.7', directory where libuinput.so was just generated
 	LIB=$( python3 -c 'import platform ; print("lib.linux-%s-%s.%s" % ((platform.machine(),) + platform.python_version_tuple()[0:2]))' )
-	EXT_SUFFIX=$( python3 -c 'import sysconfig ; print(sysconfig.get_config_var("EXT_SUFFIX"))' )
 	
 	for cmod in ${C_MODULES[@]}; do
-		if [ -e build/$LIB/lib${cmod}${EXT_SUFFIX} ] ; then
-			rm build/$LIB/lib${cmod}${EXT_SUFFIX} || exit 1
+		if [ -e build/$LIB/lib${cmod}.so ] ; then
+			rm build/$LIB/lib${cmod}.so || exit 1
 		fi
 	done
 	
@@ -26,17 +23,14 @@ function rebuild_c_modules() {
 	
 	for cmod in ${C_MODULES[@]}; do
 		if [ ! -e lib${cmod}.so ] ; then
-			ln -s build/$LIB/lib${cmod}${EXT_SUFFIX} ./lib${cmod}.so || exit 1
-			echo Symlinked ./lib${cmod}${EXT_SUFFIX} '->' build/$LIB/lib${cmod}.so
+			ln -s build/$LIB/lib${cmod}.so ./lib${cmod}.so || exit 1
+			echo Symlinked ./lib${cmod}.so '->' build/$LIB/lib${cmod}.so
 		fi
 	done
 	echo ""
 }
-
-
 # Ensure correct cwd
-cd "$(dirname "$0")"
-
+[ ! -e setup.py ] && echo "File setup.py not found" && exit 1
 # Check if c modules are compiled and actual
 for cmod in ${C_MODULES[@]}; do
 	eval expected_version=\$C_VERSION_${cmod}

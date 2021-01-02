@@ -2,7 +2,7 @@
 """
 SC-Controller - Icon Chooser
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from gi.repository import Gtk, Gdk, Gio, GdkPixbuf, GObject
@@ -173,7 +173,7 @@ class IconChooser(Editor, UserDataManager):
 		licensefile = os.path.join(path, "LICENCES")
 		if not os.path.exists(licensefile):
 			return None
-		for line in open(licensefile, "r").readlines():
+		for line in file(licensefile, "r").readlines():
 			if line.startswith(name):
 				if "-" in line:
 					return line.split("-")[-1].strip("\t\r\n ")

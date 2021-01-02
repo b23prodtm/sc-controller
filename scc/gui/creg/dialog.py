@@ -6,7 +6,7 @@ Dialog that asks a lot of question to create configuration node in config file.
 Most "interesting" thing here may be that this works 100% independently from
 daemon.
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from gi.repository import Gtk, GLib, GdkPixbuf
@@ -25,7 +25,7 @@ from scc.tools import nameof, clamp
 from scc.config import Config
 
 import evdev
-import os, logging, json, re
+import os, logging, json
 log = logging.getLogger("CRegistration")
 
 
@@ -84,18 +84,14 @@ class ControllerRegistration(Editor):
 		Device is considered gamepad-like if has at least one button with
 		keycode in gamepad range and at least two axes.
 		"""
-
-		# Strip special symbols
-		name = re.sub( r"[^a-zA-Z0-9.]+", ' ', dev.name.lower() )
-
 		# ... but some cheating first
-		if "keyboard" in name:
+		if "keyboard" in dev.name.lower():
 			return False
-		if "touchpad" in name:
+		if "touchpad" in dev.name.lower():
 			return False
-		if "mouse" in name:
+		if "mouse" in dev.name.lower():
 			return False
-		if "gamepad" in name:
+		if "gamepad" in dev.name.lower():
 			return True
 		caps = dev.capabilities(verbose=False)
 		if evdev.ecodes.EV_ABS in caps: # Has axes
@@ -104,6 +100,21 @@ class ControllerRegistration(Editor):
 					if button >= evdev.ecodes.BTN_0 and button <= evdev.ecodes.BTN_GEAR_UP:
 						return True
 		return False
+
+
+	def get_weird_id(self):
+		# Generate database ID
+		wordswap = lambda i: ((i & 0xFF) << 8) | ((i & 0xFF00) >> 8)
+		# TODO: version?
+		if self._evdevice is not None:
+			return "%.4x%.8x%.8x%.8x0000" % (
+				wordswap(self._evdevice.info.bustype),
+				wordswap(self._evdevice.info.vendor),
+				wordswap(self._evdevice.info.product),
+				wordswap(self._evdevice.info.version)
+			)
+		else:
+			return "0.0.0.0.0x0000"
 
 
 	def load_sdl_mappings(self):
@@ -116,15 +127,7 @@ class ControllerRegistration(Editor):
 		buttons = self._tester.buttons
 		axes = self._tester.axes
 
-		# Generate database ID
-		wordswap = lambda i: ((i & 0xFF) << 8) | ((i & 0xFF00) >> 8)
-		# TODO: version?
-		weird_id = "%.4x%.8x%.8x%.8x0000" % (
-				wordswap(self._evdevice.info.bustype),
-				wordswap(self._evdevice.info.vendor),
-				wordswap(self._evdevice.info.product),
-				wordswap(self._evdevice.info.version)
-		)
+		weird_id = self.get_weird_id()
 
 		# Search in database
 		try:
@@ -214,13 +217,13 @@ class ControllerRegistration(Editor):
 	def generate_unassigned(self):
 		unassigned = set()
 		unassigned.clear()
-		assigned_axes = set([ x for x in self._mappings.values()
+		assigned_axes = set([ x for x in list(self._mappings.values())
 							if isinstance(x, AxisData) ])
-		assigned_axes.update([ x.axis_data for x in self._mappings.values()
+		assigned_axes.update([ x.axis_data for x in list(self._mappings.values())
 							if isinstance(x, DPadEmuData) ])
-		assigned_buttons = set([ x for x in self._mappings.values()
-							if x in SCButtons.__members__.values() ])
-		assigned_buttons.update([ x.button for x in self._mappings.values()
+		assigned_buttons = set([ x for x in list(self._mappings.values())
+							if x in list(SCButtons.__members__.values()) ])
+		assigned_buttons.update([ x.button for x in list(self._mappings.values())
 							if isinstance(x, DPadEmuData) ])
 		for a in BUTTON_ORDER:
 			if a not in assigned_buttons:
@@ -284,7 +287,7 @@ class ControllerRegistration(Editor):
 			return rv
 
 		for code, target in self._mappings.items():
-			if target in SCButtons.__members__.values():
+			if target in SCButtons:
 				config['buttons'][code] = nameof(target)
 			elif isinstance(target, DPadEmuData):
 				config['dpads'][code] = axis_to_json(target.axis_data)
@@ -442,9 +445,8 @@ class ControllerRegistration(Editor):
 		self.set_hid_enabled(True)
 
 		def retry_with_evdev(tester, code):
-			if tester:
-				for s in tester.__signals: tester.disconnect(s)
-				tester.stop()
+			for s in tester.__signals: tester.disconnect(s)
+			tester.stop()
 			self.set_hid_enabled(False)
 			if code != 0:
 				log.error("HID driver test failed (code %s)", code)
@@ -475,14 +477,15 @@ class ControllerRegistration(Editor):
 
 
 	def on_registration_ready(self, tester):
-		cbAccessMode = self.builder.get_object("cbAccessMode")
+		lstAccessMode = self.builder.get_object("lstAccessMode")
 		fxController = self.builder.get_object("fxController")
 		cbEmulateC = self.builder.get_object("cbEmulateC")
 		stDialog = self.builder.get_object("stDialog")
 		btNext = self.builder.get_object("btNext")
 
-		self.set_cb(cbAccessMode, tester.driver)
-		cbAccessMode.set_sensitive(True)
+		for i, x in enumerate(lstAccessMode):
+			if x[0] == tester.driver:
+				lstAccessMode[i][2] = True
 
 		if not self._mappings:
 			self._mappings = {}
@@ -504,6 +507,16 @@ class ControllerRegistration(Editor):
 		cbEmulateC.grab_focus()
 		btNext.set_label("_Save")
 		btNext.set_sensitive(True)
+
+
+	def cbEmulateC_toggled_cb(self, cb, *a):
+		self.generate_unassigned()
+		self.generate_raw_data()
+
+
+	def cbEmulateC_toggled_cb(self, cb, *a):
+		self.generate_unassigned()
+		self.generate_raw_data()
 
 
 	def on_device_open_failed(self, *a):
@@ -535,11 +548,11 @@ class ControllerRegistration(Editor):
 
 	def set_hid_enabled(self, enabled):
 		""" Enables or disables option to use HID driver """
-		cbAccessMode = self.builder.get_object("cbAccessMode")
-		for x in cbAccessMode.get_model():
+		lstAccessMode = self.builder.get_object("lstAccessMode")
+		for i, x in enumerate(lstAccessMode):
 			if x[0] == "hid":
-				x[1] = _("USB HID (recommended)") if enabled else _("USB HID")
-				x[2] = enabled
+				lstAccessMode[i][1] = _("USB HID (recommended)") if enabled else _("USB HID")
+				lstAccessMode[i][2] = enabled
 
 
 	def on_cbAccessMode_changed(self, cb):
@@ -591,10 +604,33 @@ class ControllerRegistration(Editor):
 				self.unhilight(nameof(what.button))
 				self.hilight_axis(what.axis_data, 0)
 		elif what is not None:
+			if what in (SCButtons.BACK, SCButtons.START):
+				if pressed:
+					self._emulate_c_buttons.add(what)
+				else:
+					self._emulate_c_buttons.discard(what)
+				if cbEmulateC.get_active():
+					if pressed:
+						if len(self._emulate_c_buttons) == 2:
+							self.hilight(nameof(SCButtons.C))
+							self.unhilight(nameof(SCButtons.START))
+							self.unhilight(nameof(SCButtons.BACK))
+						else:
+							GLib.timeout_add(EMULATE_C_TIMEOUT,
+									self._on_emulate_c_timeout)
+						return
+					else:
+						self.unhilight(nameof(SCButtons.C))
 			if pressed:
 				self.hilight(nameof(what))
 			else:
 				self.unhilight(nameof(what))
+
+
+	def _on_emulate_c_timeout(self, *a):
+		if len(self._emulate_c_buttons) < 2:
+			for what in self._emulate_c_buttons:
+				self.hilight(nameof(what))
 
 
 	def on_tester_axis(self, tester, number, value):
@@ -746,7 +782,10 @@ class ControllerRegistration(Editor):
 				continue
 			if is_gamepad or cbShowAllDevices.get_active():
 				lstDevices.append(( fname, dev.name,
-					self._gamepad_icon if is_gamepad else self._other_icon ))
+							self._gamepad_icon if is_gamepad else self._other_icon,
+							self._tester.driver if self._tester else "None",
+							self.get_weird_id()
+							))
 
 
 	def refresh_controller_image(self, *a):

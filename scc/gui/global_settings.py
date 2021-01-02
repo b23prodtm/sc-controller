@@ -4,7 +4,7 @@ SC-Controller - Global Settings
 
 Currently setups only one thing...
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from gi.repository import Gtk, Gdk, GObject, GLib, GdkPixbuf
@@ -145,7 +145,7 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
 	
 	
 	def load_drivers(self):
-		for key, value in self.app.config['drivers'].items():
+		for key, value in list(self.app.config['drivers'].items()):
 			w = self.builder.get_object("cbEnableDriver_%s" % (key, ))
 			if w:
 				w.set_active(value)
@@ -181,7 +181,7 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
 		conditions = AutoSwitcher.parse_conditions(self.app.config)
 		model = tvItems.get_model()
 		model.clear()
-		for cond in conditions.keys():
+		for cond in list(conditions.keys()):
 			o = GObject.GObject()
 			o.condition = cond
 			o.action = conditions[cond]
@@ -387,11 +387,11 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
 					self.app.config["drivers"][x] = True
 				self._recursing = False
 		
-		if not cb.get_active() and any([ drv in x for x in self.DRIVER_DEPS.values() ]):
+		if not cb.get_active() and any([ drv in x for x in list(self.DRIVER_DEPS.values()) ]):
 			# Something depends on this driver,
 			# disable anything that has no dependent drivers active
 			self._recursing = True
-			for x, deps in self.DRIVER_DEPS.items():
+			for x, deps in list(self.DRIVER_DEPS.items()):
 				w = self.builder.get_object("cbEnableDriver_%s" % (x, ))
 				one_active = any([ self.app.config["drivers"].get(y)
 										for y in self.DRIVER_DEPS[x] ])
@@ -488,15 +488,15 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
 		
 		# Build condition
 		data = {}
-		if cbMatchTitle.get_active() and entTitle.get_text():
+		if cbMatchTitle.get_active() and entTitle.get_text().decode("utf-8"):
 			if cbExactTitle.get_active():
-				data['exact_title'] = entTitle.get_text()
+				data['exact_title'] = entTitle.get_text().decode("utf-8")
 			elif cbRegExp.get_active():
-				data['regexp'] = entTitle.get_text()
+				data['regexp'] = entTitle.get_text().decode("utf-8")
 			else:
-				data['title'] = entTitle.get_text()
-		if cbMatchClass.get_active() and entClass.get_text():
-			data['wm_class'] = entClass.get_text()
+				data['title'] = entTitle.get_text().decode("utf-8")
+		if cbMatchClass.get_active() and entClass.get_text().decode("utf-8"):
+			data['wm_class'] = entClass.get_text().decode("utf-8")
 		condition = Condition(**data)
 		
 		# Grab selected action
@@ -626,13 +626,13 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
 		btSave = self.builder.get_object("btSave")
 		cbMatchTitle = self.builder.get_object("cbMatchTitle")
 		# Ensure that 'Match Title' checkbox is checked if its entry gets text
-		if ent.get_text():
+		if ent.get_text().decode("utf-8"):
 			cbMatchTitle.set_active(True)
 		if cbRegExp.get_active():
 			# If regexp combobox is active, try to compile expression typed
 			# in field and don't allow user to save unless expression is valid
 			try:
-				re.compile(ent.get_text())
+				re.compile(ent.get_text().decode("utf-8"))
 			except Exception as e:
 				log.error(e)
 				btSave.set_sensitive(False)
@@ -644,7 +644,7 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
 		theme = cb.get_model().get_value(cb.get_active_iter(), 0)
 		if theme in (None, "None"): return
 		filename = os.path.join(get_share_path(), "osd-styles", theme)
-		data = json.loads(open(filename, "r").read())
+		data = json.loads(file(filename, "r").read())
 		
 		# Transfer values from json to config
 		for grp in ("osd_colors", "osk_colors"):
@@ -659,10 +659,10 @@ class GlobalSettings(Editor, UserDataManager, ComboSetter):
 	
 	
 	def on_cbOSDStyle_changed(self, cb):
-		color_keys = self.app.config['osk_colors'].keys() + self.app.config['osd_colors'].keys()
+		color_keys = list(self.app.config['osk_colors'].keys()) + list(self.app.config['osd_colors'].keys())
 		osd_style = cb.get_model().get_value(cb.get_active_iter(), 0)
 		css_file = os.path.join(get_share_path(), "osd-styles", osd_style)
-		first_line = open(css_file, "r").read().split("\n")[0]
+		first_line = file(css_file, "r").read().split("\n")[0]
 		used_colors = None				# None means "all"
 		if "Used colors:" in first_line:
 			used_colors = set(first_line.split(":", 1)[1].strip(" */").split(" "))

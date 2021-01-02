@@ -11,7 +11,7 @@ export SCC_SHARED="$(pwd)"
 
 if [ x"$1" == x"lldb" ] ; then
 	shift
-	lldb python3 -- 'scripts/scc-daemon' debug $@
+	lldb python2 -- 'scripts/scc-daemon' debug $@
 else
-	python3 'scripts/scc-daemon' $@
+	python2 'scripts/scc-daemon' $@
 fi

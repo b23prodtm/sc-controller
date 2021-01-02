@@ -4,7 +4,7 @@ SC-Controller - Simple Chooser
 
 Used by Action Editor to display window with just one Component
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from gi.repository import Gtk, Gdk, GLib

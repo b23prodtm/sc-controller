@@ -8,7 +8,7 @@ Set of widgets designed to allow user to select profile, placed in one Gtk.Box:
 ... where (S) is Save button that can be shown on demand and (ch) is change
 indicator drawn in combobox.
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from gi.repository import Gtk, Gio, GLib, GObject
@@ -39,12 +39,12 @@ class ProfileSwitcher(Gtk.EventBox, UserDataManager):
 	"""
 	
 	__gsignals__ = {
-			"changed"				: (GObject.SignalFlags.RUN_FIRST, None, (object, object)),
-			"new-clicked"			: (GObject.SignalFlags.RUN_FIRST, None, (object,)),
-			"right-clicked"		: (GObject.SignalFlags.RUN_FIRST, None, ()),
-			"save-clicked"			: (GObject.SignalFlags.RUN_FIRST, None, ()),
-			"switch-to-clicked"	: (GObject.SignalFlags.RUN_FIRST, None, ()),
-			"unknown-profile"		: (GObject.SignalFlags.RUN_FIRST, None, (object,)),
+		"changed"				: (GObject.SignalFlags.RUN_FIRST, None, (object, object)),
+		"new-clicked"			: (GObject.SignalFlags.RUN_FIRST, None, (object,)),
+		"right-clicked"		: (GObject.SignalFlags.RUN_FIRST, None, ()),
+		"save-clicked"			: (GObject.SignalFlags.RUN_FIRST, None, ()),
+		"switch-to-clicked"	: (GObject.SignalFlags.RUN_FIRST, None, ()),
+		"unknown-profile"		: (GObject.SignalFlags.RUN_FIRST, None, (object,)),
 	}
 	
 	SEND_TIMEOUT = 100	# How many ms should switcher wait before sending event
@@ -111,11 +111,8 @@ class ProfileSwitcher(Gtk.EventBox, UserDataManager):
 		if name.endswith(".mod"): name = name[0:-4]
 		if name.endswith(".sccprofile"): name = name[0:-11]
 		if "/" in name : name = os.path.split(name)[-1]
-		self._current = name
-		if type(name) == unicode:
-			# GTK can't handle this
-			name = name.encode("utf-8")
 		
+		self._current = name
 		active = self._combo.get_active_iter()
 		giofile = None
 		for row in self._model:
@@ -161,7 +158,7 @@ class ProfileSwitcher(Gtk.EventBox, UserDataManager):
 		self._model.clear()
 		i, current_index = 0, 0
 		for f in sorted(lst, key=lambda f: f.get_basename()):
-			name = f.get_basename().decode("utf-8")
+			name = f.get_basename()
 			if name.endswith(".mod"):
 				continue
 			if name.startswith("."):
@@ -297,7 +294,7 @@ class ProfileSwitcher(Gtk.EventBox, UserDataManager):
 			if not self._savebutton:
 				# Save button has to be created
 				self._savebutton = ButtonInRevealer(
-					"gtk-save", _("Save changes"),
+					"document-save", _("Save changes"),
 					self.on_savebutton_clicked)
 				self._box.pack_start(self._savebutton, False, True, 0)
 				self.show_all()

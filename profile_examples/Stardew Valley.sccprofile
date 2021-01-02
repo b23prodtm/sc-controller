@@ -1,5 +1,4 @@
 {
-    "_": "", 
     "buttons": {
         "A": {
             "action": "button(Keys.BTN_GAMEPAD)", 
@@ -42,7 +41,7 @@
             "action": "button(Keys.KEY_M)", 
             "name": "Map"
         }, 
-        "STICKPRESS": {
+        "STICK": {
             "action": "button(Keys.BTN_THUMBL)"
         }, 
         "X": {
@@ -54,9 +53,7 @@
             "name": "Craft"
         }
     }, 
-    "cpad": {}, 
     "gyro": {}, 
-    "is_template": false, 
     "menus": {
         "Inventory": [{
             "action": "button(Keys.KEY_1)", 
@@ -89,19 +86,40 @@
         "name": "Inventory"
     }, 
     "pad_right": {
-        "action": "mode(LGRIP, feedback(RIGHT, ball(XY(mouse(Rels.REL_HWHEEL), mouse(Rels.REL_WHEEL)))), feedback(RIGHT, 256, ball(mouse())))"
+        "action": "mouse()", 
+        "ball": true, 
+        "feedback": ["RIGHT", 256], 
+        "modes": {
+            "LGRIP": {
+                "X": {
+                    "action": "mouse(Rels.REL_HWHEEL)"
+                }, 
+                "Y": {
+                    "action": "mouse(Rels.REL_WHEEL)"
+                }, 
+                "ball": true, 
+                "feedback": ["RIGHT"]
+            }
+        }
     }, 
     "stick": {
-        "action": "XY(axis(Axes.ABS_X), raxis(Axes.ABS_Y))", 
+        "X": {
+            "action": "axis(Axes.ABS_X)"
+        }, 
+        "Y": {
+            "action": "raxis(Axes.ABS_Y)"
+        }, 
         "name": "Move"
     }, 
     "trigger_left": {
-        "action": "trigger(254, 255, button(Keys.BTN_RIGHT))", 
+        "action": "button(Keys.BTN_RIGHT)", 
+        "levels": [254, 255], 
         "name": "RClick"
     }, 
     "trigger_right": {
-        "action": "trigger(254, 255, button(Keys.BTN_LEFT))", 
+        "action": "button(Keys.BTN_LEFT)", 
+        "levels": [254, 255], 
         "name": "Click"
     }, 
-    "version": 1.4
+    "version": 1.2
 }

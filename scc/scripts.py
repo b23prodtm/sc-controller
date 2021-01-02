@@ -39,7 +39,7 @@ def help_gui():
 def cmd_test_evdev(argv0, argv):
 	"""
 	Evdev driver test. Displays gamepad inputs using evdev driver.
-
+	
 	Usage: scc test-evdev /dev/input/node
 	Return codes:
 	  0 - normal exit
@@ -53,7 +53,7 @@ def cmd_test_evdev(argv0, argv):
 def cmd_test_hid(argv0, argv):
 	"""
 	HID driver test. Displays gamepad inputs using hid driver.
-
+	
 	Usage: scc test-hid vendor_id device_id
 	Return codes:
 	  0 - normal exit
@@ -82,9 +82,9 @@ def cmd_osd_keyboard(argv0, argv):
 def cmd_list_profiles(argv0, argv):
 	"""
 	Lists available profiles
-
+	
 	Usage: scc list-profiles [-a]
-
+	
 	Arguments:
 	  -a   Include names begining with dot
 	"""
@@ -113,7 +113,7 @@ def cmd_set_profile(argv0, argv):
 	Usage: scc set-profile [controller_id] "profile name"
 	"""
 	from scc.tools import find_profile
-
+	
 	if len(argv) < 1:
 		show_help(command = "set_profile", out=sys.stderr)
 		return 1
@@ -174,9 +174,9 @@ def cmd_dependency_check(argv0, argv):
 	""" Checks if all required libraries are installed on this system """
 	try:
 		import gi
-		gi.require_version('Gtk', '3.0')
-		gi.require_version('GdkX11', '3.0')
-		gi.require_version('Rsvg', '2.0')
+		gi.require_version('Gtk', '3.0') 
+		gi.require_version('GdkX11', '3.0') 
+		gi.require_version('Rsvg', '2.0') 
 	except ValueError as e1:
 		print(e1, file=sys.stderr)
 		if "Rsvg" in str(e1):
@@ -206,15 +206,15 @@ def cmd_dependency_check(argv0, argv):
 def cmd_lock_inputs(argv0, argv, lock="Lock: "):
 	"""
 	Locks and prints pressed buttons, pads and sticks
-
+	
 	Locks controller inputs and prints buttons, pads and stick as they are
 	pressed or moved on controller.
-
+	
 	Usage: scc lock-inputs [button1] [stick1] [button2] ... [buttonN]
-
+	
 	Available button, sticks and pads:
 		A X B Y START C BACK RGRIP LGRIP   LB RB LT RT STICK LPAD RPAD
-
+	
 	Return codes:
 		-1  - failed to connect to daemon
 		-2  - failed to lock inputs
@@ -252,15 +252,15 @@ def cmd_lock_inputs(argv0, argv, lock="Lock: "):
 def cmd_print_inputs(argv0, argv, lock="Lock: "):
 	"""
 	Prints pressed buttons, pads and sticks
-
+	
 	Prints controller inputs and prints buttons, pads and stick as they are
 	pressed or moved on controller, without locking them exclusivelly.
-
+	
 	Usage: scc lock-inputs [button1] [stick1] [button2] ... [buttonN]
-
+	
 	Available button, sticks and pads:
 		A X B Y START C BACK RGRIP LGRIP   LB RB LT RT STICK LPAD RPAD
-
+	
 	Return codes:
 		-1  - failed to connect to daemon
 		-2  - failed to lock inputs
@@ -283,7 +283,7 @@ def connect_to_daemon():
 	except Exception as e:
 		print("Connection to scc-daemon failed: %s" % (e, ), file=sys.stderr)
 		return None
-	return s.makefile(mode="rw")
+	return s.makefile()
 
 
 def check_error(s):
@@ -323,11 +323,11 @@ def import_osd():
 def run_osd_tool(tool, argv0, argv):
 	import signal, argparse
 	signal.signal(signal.SIGINT, sigint)
-
+	
 	from scc.tools import init_logging
 	from scc.paths import get_share_path
 	init_logging()
-
+	
 	sys.argv[0] = "scc osd-keyboard"
 	if not tool.parse_argumets([argv0] + argv):
 		sys.exit(1)
@@ -351,6 +351,7 @@ def show_help(command = None, out=sys.stdout):
 					if line.startswith("\t"): line = line[1:]
 					print(line, file=out)
 				return 0
+	
 	print("Usage: %s <command> [ arguments ]" % (sys.argv[0], ), file=out)
 	print("", file=out)
 	print("List of commands:", file=out)
@@ -384,7 +385,7 @@ def main():
 	except:
 		print("Unknown command: %s" % (sys.argv[1], ), file=sys.stderr)
 		sys.exit(show_help(out=sys.stderr))
-
+	
 	try:
 		sys.exit(command(sys.argv[0], sys.argv[2:]))
 	except KeyboardInterrupt:

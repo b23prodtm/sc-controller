@@ -4,7 +4,7 @@ SC-Controller - OSD Menu Generators
 
 Auto-generated menus with stuff like list of all available profiles...
 """
-from __future__ import unicode_literals
+
 from scc.tools import _, set_logging_level
 
 from gi.repository import Gdk, Gio, GdkX11
@@ -28,7 +28,7 @@ class ProfileListMenuGenerator(MenuGenerator):
 		menu.hide()
 		def on_response(*a):
 			menu.quit(-2)
-		daemon.request(b"OSD: " + menuitem.label.encode("utf-8") + b"\n",
+		daemon.request(b"OSD: " + menuitem.label.encode("utf-8") +"\n",
 			on_response, on_response)
 	
 	
@@ -74,7 +74,7 @@ class RecentListMenuGenerator(MenuGenerator):
 		menu.hide()
 		def on_response(*a):
 			menu.quit(-2)
-		daemon.request(b"OSD: " + menuitem.label.encode("utf-8") + b"\n",
+		daemon.request(b"OSD: " + menuitem.label.encode("utf-8") +"\n",
 			on_response, on_response)
 	
 	
@@ -97,8 +97,8 @@ class WindowListMenuGenerator(MenuGenerator):
 	GENERATOR_NAME = "windowlist"
 	MAX_LENGHT = 50
 	
-	#def generate(self, menuhandler):
-	#	return _("[ Window Lists ]")
+	def generate(self, menuhandler):
+		return _("[ Window Lists ]")
 
 	
 	def encode(self):
@@ -145,8 +145,8 @@ class GameListMenuGenerator(MenuGenerator):
 	
 	_games = None		# Static list of know games
 	
-	#def generate(self, menuhandler):
-	#	return _("[ Games ]")
+	def generate(self, menuhandler):
+		return _("[ Games ]")
 
 	
 	def encode(self):

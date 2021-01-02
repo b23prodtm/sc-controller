@@ -2,7 +2,7 @@
 """
 SC-Controller - Gesture-related GUI stuff.
 """
-from __future__ import unicode_literals
+
 from scc.tools import _, set_logging_level
 
 from gi.repository import Gtk, Gdk, GLib, GObject

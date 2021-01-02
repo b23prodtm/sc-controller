@@ -1,5 +1,5 @@
 #!/usr/bin/env python2
-from __future__ import unicode_literals
+
 
 from collections import deque
 from scc.lib import xwrappers as X
@@ -20,8 +20,8 @@ log = logging.getLogger("Mapper")
 class Mapper(object):
 	DEBUG = False
 	
-	def __init__(self, profile, scheduler, keyboard=b"SCController Keyboard",
-				mouse=b"SCController Mouse",
+	def __init__(self, profile, scheduler, keyboard="SCController Keyboard",
+				mouse="SCController Mouse",
 				gamepad=True, poller=None):
 		"""
 		If any of keyboard, mouse or gamepad is set to None, that device
@@ -95,11 +95,11 @@ class Mapper(object):
 	
 	
 	def create_keyboard(self, name):
-		return Keyboard(name=name)
+		return Keyboard(name)
 	
 	
 	def create_mouse(self, name):
-		return Mouse(name=name)
+		return Mouse(name)
 	
 	
 	def _rumble_ready(self, fd, event):
@@ -108,7 +108,7 @@ class Mapper(object):
 			self.send_feedback(HapticData(
 				HapticPos.BOTH,
 				period = 32760,
-				amplitude = max(0, ef.level),
+				amplitude = ef.level,
 				count = min(0x7FFF, ef.duration * ef.repetitions / 30)
 			))
 	
@@ -359,7 +359,7 @@ class Mapper(object):
 		self.state = state
 		self.buttons = state.buttons
 		
-		if self.buttons & SCButtons.LPAD and not self.buttons & (SCButtons.LPADTOUCH | STICKTILT):
+		if self.buttons & SCButtons.LPAD and not self.buttons & SCButtons.LPADTOUCH:
 			self.buttons = (self.buttons & ~SCButtons.LPAD) | SCButtons.STICKPRESS
 		
 		fe = self.force_event
@@ -418,27 +418,16 @@ class Mapper(object):
 					if not self.lpad_touched:
 						self.lpad_touched = True
 					self.profile.pads[LEFT].whole(self, state.lpad_x, state.lpad_y, LEFT)
-					if self.old_state.buttons & STICKTILT and not self.buttons & STICKTILT:
-						# LPAD and stick share axes and so when they are used simultaneously (by someone with 3 hands or so :)
-						# this is how mapper can tell that stick was recentered
-						self.profile.stick.whole(self, 0, 0, STICK)
 				elif not self.buttons & STICKTILT:
 					# Pad is not being touched
 					if self.lpad_touched:
 						self.lpad_touched = False
 						self.profile.pads[LEFT].whole(self, 0, 0, LEFT)
-					
+			
 			# CPAD (touchpad on DS4 controller)
 			if controller.flags & ControllerFlags.HAS_CPAD:
-				if ((FE_PAD in fe)
-						or (self.old_state.cpad_x != state.cpad_x)
-						or (self.old_state.cpad_y != state.cpad_y)
-						or ((self.old_buttons & SCButtons.CPADTOUCH) and not (self.buttons & SCButtons.CPADTOUCH))
-					):
-					if self.buttons & SCButtons.CPADTOUCH:
-						self.profile.pads[CPAD].whole(self, state.cpad_x, state.cpad_y, CPAD)
-					elif self.old_buttons & SCButtons.CPADTOUCH:
-						self.profile.pads[CPAD].whole(self, 0, 0, CPAD)
+				if FE_PAD in fe or self.old_state.cpad_x != state.cpad_x or self.old_state.cpad_y != state.cpad_y:
+					self.profile.pads[CPAD].whole(self, state.cpad_x, state.cpad_y, CPAD)
 		except Exception:
 			# Log error but don't crash here, it breaks too many things at once
 			if hasattr(self, "_testing"):

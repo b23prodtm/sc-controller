@@ -8,7 +8,7 @@ from scc.actions import HatRightAction, TriggerAction, MouseAction
 from scc.actions import HatUpAction, HatDownAction, HatLeftAction
 from scc.actions import AxisAction, RelAreaAction, MultiAction
 from scc.special_actions import ChangeProfileAction, GridMenuAction, MenuAction
-from scc.modifiers import SensitivityModifier, ClickModifier, FeedbackModifier
+from scc.modifiers import SensitivityModifier, ClickedModifier, FeedbackModifier
 from scc.constants import SCButtons, HapticPos, TRIGGER_CLICK, YAW, ROLL
 from scc.modifiers import BallModifier, DoubleclickModifier
 from scc.modifiers import HoldModifier, ModeModifier
@@ -377,7 +377,7 @@ class VDFProfile(Profile):
 				action = MouseAction()
 		elif mode == "mouse_wheel":
 			action = BallModifier(XYAction(MouseAction(Rels.REL_HWHEEL),
-			 	MouseAction(Rels.REL_WHEEL)))
+			 	ouseAction(Rels.REL_WHEEL)))
 		elif mode == "trigger":
 			actions = []
 			if "click" in inputs:
@@ -466,7 +466,7 @@ class VDFProfile(Profile):
 		
 		Throws ParseError if key is not supported.
 		"""
-		if binding in SCButtons.__members__.values():
+		if binding in SCButtons:
 			self.buttons[binding] = action
 		elif binding.startswith("left_trackpad"):
 			self.pads[Profile.LEFT] = action
@@ -503,7 +503,7 @@ class VDFProfile(Profile):
 		
 		Throws ParseError if key is not supported.
 		"""
-		if binding in SCButtons.__members__.values():
+		if binding in SCButtons:
 			return self.buttons[binding]
 		elif binding.startswith("left_trackpad"):
 			return self.pads[Profile.LEFT]
@@ -599,7 +599,7 @@ class VDFProfile(Profile):
 				self.action_sets[aset.name] = aset
 				VDFProfile._load_preset(data, aset, p)
 		
-		for aset in self.action_sets.values():
+		for aset in list(self.action_sets.values()):
 			aset.buttons[SCButtons.C] = HoldModifier(
 				MenuAction("Default.menu"), MenuAction("Default.menu")
 			)

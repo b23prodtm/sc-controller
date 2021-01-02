@@ -1,8 +1,11 @@
 #!/usr/bin/env python2
 """ ae - Action Editor components """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
+# `gi.repository` is a special Python package that dynamically generates objects
+import gi
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GLib
 from scc.actions import Action, NoAction, XYAction
 from scc.gui.editor import ComboSetter
@@ -102,7 +105,7 @@ def describe_action(mode, cls, v):
 	Returns action description with 'v' as parameter, unless unless v is None.
 	Returns "not set" if v is None
 	"""
-	if v is None or type(v) in (int, float, str,):
+	if v is None or type(v) in (int, float, str, str):
 		return _('(not set)')
 	elif isinstance(v, Action):
 		dsc = v.describe(Action.AC_STICK if cls == XYAction else Action.AC_BUTTON)

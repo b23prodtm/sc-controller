@@ -4,7 +4,7 @@ SC-Controller - Menu Editor
 
 Edits .menu files and menus stored in profile.
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from gi.repository import Gtk, Gdk, GLib, GObject
@@ -107,9 +107,9 @@ class MenuEditor(Editor):
 		""" Handler for Save button """
 		self._remove_original()
 		if self.builder.get_object("rbInProfile").get_active():
-			self._save_to_profile(self.builder.get_object("entName").get_text())
+			self._save_to_profile(self.builder.get_object("entName").get_text().decode("utf-8"))
 		else:
-			self._save_to_file(self.builder.get_object("entName").get_text())
+			self._save_to_file(self.builder.get_object("entName").get_text().decode("utf-8"))
 		self.close()
 	
 	

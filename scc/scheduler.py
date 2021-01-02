@@ -85,5 +85,3 @@ class Task(object):
 		self.callback = lambda *a, **b: False
 		self.data = ()
 
-	def __lt__(self, other):
-		self.time < other.time

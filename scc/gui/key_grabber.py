@@ -4,7 +4,7 @@ SC-Controller - Action Editor
 
 Allows to edit button or trigger action.
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from scc.gui.controller_widget import ControllerButton
@@ -38,7 +38,7 @@ class KeyGrabber(object):
 	
 	def __new__(cls, *a):
 		if cls._singleton is None:
-			cls._singleton = object.__new__(cls)
+			cls._singleton = object.__new__(cls, *a)
 		return cls._singleton
 	
 	

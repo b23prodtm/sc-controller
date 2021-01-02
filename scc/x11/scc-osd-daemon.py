@@ -5,7 +5,7 @@ SC-Controller - OSD Daemon
 
 Controls stuff displayed as OSD.
 """
-from __future__ import unicode_literals
+
 from scc.tools import _, set_logging_level
 
 import gi
@@ -115,10 +115,9 @@ class OSDDaemon(object):
 		if m.get_exit_code() == 0:
 			# 0 means that user selected item and confirmed selection
 			self.daemon.request(
-				'Selected: {} {}'.format(m.get_menuid(), m.get_selected_item_id()),
-				#'Selected: %s' % ( shjoin([
-				#	m.get_menuid(), m.get_selected_item_id()
-				#])),
+				'Selected: %s' % ( shjoin([
+					m.get_menuid(), m.get_selected_item_id()
+				])),
 				lambda *a : False, lambda *a : False)
 	
 	
@@ -174,10 +173,9 @@ class OSDDaemon(object):
 				# TODO: Do this only for default position once changing
 				# TODO: is allowed
 				if len(self._visible_messages):
-					tmp = list(self._visible_messages.values())
-					height = tmp[0].get_size().height
+					height = list(self._visible_messages.values())[0].get_size().height
 					x, y = m.position
-					while y in [ i.position[1] for i in tmp ]:
+					while y in [ i.position[1] for i in list(self._visible_messages.values()) ]:
 						y -= height + 5
 					m.position = x, y
 				m.show()
@@ -290,6 +288,11 @@ class OSDDaemon(object):
 	
 	
 	def run(self):
+		on_wayland = "WAYLAND_DISPLAY" in os.environ or not isinstance(Gdk.Display.get_default(), GdkX11.X11Display)
+		if on_wayland:
+			log.error("Cannot run on Wayland")
+			self.exit_code = 8
+			return
 		self.daemon = DaemonManager()
 		self.config = Config()
 		self._check_colorconfig_change()
@@ -302,7 +305,7 @@ class OSDDaemon(object):
 
 
 if __name__ == "__main__":
-	from scc.tools import init_logging
+	from scc.tools import init_logging, set_logging_level
 	from scc.paths import get_share_path
 	init_logging(suffix=" OSD")
 	set_logging_level('debug' in sys.argv, 'debug' in sys.argv)

@@ -200,7 +200,7 @@ class USBDriver(object):
 		""" Closes all devices and unclaims all interfaces """
 		if len(self._devices):
 			log.debug("Releasing devices...")
-			to_release, self._devices, self._syspaths = self._devices.values(), {}, {}
+			to_release, self._devices, self._syspaths = list(self._devices.values()), {}, {}
 			for d in to_release:
 				d.close()
 	
@@ -316,7 +316,7 @@ class USBDriver(object):
 			self._ctx.handleEventsTimeout()
 			self._changed = 0
 		
-		for d in self._devices.values():		# TODO: don't use .values() here
+		for d in list(self._devices.values()):		# TODO: don't use .values() here
 			try:
 				d.flush()
 			except usb1.USBErrorPipe:

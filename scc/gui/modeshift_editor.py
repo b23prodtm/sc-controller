@@ -4,7 +4,7 @@ SC-Controller - Action Editor
 
 Allows to edit button or trigger action.
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from scc.gui.controller_widget import ControllerButton
@@ -98,7 +98,7 @@ class ModeshiftEditor(Editor):
 			if any([ x[0] == item for x in self.actions[self.current_page] ]):
 				# Skip already added buttons
 				continue
-			if type(item) is str:
+			if type(item) in (str, str):
 				# Special case for soft pull items
 				button = getattr(SCButtons, item.split(" ")[-1])
 				if any([ (isinstance(x, RangeOP) and x.what == button)
@@ -400,7 +400,7 @@ class ModeshiftEditor(Editor):
 			lblPressAlone.set_label(_("(pressed alone)"))
 			self.mode = mode = mode or Action.AC_BUTTON
 		
-		self.set_title("Modeshift for %s" % (nameof(id) if id in SCButtons.__members__.values() else str(id),))
+		self.set_title("Modeshift for %s" % (nameof(id) if id in SCButtons else str(id),))
 		
 		if isinstance(action, FeedbackModifier):
 			cbHoldFeedback.set_active(True)

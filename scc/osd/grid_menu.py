@@ -5,7 +5,7 @@ SC-Controller - Grid OSD Menu
 Works as OSD menu, but displays item in (as rectangluar as possible - and
 that's usually not very much) grid.
 """
-from __future__ import unicode_literals
+
 from scc.tools import _, set_logging_level
 
 from gi.repository import Gtk

@@ -4,7 +4,7 @@ SC-Controller - Profile
 
 Handles mapping profile stored in json file
 """
-from __future__ import unicode_literals
+
 
 from scc.constants import LEFT, RIGHT, CPAD, WHOLE, STICK, GYRO
 from scc.constants import SCButtons, HapticPos
@@ -20,7 +20,7 @@ log = logging.getLogger("profile")
 
 
 class Profile(object):
-	VERSION = 1.4	# Current profile version. When loading profile file
+	VERSION = 1.3	# Current profile version. When loading profile file
 					# with version lower than this, auto-conversion may happen
 	
 	LEFT  = LEFT
@@ -48,7 +48,7 @@ class Profile(object):
 	
 	def save(self, filename):
 		""" Saves profile into file. Returns self """
-		fileobj = open(filename, "w")
+		fileobj = file(filename, "w")
 		self.save_fileobj(fileobj)
 		fileobj.close()
 		return self
@@ -100,7 +100,7 @@ class Profile(object):
 		data = json.loads(fileobj.read())
 		# Version
 		try:
-			version = float(data["version"])
+			version = int(data["version"])
 		except:
 			version = 0
 		
@@ -167,7 +167,6 @@ class Profile(object):
 				self.menus[id] = MenuData.from_json_data(data["menus"][id], self.parser)
 		
 		# Conversion
-		self.original_version = version		# TODO: This is temporary
 		if version < Profile.VERSION:
 			self._convert(version)
 		
@@ -238,7 +237,7 @@ class Profile(object):
 				dct[x] = dct[x].compress()
 		self.stick = self.stick.compress()
 		self.gyro = self.gyro.compress()
-		for menu in self.menus.values():
+		for menu in list(self.menus.values()):
 			menu.compress()
 	
 	
@@ -323,7 +322,7 @@ class Profile(object):
 							self.triggers[p].to_string(), n.to_string())
 						self.triggers[p] = n
 		if from_version < 1.3:
-			# Action format completly changed in v0.4, but profile foramat is same.
+			# Action format completly changed in v0.4, but profile foramt is same.
 			pass
 
 class Encoder(JSONEncoder):

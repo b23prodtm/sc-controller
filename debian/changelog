@@ -1,7 +1,7 @@
 sc-controller (0.4.9) UNRELEASED; urgency=medium
 
-  [ btinarako ]
-  * Initial release. (Closes: #XXXXXX) 
+  [ bnopod ]
+  * Initial release. (Closes: #XXXXXX)
 
   [ kozec ]
   * Imported code from 'https://github.com/ynsta/steamcontroller'
@@ -2303,4 +2303,236 @@ sc-controller (0.4.9) UNRELEASED; urgency=medium
   [ Tiana Rakoto Arimanana ]
   * Test hipfire
 
- -- btinarako <btinarako@btinarako-System-Product-Name>  Fri, 25 Dec 2020 20:48:12 +0100
+  [ kozec ]
+  * Imported heckload of c code
+  * More windows fixes
+  * Hopefully last set of fixes
+  * Prepared windows release
+  * Added missing ViGEmClient.cpp
+  * Name, Sensitivity and Deazone modifier
+  * More tests, missing functions, allowed strbuilder to work with NULL
+  * Reworked / implemented config class, now it can save & works with registry on Windows
+  * Implemented macro, along with sleep() & repeat()
+  * Moved win32 daemon modules to 'uinput-win32'
+  * Added x11 connection to daemon
+  * forgotten file
+  * Added support for fd's with high number
+  * Moving stuff around
+  * Emulating x360 controller instead of DS4 now
+  * Fix: Reading serial numbers
+  * Better split between poller on Linux and poller on
+  * Cycle action
+  * Moved usb_helper to its own struct, so it can be NOT used on *BSD
+  * Fix: creating config dir when needed
+  * css fixes
+  * Made SCCClient object into reference-counted
+  * Implemented 'and' and 'type'
+  * 'press', 'release', 'tap'
+  * OSD: Using signals where apropriate
+  * Implemented modeshift ('mode' action)
+  * Added support for LibRetro RemotePad protocol
+  * Removed old TODOs
+  * X11 output for BSD
+  * Updated .gitignore
+  * Added FOREACH_IN macro needed for iterating without malloc
+  * Fixed menu & profile tests
+  * BSD: Work in progress
+  * More constants for parser
+  * BSD: I have no idea what I am doing :(
+  * BSD: if fucking works!
+  * BSD: Support for wireless SC
+  * Updated README with BSD info
+  * Readme style
+  * Fixed comments
+  * Implemented relXY action. Ref #215
+  * Implemented TrackballAction
+  * Updated desktop profile
+  * Fixed building on Windows
+  * Added support for 'ignore_serials' option. Ref #215
+  * 'Reloaded' osd style now works on Windows as well
+  * Patreon bad, deplatforming bad, editing all the READMEs
+  * I've just commited wrong link to 4 repositories at once :(
+  * BSD: Netbsd support
+  * Fixed some memory leaks
+  * Implemented hold & doubleclick
+  * Moved all generated stuff to one module / one generator
+  * Moved uinput stuff out of daemon and to its own shared
+  * Made more libs shared
+  * Changed prefix on drivers so it matches rest
+  * More moving code around
+  * Windows fixes
+  * W10: Fixed ABS_LY overflowing, ABS_RY inverted. Ref #215
+  * Fix: wired controller interpreting PING packets as input. Ref #215
+  * Fixed building on Windows
+  * Started to work on simple python bindings, so old python code can be reused
+  * Fix: cannot parse '0'
+  * Fix: scc_make_param_list increases reference count only on 1st parameter + bindings related ref.counting issues
+  * Python binds: Passed most of parser tests
+  * Removed python tests for profile; all magic was abandonded in favor of parsing action strings
+  * Temporary(?) removed non-applicable py tests
+  * Finally passed most of py tests
+  * Moving files around
+  * GUI now boots...
+  * GUI kinda works
+  * big part of UI now works as expected
+  * mv shared/ -> share/
+  * Removed old 'AxisAction.id' prop, 'AxisAction.axis' is more clear
+  * Fixed reference leak + silenced 'deleting X' messages
+  * Moved MOD_* constants and stubs to c
+  * Fix: broken macro parsing, merging hold & doubleclick
+  * Fix: menu() not taking 'DEFAULT' as value
+  * Added mode.timeout param
+  * Added fake driver
+  * Implemented protocol messages needed by GUI
+  * Updated Desktop.sccprofile
+  * Added more action descriptions
+  * Fix: flushing mouse clicks on uinput
+  * cleanup
+  * Turned new daemon into actual daemon
+  * GUI can now start (and stop) c daemon
+  * scc-daemon daemonizing on Windows
+  * Updated docs to reflect profile format in 'c' branch
+  * Logging to buffer
+  * GUI now starts on Windows
+  * GUI can now connect to daemon on Windows
+  * Added protocol commands to retrieve daemon log
+  * More gui fixes
+  * Implemented menu icons
+  * Implemented (important part of) menu generators
+  * WIP: on-screen keyboard
+  * Implemented submenus (menu is now fully usable)
+  * GUI: disabling not-yet-implemented stuff
+  * GUI: fixing triggers, random failures
+  * GUI: Fixed menu editor
+  * GUI: Fixed giving stuff names
+  * GUI: More menu editor fixes
+  * Windows: added icon + fixed building
+  * Even more Windows fixes
+  * Build for Windows done
+  * Fix: Better scrollwheel on Windows
+  * Fix: switched client and virtual-device dirs in build order. Fixes #465
+  * Initial gyro support
+  * Implemented gyro mouse
+  * Implemented gyro action
+  * Implemented GyroAbs
+
+  [ Danilo Spinella ]
+  * Add support for libexecinfo library
+
+  [ kozec ]
+  * Implemented 'tilt'
+  * Restoring GUI for gyro
+  * Fix: LC_NUMERIC changing decimal separator to comma
+  * Restoring GUI for gyro (part 2)
+  * Added POC support for CemuHook motion provider (ref #449)
+  * Added GUI for cemuhook (ref #449)
+  * cemuhook: enabled accelerator
+
+  [ SolitudeSF ]
+  * Dont override dependencies
+
+  [ kozec ]
+  * Backported cemuhook to python code
+  * Restoring GUI for gyro (last part)
+  * Updated README
+  * Fix: GUI can't load 'deadzone'. Ref #480
+  * Fix: deadzone upper value overflowing
+  * Fix: Missing grip constants
+  * Cemuhook on Windows
+
+  [ tom ]
+  * Prepred / fixed windows release
+  * Fix: python import weirdness. Ref #215
+
+  [ kozec ]
+  * Windows build fixes
+  * Fix: All of udev_device_get_* return values may be NULL. Fixes #481
+
+  [ tom ]
+  * Fix: mouseabs takes wrong parameters
+  * Fix: broken / outdated test, AxisAction.id is not anymore
+  * Implemented joystick camera. Fixes #487
+
+  [ kozec ]
+  * hidapi: Finally does something. Wired controller kida works. Ref #461
+  * Fixed some memory leaks
+  * Much better hidapi implementation. Fixes #461
+  * Cleanup
+  * BSD support for all above
+  * argparse now returns error instead of exit()-ing
+  * OSK: Implemented help display
+  * OSK: Input and hilighting
+  * OSK: Now works on Windows
+  * Fix: missing icon
+  * OSK: Added to menu
+  * More OSK on Windows fixes
+  * Fix: Even more Windows fixes
+  * Forgotten file :(
+
+  [ ren2r ]
+  * Update clamp_axis to
+
+  [ kozec ]
+  * Updated header. Ref #503 Fixes #502
+
+  [ ren2r ]
+  * Update trigger_release
+
+  [ kozec ]
+  * Implemented 'change' on axis. Fixes #505
+  * posix_spawn fixes
+  * Created 'load_library' function & unified .so loading in it
+  * Sqashed 3 weeks of restoring menus to singe commit
+  * Implemented grid menu
+  * Windows build fixes
+  * Windows: Using hidapi for sc dongle
+  * Finally got exclusive controller access on Windows
+  * Always use HIDAPI/UHID on Windows/BSD
+  * Added missing file. Ref #496
+  * Moved scancode / key conversion to c. Fixes #507
+  * Reverted profile commited by mistake
+  * Added meson script to run executables with automatic dealing with paths
+  * Handling spaces in arguments of _spawnv. Fixes #510
+  * Prevent scc-daemon for eating 100% of CPU
+  * Release fixes
+  * Strip extension from 'profile' command line argument. Fixes #514
+  * Fix: -h option not recognized as reason to exit. Fixes #513
+  * (Re)merged reworked config support
+  * Using meson to start executables on Linux
+  * Config fixes, reenabling changing of OSD colors
+  * Removed old/duplicate files
+  * Added Santa Hat. Ref microsoft/vscode#87268
+  * (Re)implemented radial menu, with support for multiple rings. Ref #516
+  * Radial can react to buttons and display submenus.
+  * GUI for radial menu
+  * Typo
+  * Implemented very basic OSD daemon
+  * Starting OSD daemon along with scc-daemon
+  * Windows, oh glorious (not) Windows
+  * More of Windows
+  * Added POC of accelerometer mapping. Ref #523
+
+  [ Tiana Rakoto Arimanana ]
+  * v.0.4.9.12: 80c2d637a25d4efc3f5c46fd80f24d099ca91a5b
+  * Fixes: error: can't copy 'images/sc-controller.svg': doesn't exist or not a regular file
+  * Fixes: error: can't copy 'images/sc-controller.svg': doesn't exist or not a regular file
+
+  [ T.B.RAKOTOARIMA ]
+  * Fixes: pybuild 2to3 conversion (wip)
+
+  [ Tiana Rakoto Arimanana ]
+  * Fixes: dict string keys
+
+  [ BOPOD ]
+  * Fixes: FileNotFoundError: [Errno 2]
+  * Fixes: FileNotFoundError: [Errno 2]
+  * Fixes: FileNotFoundError: [Errno 2]
+  * Fixes: FileNotFoundError: [Errno 2]
+  * Fixes: FileNotFoundError: [Errno 2]
+  * Fixes: FileNotFoundError: [Errno 2]
+  * Fixes: FileNotFoundError: [Errno 2]
+  * Fixes: FileNotFoundError: [Errno 2]
+  * Fixes: FileNotFoundError: [Errno 2]
+  * Fixes: FileNotFoundError: [Errno 2]
+
+ -- btinarako <btinarako@btinarako-System-Product-Name>  Fri, 01 Jan 2021 14:45:39 +0100

@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 from scc.parser import ActionParser, ParseError
 from scc.actions import Action
 from scc.tools import _

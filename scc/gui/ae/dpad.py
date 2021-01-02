@@ -5,7 +5,7 @@ SC-Controller - Action Editor - "DPAD or Menu"
 
 Setups DPAD emulation or menu display
 """
-from __future__ import unicode_literals
+
 from scc.tools import _
 
 from gi.repository import Gtk, Gdk, GLib
