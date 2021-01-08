@@ -83,7 +83,8 @@ int main(int argc, char** argv) {
 	strbuilder_add(sys_path, LIB_PYTHON_PATH);
 #endif
 	ASSERT(!strbuilder_failed(sys_path));
-	PySys_SetPath(strbuilder_get_value_wc(sys_path));
+	wchar_t* value;
+	PySys_SetPath(strbuilder_get_value_wc(sys_path, value));
 
 	PyObject* gui = PyImport_ImportModule("gui_loader");
 	if (PyErr_Occurred()) {
