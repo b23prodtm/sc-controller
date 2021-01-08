@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct StrBuilder StrBuilder;
 
@@ -174,11 +175,12 @@ static inline const char* strbuilder_get_value(StrBuilder* b) {
 }
 
 /** Returns wide char value without deallocating builder. Returned string should not be changed or deallocated */
-static inline const wchar_t* strbuilder_get_value_wc(StrBuilder* b) {
+static inline const wchar_t* strbuilder_get_value_wc(StrBuilder* b, const wchar_t *value) {
 	size_t length = strlen(b->value) + 1;
-	const wchar_t value[length];
-	mbstowcs(value, b->value, length);
-	return (wchar_t*)value;
+	wchar_t val[length];
+	mbstowcs(val, b->value, length);
+	value = (const wchar_t*)val;
+	return value;
 }
 /** Returns length of builder value */
 static inline size_t strbuilder_len(StrBuilder* b) {

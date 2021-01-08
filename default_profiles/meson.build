@@ -1,0 +1,1 @@
+install_data(['Desktop.sccprofile', '.scc-osd.keyboard.sccprofile', 'XBox Controller.sccprofile', '.scc-osd.profile_editor.sccprofile', 'XBox Controller with High Precision Camera.sccprofile'], install_dir: 'share/default_profiles')

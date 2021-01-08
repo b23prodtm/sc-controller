@@ -1,7 +1,7 @@
 project('scc', 'c',
 	version: '3.14',
 	license: 'GPL-2',
-	default_options : ['c_std=gnu11'],
+	default_options : ['c_std=gnu11', 'menu-generators=enabled'],
 )
 
 CONFIG_BACKEND = 'config_json'
@@ -166,7 +166,6 @@ bindings_lib = shared_library('scc-bindings',
 	]
 )
 
-
 subdir('src/virtual-device')
 subdir('src/client')
 subdir('src/daemon/drivers')
@@ -179,5 +178,6 @@ if get_option('menu-generators').enabled()
 endif
 subdir('src/gui')
 subdir('tests')
+subdir('share')
 
 meson.add_install_script('meson-custom-install.sh')
