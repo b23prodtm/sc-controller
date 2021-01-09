@@ -1,4 +1,4 @@
-# SC Controller [![Build Status](https://travis-ci.org/b23prodtm/sc-controller.svg?branch=travisobs)](https://travis-ci.org/b23prodtm/sc-controller)
+# SC Controller [![Build Status](https://www.travis-ci.com/b23prodtm/sc-controller.svg?branch=travisobs)](https://www.travis-ci.com/b23prodtm/sc-controller)
 SC Controller
 
 User-mode driver and mapper for Steam Controller, DS4 and similar controllers.
