@@ -41,7 +41,7 @@ rule REGENERATE_BUILD
 
 # Phony build target, always out of date
 
-build PHONY: phony 
+build PHONY: phony
 
 # Build rules for targets
 
@@ -679,14 +679,14 @@ build src/daemon/scc-input-tester: c_LINKER src/daemon/a87c725@@scc-input-tester
 
 build scc-daemon: phony meson-scc-daemon
 
-build meson-scc-daemon: CUSTOM_COMMAND 
+build meson-scc-daemon: CUSTOM_COMMAND
  COMMAND = /usr/bin/meson --internal commandrunner /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/reconfigure src/daemon /usr/bin/meson sh ../../meson-run.sh src/daemon/scc-daemon debug
  description = Running$ external$ command$ scc-daemon.
  pool = console
 
 build scc-input-tester: phony meson-scc-input-tester
 
-build meson-scc-input-tester: CUSTOM_COMMAND 
+build meson-scc-input-tester: CUSTOM_COMMAND
  COMMAND = /usr/bin/meson --internal commandrunner /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/reconfigure src/daemon /usr/bin/meson sh ../../meson-run.sh src/daemon/scc-input-tester --first
  description = Running$ external$ command$ scc-input-tester.
  pool = console
@@ -801,14 +801,14 @@ build src/osd/scc-osd-keyboard: c_LINKER src/osd/9928db8@@scc-osd-keyboard@exe/o
 
 build scc-osd-menu: phony meson-scc-osd-menu
 
-build meson-scc-osd-menu: CUSTOM_COMMAND 
- COMMAND = /usr/bin/meson --internal commandrunner /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/reconfigure src/osd /usr/bin/meson sh ../../meson-run.sh src/osd/scc-osd-menu -f ../share/default_menus/Default.menu -t radial -c LEFT
+build meson-scc-osd-menu: CUSTOM_COMMAND
+ COMMAND = /usr/bin/meson --internal commandrunner /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/reconfigure src/osd /usr/bin/meson sh ../../meson-run.sh src/osd/scc-osd-menu -f ../share/scc/default_menus/Default.menu -t radial -c LEFT
  description = Running$ external$ command$ scc-osd-menu.
  pool = console
 
 build scc-osd-daemon: phony meson-scc-osd-daemon
 
-build meson-scc-osd-daemon: CUSTOM_COMMAND 
+build meson-scc-osd-daemon: CUSTOM_COMMAND
  COMMAND = /usr/bin/meson --internal commandrunner /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/reconfigure src/osd /usr/bin/meson sh ../../meson-run.sh src/osd/scc-osd-daemon
  description = Running$ external$ command$ scc-osd-daemon.
  pool = console
@@ -840,7 +840,7 @@ build src/gui/sc-controller: c_LINKER src/gui/393dca3@@sc-controller@exe/gui.c.o
 
 build sc-controller: phony meson-sc-controller
 
-build meson-sc-controller: CUSTOM_COMMAND 
+build meson-sc-controller: CUSTOM_COMMAND
  COMMAND = /usr/bin/meson --internal commandrunner /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller /home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/reconfigure src/gui /usr/bin/meson sh ../../meson-run.sh src/gui/sc-controller
  description = Running$ external$ command$ sc-controller.
  pool = console
@@ -1086,7 +1086,6 @@ build build.ninja: REGENERATE_BUILD ../meson.build /usr/bin/find ../src/virtual-
 build reconfigure: REGENERATE_BUILD PHONY
  pool = console
 
-build ../meson.build /usr/bin/find ../src/virtual-device/meson.build ../src/client/meson.build ../src/daemon/drivers/meson.build ../src/daemon/meson.build ../src/osd/meson.build ../src/osd/common/meson.build ../src/osd/menus/meson.build ../src/osd/keyboard/meson.build ../src/menu-generators/meson.build ../src/gui/meson.build ../tests/meson.build meson-private/coredata.dat ../meson_options.txt: phony 
+build ../meson.build /usr/bin/find ../src/virtual-device/meson.build ../src/client/meson.build ../src/daemon/drivers/meson.build ../src/daemon/meson.build ../src/osd/meson.build ../src/osd/common/meson.build ../src/osd/menus/meson.build ../src/osd/keyboard/meson.build ../src/menu-generators/meson.build ../src/gui/meson.build ../tests/meson.build meson-private/coredata.dat ../meson_options.txt: phony
 
 default all
-

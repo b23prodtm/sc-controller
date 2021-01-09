@@ -5,8 +5,8 @@
 import os, subprocess, colorsys
 from xml.etree import ElementTree as ET
 
-ICODIR = "./share/images/"						# Directory with icons
-CICONS = "./share/images/controller-icons/"		# Directory controller-icons
+ICODIR = "./share/scc/images/"						# Directory with icons
+CICONS = "./share/scc/images/controller-icons/"		# Directory controller-icons
 RECOLORS = {		# Defines set of hue shifts for controller-icons
 	# "0" : 0.0,	# Green - original
 	"1" : 0.3,		# Blue

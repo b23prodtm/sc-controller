@@ -10,7 +10,7 @@
 
 /** Tests loading profile file */
 void test_loading(CuTest* tc) {
-	Profile* p = scc_profile_from_json("../share/default_profiles/XBox Controller.sccprofile", NULL);
+	Profile* p = scc_profile_from_json("../share/scc/default_profiles/XBox Controller.sccprofile", NULL);
 	assert(tc, p != NULL);
 	assert(tc, strcmp(scc_action_to_string(p->get_button(p, B_A)), "button(BTN_A)") == 0);
 	// printf("%s\n", scc_action_to_string(p->get_stick(p)));
@@ -21,7 +21,7 @@ void test_loading(CuTest* tc) {
 
 /** Tests loading profile with action set to 'RPAD' instead of 'RPADPRESS' */
 void test_load_old_rpad(CuTest* tc) {
-	Profile* p = scc_profile_from_json("../share/default_profiles/Desktop.sccprofile", NULL);
+	Profile* p = scc_profile_from_json("../share/scc/default_profiles/Desktop.sccprofile", NULL);
 	assert(tc, p != NULL);
 	assert(tc, strcmp(scc_action_to_string(p->get_button(p, B_RPADPRESS)), "button(BTN_LEFT)") == 0);
 	

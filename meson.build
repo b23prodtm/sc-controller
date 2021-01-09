@@ -178,7 +178,7 @@ if get_option('menu-generators').enabled()
 endif
 subdir('src/gui')
 subdir('tests')
-subdir('share')
+subdir('share/scc')
 
 # Import python3 meson module which is used to find the Python dependencies.
 py3_mod = import('python3')
@@ -191,5 +191,5 @@ shared_library('uinput', 'scc/uinput.c', install: true, dependencies: py3_dep)
 shared_library('hiddrv', 'scc/drivers/hiddrv.c', install: true, dependencies: py3_dep)
 shared_library('sc_by_bt', 'scc/drivers/sc_by_bt.c', install: true, dependencies: py3_dep)
 
-run_command(py3, 'setup.py', 'build')
-run_command(py3, 'setup.py', 'install')
+run_command(py3, 'setup.py', 'build', '--prefix' + meson.current_build_dir())
+run_command(py3, 'setup.py', 'install', '--prefix' + meson.current_build_dir())

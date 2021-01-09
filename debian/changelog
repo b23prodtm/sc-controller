@@ -2334,4 +2334,7 @@ sc-controller (0.4.9) UNRELEASED; urgency=medium
   * Issue: test_menu_generators #2
   * Fixes: Meson tests (#2)
 
- -- btinarako <btinarako@btinarako-System-Product-Name>  Sat, 09 Jan 2021 18:17:24 +0100
+  [ BOPOD ]
+  * Fixes: share/scc
+
+ -- btinarako <btinarako@btinarako-System-Product-Name>  Sat, 09 Jan 2021 21:22:07 +0100

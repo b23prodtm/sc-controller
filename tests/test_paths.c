@@ -6,16 +6,16 @@
 
 
 void test_find_icon(CuTest* tc) {
-	const char* paths[] = { "../share/images/menu-icons", NULL };
+	const char* paths[] = { "../share/scc/images/menu-icons", NULL };
 	bool has_color;
 	char* filename = scc_find_icon("system/turn-off", false, &has_color, paths, NULL);
 	assert(tc, !has_color);
-	assert(tc, 0 == strcmp(filename, "../share/images/menu-icons/system/turn-off.bw.png"));
+	assert(tc, 0 == strcmp(filename, "../share/scc/images/menu-icons/system/turn-off.bw.png"));
 	free(filename);
 	
 	filename = scc_find_icon("system/turn-off", true, &has_color, paths, NULL);
 	assert(tc, has_color);
-	assert(tc, 0 == strcmp(filename, "../share/images/menu-icons/system/turn-off.png"));
+	assert(tc, 0 == strcmp(filename, "../share/scc/images/menu-icons/system/turn-off.png"));
 	free(filename);
 }
 

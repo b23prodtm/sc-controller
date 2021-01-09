@@ -18,7 +18,7 @@ static Config* make_cfg(CuTest* tc) {
 /** Tests loading menu file */
 void test_apply_generators(CuTest* tc) {
 	Config* cfg = make_cfg(tc);
-	MenuData* m = scc_menudata_from_json("share/default_menus/Default.menu", NULL);
+	MenuData* m = scc_menudata_from_json("share/scc/default_menus/Default.menu", NULL);
 	assert(tc, m != NULL);
 	assert(tc, 1 == scc_menudata_apply_generators(m, cfg));
 	

@@ -88,12 +88,12 @@ for i in "${LIBS[@]}" "${GTK_LIBS[@]}" ; do
 	fi
 done
 
-mkdir -p release-win32/share/images/status
-mkdir -p release-win32/share/images/actions
+mkdir -p release-win32/share/scc/images/status
+mkdir -p release-win32/share/scc/images/actions
 for i in "${GTK_ICONS[@]}" ; do
 	n=$(basename "$i")
-	[ -e release-win32/share/images/"$n" ] || cp -nv \
-		/mingw32/share/icons/Adwaita/16x16/"$i" release-win32/share/images/"$n"
+	[ -e release-win32/share/scc/images/"$n" ] || cp -nv \
+		/mingw32/share/icons/Adwaita/16x16/"$i" release-win32/share/scc/images/"$n"
 done
-cp -vu /mingw32/share/icons/Adwaita/16x16/legacy/document-save.png release-win32/share/images/gtk-save-ltr.png
+cp -vu /mingw32/share/icons/Adwaita/16x16/legacy/document-save.png release-win32/share/scc/images/gtk-save-ltr.png
 

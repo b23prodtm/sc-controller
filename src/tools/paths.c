@@ -58,7 +58,7 @@ const char* scc_get_config_path() {
 	if (config_path[0] != 0)
 		// Return cached value
 		return config_path;
-	
+
 #ifdef _WIN32
 	SHGetFolderPathA(NULL, CSIDL_APPDATA|CSIDL_FLAG_CREATE, NULL, 0, config_path);
 	ASSERT(strlen(config_path) < PATH_MAX - 6);
@@ -74,7 +74,7 @@ const char* scc_get_config_path() {
 		}
 		return config_path;
 	}
-	
+
 	struct passwd* pw = getpwuid(getuid());
 	if (snprintf(config_path, PATH_MAX, "%s/.config/scc", pw->pw_dir) >= PATH_MAX) {
 		LERROR("Your $HOME doesn't fit PATH_MAX. How's that even possible? Using /tmp instead.");
@@ -82,7 +82,7 @@ const char* scc_get_config_path() {
 		LERROR("%s", pw->pw_dir);
 		sprintf(config_path, "/tmp");
 	}
-#endif	
+#endif
 	return config_path;
 }
 
@@ -99,19 +99,19 @@ const char* scc_get_share_path() {
 	if (share_path[0] != 0)
 		// Return cached value
 		return share_path;
-	
+
 	const char* scc_shared = getenv("SCC_SHARED");
 	if (scc_shared != NULL) {
 		// Automatically adding '/share' to end just because it's more
 		// comfortable to write SCC_SHARED=$(pwd)
-		if (snprintf(share_path, PATH_MAX, "%s/share", scc_shared) >= PATH_MAX)
+		if (snprintf(share_path, PATH_MAX, "%s/share/scc", scc_shared) >= PATH_MAX)
 			FATAL("$SCC_SHARED doesn't fit PATH_MAX.");
 		if (dir_exists(share_path))
 			return share_path;
 		snprintf(share_path, PATH_MAX, "%s", scc_shared);
 		return share_path;
 	}
-	
+
 #ifdef _WIN32
 	// What this does is taking path to current executable and going
 	// up one directory until directory with "default_menus" subdir is found.
@@ -120,10 +120,10 @@ const char* scc_get_share_path() {
 	char test[PATH_MAX];
 	GetModuleFileName(NULL, arg0, MAX_PATH);
 	while (1) {
-		snprintf(test, PATH_MAX, "%s\\share\\default_menus", arg0);
+		snprintf(test, PATH_MAX, "%s\\share\\scc\\default_menus", arg0);
 		if (access(test, F_OK) == 0) {
 			strncpy(share_path, arg0, PATH_MAX);
-			strcat(share_path, "\\share");
+			strcat(share_path, "\\share\\scc");
 			return share_path;
 		}
 		char* slash = strrchr(arg0, '\\');
@@ -138,7 +138,7 @@ const char* scc_get_share_path() {
 		"~/.local/share/scc",
 		NULL,
 	};
-	
+
 	for (int i=0; possibilities[i] != NULL; i++) {
 		if (possibilities[i][0] == '~') {
 			// Begins with home directory
@@ -149,12 +149,12 @@ const char* scc_get_share_path() {
 		} else {
 			strncpy(share_path, possibilities[i], PATH_MAX);
 		}
-		
+
 		if (dir_exists(share_path))
 			return share_path;
 		// Dir doesn't exists, try another
 	}
-	
+
 	// No path found, assume default and hope for best
 	strncpy(share_path, "/usr/share/scc", PATH_MAX);
 #endif
@@ -165,7 +165,7 @@ const char* scc_get_profiles_path() {
 	if (profiles_path[0] != 0)
 		// Return cached value
 		return profiles_path;
-	
+
 	sprintf(profiles_path, "%s" SEP "profiles", scc_get_config_path());
 	return profiles_path;
 }
@@ -174,7 +174,7 @@ const char* scc_get_default_profiles_path() {
 	if (default_profiles_path[0] != 0)
 		// Return cached value
 		return default_profiles_path;
-	
+
 	sprintf(default_profiles_path, "%s" SEP "default_profiles", scc_get_share_path());
 	return default_profiles_path;
 }
@@ -183,7 +183,7 @@ const char* scc_get_menus_path() {
 	if (menus_path[0] != 0)
 		// Return cached value
 		return menus_path;
-	
+
 	sprintf(menus_path, "%s" SEP "menus", scc_get_config_path());
 	return menus_path;
 }
@@ -192,7 +192,7 @@ const char* scc_get_default_menus_path() {
 	if (default_menus_path[0] != 0)
 		// Return cached value
 		return default_menus_path;
-	
+
 	sprintf(default_menus_path, "%s" SEP "default_menus", scc_get_share_path());
 	return default_menus_path;
 }
@@ -201,7 +201,7 @@ const char* scc_get_menuicons_path() {
 	if (menuicons_path[0] != 0)
 		// Return cached value
 		return menuicons_path;
-	
+
 	sprintf(menuicons_path, "%s" SEP "menu-icons", scc_get_config_path());
 	return menuicons_path;
 }
@@ -210,7 +210,7 @@ const char* scc_get_default_menuicons_path() {
 	if (default_menuicons_path[0] != 0)
 		// Return cached value
 		return default_menuicons_path;
-	
+
 	sprintf(default_menuicons_path, "%s" SEP "images" SEP "menu-icons", scc_get_share_path());
 	return default_menuicons_path;
 }
@@ -219,7 +219,7 @@ const char* scc_get_controller_icons_path() {
 	if (controller_icons_path[0] != 0)
 		// Return cached value
 		return controller_icons_path;
-	
+
 	sprintf(controller_icons_path, "%s" SEP "controller-icons", scc_get_config_path());
 	return controller_icons_path;
 }
@@ -228,7 +228,7 @@ const char* scc_get_default_controller_icons_path() {
 	if (default_controller_icons_path[0] != 0)
 		// Return cached value
 		return default_controller_icons_path;
-	
+
 	sprintf(default_controller_icons_path, "%s" SEP "images" SEP "controller-icons", scc_get_share_path());
 	return default_controller_icons_path;
 }
@@ -237,7 +237,7 @@ const char* scc_get_default_button_images_path() {
 	if (default_button_images_path[0] != 0)
 		// Return cached value
 		return default_button_images_path;
-	
+
 	sprintf(default_button_images_path, "%s" SEP "images" SEP "button-images", scc_get_share_path());
 	return default_button_images_path;
 }
@@ -246,7 +246,7 @@ const char* scc_get_pid_file() {
 	if (pid_file_path[0] != 0)
 		// Return cached value
 		return pid_file_path;
-	
+
 	sprintf(pid_file_path, "%s" SEP "daemon.pid", scc_get_config_path());
 	return pid_file_path;
 }
@@ -259,7 +259,7 @@ const char* scc_get_exe_path() {
 		return exe_path;
 	char path[PATH_MAX];
 #ifdef _WIN32
-	snprintf(path, PATH_MAX, "%s\\..", scc_get_share_path());
+	snprintf(path, PATH_MAX, "%s\\..\\..", scc_get_share_path());
 	ASSERT(exe_path == scc_realpath(path, exe_path));
 #else
 	ASSERT(getcwd(exe_path, PATH_MAX) != NULL);
@@ -277,7 +277,7 @@ char* scc_find_binary(const char* name) {
 		"src/osd",
 		"src/daemon",
 	};
-	
+
 	StrBuilder* sb = strbuilder_new();
 	if (sb == NULL) return NULL;
 	for (size_t i=0; i<sizeof(paths) / sizeof(char*); i++) {
@@ -293,10 +293,10 @@ char* scc_find_binary(const char* name) {
 			if (access(strbuilder_get_value(sb), X_OK) == 0)
 				return strbuilder_consume(sb);
 #endif
-		
+
 		strbuilder_clear(sb);
 	}
-	
+
 	strbuilder_free(sb);
 	return NULL;
 }
@@ -374,7 +374,7 @@ char* scc_path_strip_extension(const char* path) {
 	char* dot = strrchr(path, '.');
 	if (dot == NULL)
 		return strbuilder_cpy(path);
-	
+
 	StrBuilder* b = strbuilder_new();
 	if (b == NULL) return NULL;
 	if (!strbuilder_add(b, path)) {
@@ -397,7 +397,7 @@ char* scc_find_icon(const char* name, bool prefer_colored, bool* has_colors, con
 		default_paths[0] = scc_get_default_menuicons_path();
 		default_paths[1] = scc_get_menuicons_path();
 	}
-	
+
 	if (name == NULL) return NULL;
 	if ((strlen(name) > 3) && (0 == strcmp(name + strlen(name) - 3, ".bw"))) {
 		// TODO: Tests for this
@@ -409,10 +409,10 @@ char* scc_find_icon(const char* name, bool prefer_colored, bool* has_colors, con
 		free(no_suffix);
 		return rv;
 	}
-	
+
 	if (paths == NULL) paths = default_paths;
 	if (extensions == NULL) extensions = default_extensions;
-	
+
 	while (*extensions != NULL) {
 		const char* extension = *extensions;
 		gray_filename = strbuilder_fmt("%s.bw.%s", name, extension);
@@ -475,7 +475,7 @@ char* scc_find_icon(const char* name, bool prefer_colored, bool* has_colors, con
 	}
 	rv = NULL;
 	goto scc_find_icon_cleanup;
-	
+
 scc_find_icon_oom:
 	LERROR("scc_find_icon: out of memory");
 	rv = NULL;
@@ -492,10 +492,10 @@ char* scc_find_button_image(SCButton button, bool prefer_colored, bool* has_colo
 	static const char* extensions[] = { "svg", NULL };
 	const char* bstr = scc_button_to_string(button);
 	if (bstr == NULL) return NULL;
-	
+
 	if (paths[0] == NULL)
 		paths[0] = scc_get_default_button_images_path();
-	
+
 	return scc_find_icon(bstr, prefer_colored, has_colors, paths, extensions);
 }
 
@@ -520,11 +520,11 @@ const char* scc_get_python_src_path() {
 		return python_path;
 	char path[PATH_MAX];
 #ifdef _WIN32
-	snprintf(path, PATH_MAX, "%s\\..\\python", scc_get_share_path());
+	snprintf(path, PATH_MAX, "%s\\..\\..\\python", scc_get_share_path());
 #else
-	snprintf(path, PATH_MAX, "%s/../python/scc", scc_get_share_path());
+	snprintf(path, PATH_MAX, "%s/../../python/scc", scc_get_share_path());
 	if (access(path, F_OK) != -1) {
-		snprintf(path, PATH_MAX, "%s/../python", scc_get_share_path());
+		snprintf(path, PATH_MAX, "%s/../../python", scc_get_share_path());
 	} else {
 		snprintf(path, PATH_MAX, "/usr/lib/python3.8/site-packages");
 	}
@@ -541,4 +541,3 @@ const char* scc_get_daemon_socket() {
 	snprintf(socket_path, PATH_MAX + 128, "%s" SEP "daemon.socket", scc_get_config_path());
 	return socket_path;
 }
-
