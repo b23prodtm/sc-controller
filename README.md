@@ -1,4 +1,4 @@
-# SC Controller [![Build Status](https://travis-ci.org/b23prodtm/sc-controller.svg?branch=travisobs)](https://travis-ci.org/kozec/sc-controller)
+# SC Controller [![Build Status](https://travis-ci.org/b23prodtm/sc-controller.svg?branch=travisobs)](https://travis-ci.org/b23prodtm/sc-controller)
 SC Controller
 
 User-mode driver and mapper for Steam Controller, DS4 and similar controllers.
@@ -9,20 +9,6 @@ User-mode driver and mapper for Steam Controller, DS4 and similar controllers.
 [![screenshot3](docs/screenshot4-tn.png?raw=true)](docs/screenshot4.png?raw=true)
 
 -----------
-
-## WIP Windows/BSD/Linux/android port in c
-
-Hi there. What you are browsing is WIP branch in which I'm rewriting major parts of SCC into much more portable and much less python requiring code.
-
-It should be somehow usable, but there is no GUI and only very basic OSD menu right now.
-See this [wiki page](https://github.com/kozec/sc-controller/wiki/Running-SC-Controller-on-Windows) for how to run it.
-
------------
-
-#### Like what I'm doing?
-
-[![Help me become filthy rich on Liberapay](https://img.shields.io/badge/Help%20me%20become%20filthy%20rich%20on-Liberapay-yellow.svg)](https://liberapay.com/kozec) <sup>or</sup> [![donate anything with PayPal](https://img.shields.io/badge/donate_anything_with-Paypal-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=77DQD3L9K8RPU&lc=SK&item_name=kozec&item_number=scc&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted)
-
 
 #### Building
 
@@ -52,4 +38,3 @@ $ meson build
 $ ninja -C build
 $ ninja -C build scc-daemon
 ```
-
