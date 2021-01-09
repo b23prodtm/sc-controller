@@ -120,7 +120,7 @@ class TriggerComponent(AEComponent, BindingEditor):
 		if isinstance(action, TriggerAction):
 			return action.action
 		return action
-
+	
 	@staticmethod
 	def _strip_hipfire(action):
 		"""
@@ -227,8 +227,8 @@ class TriggerComponent(AEComponent, BindingEditor):
 		if not self._recursing:
 			self.send()
 
-
-	def on_btPartPressed_clicked(self, *a):
+	
+		def on_btPartPressed_clicked(self, *a):
 		""" 'Partialy Pressed Action' handler """
 		ae = self.choose_editor(self.half, "")
 		ae.set_title(_("Select Partialy Pressed Action"))
