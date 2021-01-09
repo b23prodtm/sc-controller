@@ -22,7 +22,7 @@ log = logging.getLogger("IE.ImportVdf")
 class ImportVdf(object):
 	PROFILE_LIST = "7/remote/sharedconfig.vdf"
 	STEAMPATH = '~/.steam/steam/'
-	
+
 	def __init__(self):
 		self._profile = None
 		self._lstVdfProfiles = self.builder.get_object("tvVdfProfiles").get_model()
@@ -33,8 +33,8 @@ class ImportVdf(object):
 		self._lock = threading.Lock()
 		self.__profile_load_started = False
 		self._on_preload_finished = None
-	
-	
+
+
 	def on_grVdfImport_activated(self, *a):
 		if not self.__profile_load_started:
 			self.__profile_load_started = True
@@ -42,12 +42,12 @@ class ImportVdf(object):
 			threading.Thread(target=self._load_game_names).start()
 			threading.Thread(target=self._load_profile_names).start()
 		self.on_tvVdfProfiles_cursor_changed()
-	
-	
+
+
 	def _load_profiles(self):
 		"""
 		Search for file containign list of profiles and reads it.
-		
+
 		This is done in thread, with crazy hope that it will NOT crash GTK
 		in the process.
 		"""
@@ -64,15 +64,15 @@ class ImportVdf(object):
 					except Exception as e:
 						log.exception(e)
 					self._lock.release()
-		
+
 		GLib.idle_add(self._load_finished)
-	
-	
+
+
 	def _parse_profile_list(self, i, filename):
 		"""
 		Parses sharedconfig.vdf and loads game and profile IDs. That is later
 		decoded into name of game and profile name.
-		
+
 		Called from _load_profiles, in thread. Exceptions are catched and logged
 		from there.
 		Calls GLib.idle_add to send loaded data into UI.
@@ -93,19 +93,19 @@ class ImportVdf(object):
 				if len(listitems) > 10:
 					GLib.idle_add(self.fill_list, listitems)
 					listitems = []
-		
+
 		GLib.idle_add(self.fill_list, listitems)
 		return i
-	
-	
+
+
 	def _load_game_names(self):
 		"""
 		Loads names for game ids in q_games.
-		
+
 		This is done in thread (not in same thread as _load_profiles),
 		because it involves searching for apropriate file and parsing it
 		entirely.
-		
+
 		Calls GLib.idle_add to send loaded data into UI.
 		"""
 		sa_path = self._find_steamapps()
@@ -132,8 +132,8 @@ class ImportVdf(object):
 			else:
 				name = gameid
 			GLib.idle_add(self._set_game_name, index, name)
-	
-	
+
+
 	@staticmethod
 	def _find_legacy_bin(path):
 		"""
@@ -147,12 +147,12 @@ class ImportVdf(object):
 				if f.endswith("_legacy.bin"):
 					return os.path.join(path, f)
 		return None
-	
-	
+
+
 	def _load_profile_names(self):
 		"""
 		Loads names for profiles ids in q_profiles.
-		
+
 		This is same as _load_game_names, but for profiles.
 		"""
 		content_path = os.path.join(self._find_steamapps(), "workshop/content")
@@ -188,8 +188,8 @@ class ImportVdf(object):
 				name = _("(not found)")
 				GLib.idle_add(self._set_profile_name, index, name, None)
 			self._lock.release()
-	
-	
+
+
 	def _load_finished(self):
 		""" Called in main thread after _load_profiles is finished """
 		self.builder.get_object("rvLoading").set_reveal_child(False)
@@ -200,8 +200,8 @@ class ImportVdf(object):
 			cb, data = self._on_preload_finished
 			GLib.idle_add(cb, *data)
 			self._on_preload_finished = None
-	
-	
+
+
 	def _find_steamapps(self):
 		"""
 		Returns path to SteamApps folder or None if it cannot be found.
@@ -214,20 +214,20 @@ class ImportVdf(object):
 				return path
 		log.warning("Cannot find SteamApps directory")
 		return None
-	
-	
+
+
 	def _set_game_name(self, index, name):
 		self._lstVdfProfiles[index][1] = name
-	
-	
+
+
 	def _set_profile_name(self, index, name, filename):
 		self._lstVdfProfiles[index][2] = name
 		self._lstVdfProfiles[index][3] = filename
-	
-	
+
+
 	def fill_list(self, items):
 		"""
-		Adds items to profile list. Has to run in main thread, 
+		Adds items to profile list. Has to run in main thread,
 		otherwise, GTK will crash.
 		"""
 		for i in items:
@@ -236,8 +236,8 @@ class ImportVdf(object):
 			self._s_games.release()
 			self._q_profiles.append(( i[0], i[1], i[2] ))
 			self._s_profiles.release()
-	
-	
+
+
 	def on_tvVdfProfiles_cursor_changed(self, *a):
 		"""
 		Called when user selects profile.
@@ -247,16 +247,16 @@ class ImportVdf(object):
 		model, iter = tvVdfProfiles.get_selection().get_selected()
 		filename = model.get_value(iter, 3)
 		self.enable_next(filename is not None, self.import_vdf)
-	
-	
+
+
 	@staticmethod
 	def gen_aset_name(base_name, set_name):
 		""" Generates name for profile converted from action set """
 		if set_name == 'default':
 			return base_name
 		return ("." + base_name + ":" + set_name.lower()).encode('utf-8')
-	
-	
+
+
 	def on_txName_changed(self, *a):
 		"""
 		Called when text in profile name field is changed.
@@ -265,7 +265,7 @@ class ImportVdf(object):
 		txName			= self.builder.get_object("txName")
 		lblASetsNotice	= self.builder.get_object("lblASetsNotice")
 		lblASetList		= self.builder.get_object("lblASetList")
-		
+
 		btNext = self.enable_next(True, self.vdf_import_confirmed)
 		btNext.set_label('Apply')
 		btNext.set_use_stock(True)
@@ -274,23 +274,23 @@ class ImportVdf(object):
 			lblASetList.set_visible(True)
 			log.info("Imported profile contains action sets")
 			lblASetList.set_text("\n".join([
-				self.gen_aset_name(txName.get_text().decode("utf-8").strip(), x)
+				self.gen_aset_name(txName.get_text().strip(), x)
 				for x in self._profile.action_sets
 				if x != 'default'
 			]))
 		else:
 			lblASetsNotice.set_visible(False)
-			lblASetList.set_visible(False)	
-		btNext.set_sensitive(self.check_name(txName.get_text().decode("utf-8")))
-	
-	
+			lblASetList.set_visible(False)
+		btNext.set_sensitive(self.check_name(txName.get_text()))
+
+
 	def on_preload_finished(self, callback, *data):
 		"""
 		Schedules callback to be called after initial profile list is loaded
 		"""
 		self._on_preload_finished = (callback, data)
-	
-	
+
+
 	def set_vdf_file(self, filename):
 		# TODO: Jump directly to page
 		tvVdfProfiles = self.builder.get_object("tvVdfProfiles")
@@ -298,8 +298,8 @@ class ImportVdf(object):
 		tvVdfProfiles.get_selection().select_iter(iter)
 		self.window.set_page_complete(self.window.get_nth_page(0), True)
 		self.window.set_current_page(1)
-	
-	
+
+
 	def on_btDump_clicked(self, *a):
 		tvError = self.builder.get_object("tvError")
 		swError = self.builder.get_object("swError")
@@ -307,7 +307,7 @@ class ImportVdf(object):
 		tvVdfProfiles = self.builder.get_object("tvVdfProfiles")
 		model, iter = tvVdfProfiles.get_selection().get_selected()
 		filename = model.get_value(iter, 3)
-		
+
 		dump = StringIO()
 		dump.write("\nProfile filename: %s\n" % (filename,))
 		dump.write("\nProfile dump:\n")
@@ -318,12 +318,12 @@ class ImportVdf(object):
 		tvError.get_buffer().set_text(dump.getvalue())
 		swError.set_visible(True)
 		btDump.set_sensitive(False)
-	
-	
+
+
 	def import_vdf(self, filename=None):
 		grVdfImportFinished = self.builder.get_object("grVdfImportFinished")
 		self.next_page(grVdfImportFinished)
-		
+
 		tvVdfProfiles = self.builder.get_object("tvVdfProfiles")
 		lblVdfImportFinished = self.builder.get_object("lblVdfImportFinished")
 		lblError = self.builder.get_object("lblError")
@@ -332,7 +332,7 @@ class ImportVdf(object):
 		lblName = self.builder.get_object("lblName")
 		txName = self.builder.get_object("txName")
 		btDump = self.builder.get_object("btDump")
-		
+
 		if filename is None:
 			model, iter = tvVdfProfiles.get_selection().get_selected()
 			filename = model.get_value(iter, 3)
@@ -341,7 +341,7 @@ class ImportVdf(object):
 		else:
 			# Best quess
 			self._profile = VDFProfile()
-		
+
 		failed = False
 		error_log = StringIO()
 		self._lock.acquire()
@@ -352,7 +352,7 @@ class ImportVdf(object):
 		lblName.set_visible(True)
 		txName.set_visible(True)
 		btDump.set_sensitive(True)
-		
+
 		try:
 			self._profile.load(filename)
 		except Exception as e:
@@ -362,57 +362,57 @@ class ImportVdf(object):
 			txName.set_text("")
 			self._profile = None
 			failed = True
-		
+
 		logging.getLogger().removeHandler(handler)
 		self._lock.release()
-		
+
 		if failed:
 			swError.set_visible(True)
 			lblError.set_visible(True)
 			btDump.set_sensitive(False)
-			
+
 			lblVdfImportFinished.set_text(_("Import failed"))
-			
+
 			error_log.write("\nProfile filename: %s\n" % (filename,))
 			error_log.write("\nProfile dump:\n")
 			try:
 				error_log.write(open(filename, "r").read())
 			except Exception as e:
 				error_log.write("(failed to write: %s)" % (e,))
-			
+
 			tvError.get_buffer().set_text(error_log.getvalue())
 		else:
 			if len(error_log.getvalue()) > 0:
 				# Some warnings were displayed
 				swError.set_visible(True)
 				lblError.set_visible(True)
-				
+
 				lblVdfImportFinished.set_text(_("Profile imported with warnings"))
-				
+
 				tvError.get_buffer().set_text(error_log.getvalue())
 				txName.set_text(self._profile.name)
 			else:
 				lblVdfImportFinished.set_text(_("Profile sucessfully imported"))
 				txName.set_text(self._profile.name)
 			self.on_txName_changed()
-	
-	
+
+
 	def vdf_import_confirmed(self, *a):
-		name = self.builder.get_object("txName").get_text().decode("utf-8").strip()
-		
+		name = self.builder.get_object("txName").get_text().strip()
+
 		if len(self._profile.action_sets) > 1:
 			# Update ChangeProfileActions with correct profile names
 			for x in self._profile.action_set_switches:
 				id = int(x._profile.split(":")[-1])
 				target_set = self._profile.action_set_by_id(id)
 				x._profile = self.gen_aset_name(name, target_set)
-			
+
 			# Save action set profiles
 			for k in self._profile.action_sets:
 				if k != 'default':
 					filename = self.gen_aset_name(name, k) + ".sccprofile"
 					path = os.path.join(get_profiles_path(), filename)
 					self._profile.action_sets[k].save(path)
-		
+
 		self.app.new_profile(self._profile, name)
 		GLib.idle_add(self.window.destroy)
