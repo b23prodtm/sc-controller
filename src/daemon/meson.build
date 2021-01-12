@@ -28,7 +28,7 @@ elif host_machine.system() == 'openbsd' or host_machine.system() == 'netbsd'
 	USB_HELPER = 'usb_helper_bsd.c'
 	if host_machine.system() == 'openbsd'
 		# not needed on netbsd
-		include += [ include_directories('/usr/local/include') ]
+		include += [ include_directories('/usr/include') ]
 	endif
 	platform_dependent_deps = [
 		dependency('x11'),
@@ -83,7 +83,7 @@ scc_daemon = executable('scc-daemon',
 	build_rpath: '/usr/X11R6/lib',
 	sources: platform_dependent_src + [
 		'main.c',
-		
+
 		'x11.c',
 		'daemon.c',
 		'logger.c',
@@ -109,7 +109,7 @@ scc_input_tester = executable('scc-input-tester',
 	],
 	sources: platform_dependent_src + [
 		'input_tester.c',
-		
+
 		'poller.c',
 		'drivers.c',
 		'scheduler.c',
@@ -122,4 +122,3 @@ run_target('scc-daemon', command: ['sh', '../../meson-run.sh', 'src/daemon/scc-d
 
 run_target('scc-input-tester', command: ['sh', '../../meson-run.sh', 'src/daemon/scc-input-tester', '--first'],
 	dependencies: [scc_input_tester])
-

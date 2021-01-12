@@ -15,10 +15,10 @@ osd_lib = shared_library('scc-osd',
 	dependencies: [
 		dependency('gtk+-3.0', version: '>=3.22.0'),
 		# dependency('glib-2.0', version: '>=2.56.0'),
-		
+
 		# TODO: Re-enable cairo & gio for OSK
-		# meson.get_compiler('c').find_library('cairo', dirs: ['/usr/local/lib']),
-		# meson.get_compiler('c').find_library('gio-2.0', dirs: ['/usr/local/lib']),
+		# meson.get_compiler('c').find_library('cairo', dirs: ['/usr/lib']),
+		# meson.get_compiler('c').find_library('gio-2.0', dirs: ['/usr/lib']),
 	] + platform_dependent_deps,
 	sources: [
 		'css_magic.c',
@@ -26,4 +26,3 @@ osd_lib = shared_library('scc-osd',
 		'icon.c',
 	]
 )
-
