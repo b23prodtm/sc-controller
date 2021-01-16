@@ -2,11 +2,10 @@ deps = [ dependency('python3') ]
 link = [ utils_lib, tools_lib ]
 sources = [ 'gui.c' ]
 link_args = []
-
 if host_machine.system() == 'linux'
 	# pass
 elif host_machine.system() == 'openbsd' or host_machine.system() == 'netbsd'
-	# pass
+	# pass	
 elif host_machine.system() == 'windows'
 	link_args += [ '-mwindows' ]
 	sources += [
@@ -16,7 +15,6 @@ else
 	error('Unsupported system ' + host_machine.system() + ', please add it here')
 endif
 
-
 sc_controller = executable('sc-controller',
 	include_directories: include,
 	build_rpath: '/usr/X11R6/lib',
@@ -24,7 +22,10 @@ sc_controller = executable('sc-controller',
 	dependencies: deps,
 	sources: sources,
 	link_with: link,
+	install : true,
+	install_dir : bins
 )
+
 
 if host_machine.system() == 'windows'
 	# Windows-only 'stay attached to console' executable

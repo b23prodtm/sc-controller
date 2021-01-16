@@ -28,3 +28,4 @@ appimage/
 .kateconfig
 debian/sc-controller*
 obj-*
+*.pyc

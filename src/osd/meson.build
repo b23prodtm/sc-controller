@@ -10,6 +10,8 @@ scc_osd_daemon = executable('scc-osd-daemon',
 	sources: [
 		'osd-daemon.c',
 	],
+	install: true,
+	install_dir: bins
 )
 
 scc_osd_menu = executable('scc-osd-menu',
@@ -19,6 +21,8 @@ scc_osd_menu = executable('scc-osd-menu',
 	sources: [
 		'osd-menu.c',
 	],
+	install: true,
+	install_dir: bins
 )
 
 scc_osd_keyboard = executable('scc-osd-keyboard',
@@ -28,6 +32,8 @@ scc_osd_keyboard = executable('scc-osd-keyboard',
 	sources: [
 		'osd-keyboard.c',
 	],
+	install: true,
+	install_dir: bins
 )
 
 

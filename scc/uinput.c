@@ -367,7 +367,7 @@ int uinput_ff_read(int fd, int ff_effects_max, struct feedback_effect** ff_effec
 						memset(&erase, 0, sizeof(struct uinput_ff_erase));
 						erase.request_id = event.value;
 						ioctl(fd, UI_BEGIN_FF_ERASE, &erase);
-						if ((erase.effect_id >= 0) && (erase.effect_id < ff_effects_max)) {
+						if ((erase.effect_id >= 0) && ((int)erase.effect_id < ff_effects_max)) {
 							ff_effects[erase.effect_id]->in_use = false;
 						}
 						RUMBLE_DEBUG("Erased effect id %i\n", upload.effect.id);

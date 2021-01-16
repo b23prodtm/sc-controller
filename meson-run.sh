@@ -2,7 +2,6 @@
 [ -z "$MESON_BUILD_ROOT" ] && MESON_BUILD_ROOT=build
 meson "$MESON_BUILD_ROOT" || exit 1
 ninja -C "$MESON_BUILD_ROOT" || exit 1
-ninja -C "$MESON_BUILD_ROOT" scc-daemon || exit 1
 kill_it() {
 	taskkill -F -IM "$IM.exe"
 }
@@ -25,7 +24,8 @@ if [ "$(uname)" = .*MINGW??_NT.* ]; then
 	cmd.exe /C "set PATH=$PATHS & $EXE $PARS"
 	exit $?
 else
-	export SCC_SHARED="$MESON_BUILD_ROOT/../"
+	cd "$MESON_BUILD_ROOT" || exit 1
+	export SCC_SHARED="$MESON_BUILD_ROOT/.."
 	export PYTHON_PATH="$MESON_BUILD_ROOT/../python"
 	$@
 	exit $?

@@ -3,4 +3,4 @@
 
 %:
 	#dh $@ --with=python3 --buildsystem=pybuild
-	dh $@ --builddirectory=build --buildsystem=meson+ninja
+	dh $@ --parallel -Bbuild --buildsystem=meson+ninja

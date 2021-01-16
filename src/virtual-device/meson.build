@@ -13,7 +13,8 @@ if get_option('x11-output').enabled() or host_machine.system() == 'openbsd' or h
 			'uinput-x11/common.c',
 			'uinput-x11/mouse.c',
 			'uinput-x11/keyboard.c',
-		]
+		],
+		install: true
 	)
 elif host_machine.system() == 'linux'
 	virtual_device_lib = shared_library('scc-virtual-device',
@@ -25,7 +26,8 @@ elif host_machine.system() == 'linux'
 			'uinput/mouse.c',
 			'uinput/gamepad.c',
 			'uinput/keyboard.c',
-		]
+		],
+		install: true
 	)
 elif host_machine.system() == 'windows'
 	add_languages('cpp')
@@ -37,6 +39,7 @@ elif host_machine.system() == 'windows'
 			meson.get_compiler('cpp').find_library('hid'),
 		],
 		sources: [ 'uinput-win32/vigemclient/ViGEmClient.cpp' ],
+		install: true
 	)
 	
 	virtual_device_lib = shared_library('scc-virtual-device',
@@ -47,7 +50,8 @@ elif host_machine.system() == 'windows'
 			'uinput-win32/common.c',
 			'uinput-win32/vigem_gamepad.c',
 			'uinput-win32/winapi_device.c',
-		]
+		],
+		install: true
 	)
 else
 	error('Unsupported system ' + host_machine.system() + ', please add it here')

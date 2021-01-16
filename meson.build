@@ -1,14 +1,14 @@
 project('scc', 'c',
 	version: '3.14',
 	license: 'GPL-2',
-	default_options : ['c_std=gnu11', 'menu-generators=enabled'],
+	default_options : ['c_std=gnu11'],
 )
 
 CONFIG_BACKEND = 'config_json'
 tools_library_deps = []
 parser_lib_deps = []
 C_FILES = '*.c'
-
+bins = []
 libexecinfo = []
 
 if host_machine.system() == 'windows'
@@ -23,10 +23,12 @@ elif get_option('android').enabled()
 	add_global_arguments('-DANDROID', language: 'c')
 	add_global_arguments('-DNO_TRACEBACKS', language: 'c')
 elif host_machine.system() == 'linux'
+	bins += [ 'bin' ]
 	add_global_link_arguments('-lpython3.8', '-lcrypt', '-lpthread', '-ldl', '-lutil', '-lm', language: 'c')
 	add_global_arguments('-DUSE_LIBUSB', language: 'c')
 	tools_library_deps = [ meson.get_compiler('c').find_library('dl') ]
 elif host_machine.system() == 'openbsd' or host_machine.system() == 'netbsd'
+	bins += [ 'bin' ]
 	add_global_link_arguments('-lpython3.8', '-lcrypt', '-lpthread', '-ldl', '-lutil', '-lm', language: 'c')
 	add_global_link_arguments('-lc', language: 'c')
 	add_global_arguments('-D__BSD__', language: 'c')
@@ -65,6 +67,7 @@ utils_lib = shared_library('scc-utils',
 		'src/utils/list.c',
 		'src/utils/math.c',
 	],
+	install: true
 )
 
 
@@ -76,7 +79,8 @@ conversions_lib = shared_library('scc-conversions',
 		'src/conversions/int_constants.c',
 		'src/conversions/generated.c',
 		'src/conversions/methods.c',
-	]
+	],
+	install: true
 )
 
 # Difference between tools and utils:
@@ -91,7 +95,8 @@ tools_lib = shared_library('scc-tools',
 		'src/tools/constants.c',
 		'src/tools/userdata.c',
 		'src/tools/paths.c',
-	]
+	],
+	install: true
 )
 
 config_lib = shared_library('scc-config',
@@ -102,20 +107,23 @@ config_lib = shared_library('scc-config',
 		'src/config/common.c',
 		'src/config/' + CONFIG_BACKEND + '.c',
 	],
+	install: true
 )
 
 params_lib = static_library('params',
 	link_with: [utils_lib],
 	include_directories: include,
 	sources: run_command('find', 'src/actions/parameter',
-			'-maxdepth', '1', '-name', C_FILES).stdout().strip().split('\n')
+			'-maxdepth', '1', '-name', C_FILES).stdout().strip().split('\n'),
+	install: true
 )
 
 param_checker_lib = static_library('param_checker',
 	link_with: [utils_lib],
 	include_directories: include,
 	sources: run_command('find', 'src/actions/param_checker',
-			'-maxdepth', '1', '-name', C_FILES).stdout().strip().split('\n')
+			'-maxdepth', '1', '-name', C_FILES).stdout().strip().split('\n'),
+	install: true
 )
 
 action_files = (run_command('find', 'src/actions/',
@@ -134,7 +142,8 @@ actions_lib = shared_library('scc-actions',
 			build_by_default: true,
 			capture: true,
 		)
-	]
+	],
+	install: true
 )
 
 parser_lib = shared_library('scc-parser',
@@ -147,7 +156,8 @@ parser_lib = shared_library('scc-parser',
 		'src/parser/jsonprofile.c',
 		'src/parser/menu_data.c',
 		'src/parser/regexes.c',
-	]
+	],
+	install: true
 )
 
 bindings_lib = shared_library('scc-bindings',
@@ -163,7 +173,8 @@ bindings_lib = shared_library('scc-bindings',
 		'src/tools/constants.c',
 		'src/tools/bindings.c',
 		'src/tools/paths.c',
-	]
+	],
+	install: true
 )
 
 subdir('src/virtual-device')
@@ -177,7 +188,6 @@ if get_option('menu-generators').enabled()
 	subdir('src/menu-generators')
 endif
 subdir('src/gui')
-subdir('tests')
 subdir('share/scc')
 
 # Import python3 meson module which is used to find the Python dependencies.
@@ -191,5 +201,7 @@ shared_library('uinput', 'scc/uinput.c', install: true, dependencies: py3_dep)
 shared_library('hiddrv', 'scc/drivers/hiddrv.c', install: true, dependencies: py3_dep)
 shared_library('sc_by_bt', 'scc/drivers/sc_by_bt.c', install: true, dependencies: py3_dep)
 
-run_command(py3, 'setup.py', 'build', '--prefix' + meson.current_build_dir())
-run_command(py3, 'setup.py', 'install', '--prefix' + meson.current_build_dir())
+run_command(py3, 'setup.py', 'build', '--prefix=' + meson.current_build_dir())
+run_command(py3, 'setup.py', 'install', '--prefix=' + meson.current_build_dir())
+
+subdir('tests')

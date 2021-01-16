@@ -17,7 +17,8 @@ shared_library('scc-drv-sc_by_cable',
 	sources: [
 		'sc/common.c',
 		'sc/by_cable.c',
-	]
+	],
+	install: true
 )
 
 shared_library('scc-drv-sc_dongle',
@@ -27,7 +28,8 @@ shared_library('scc-drv-sc_dongle',
 	sources: [
 		'sc/common.c',
 		'sc/dongle.c',
-	]
+	],
+	install: true
 )
 
 shared_library('scc-drv-remotepad',
@@ -37,7 +39,8 @@ shared_library('scc-drv-remotepad',
 	sources: [
 		'remotepad/remotepad.c',
 		'remotepad/remotepad_controller.c',
-	]
+	],
+	install: true
 )
 
 shared_library('scc-drv-fake',
@@ -46,7 +49,8 @@ shared_library('scc-drv-fake',
 	sources: [
 		'fake/fake.c',
 		'fake/fake_controller.c',
-	]
+	],
+	install: true
 )
 
 if host_machine.system() == 'linux'
@@ -60,7 +64,8 @@ if host_machine.system() == 'linux'
 		sources: [
 			'generic/common.c',
 			'generic/evdev.c',
-		]
+		],
+		install: true
 	)
 endif
 
@@ -76,7 +81,8 @@ if host_machine.system() == 'windows'
 		sources: [
 			'generic/common.c',
 			'generic/dinput.c',
-		]
+		],
+		install: true
 	)
 endif
 

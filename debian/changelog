@@ -2337,4 +2337,50 @@ sc-controller (0.4.9) UNRELEASED; urgency=medium
   [ BOPOD ]
   * Fixes: share/scc
 
- -- btinarako <btinarako@btinarako-System-Product-Name>  Sat, 09 Jan 2021 21:22:07 +0100
+  [ kozec ]
+  * Fix: 'confirm with release' menu option doesn't works. Fixes #589
+  * Unicode profile names related fixes. Fixes #565
+
+  [ Rener ]
+  * Basic hipfire action
+  * Include hipfire in the gui
+  * Adjusting AE to show the hipfire action
+  * Some more corrections on hipfire and add modes [exclusive,sensible]
+  * Some cleanups and comments
+  * Includes the delay parameter into the GUI, rename variables and made some parameters optional
+  * Add hipfire to the documentation
+  * Revert gtk version (changed by glade editor)
+
+  [ kozec ]
+  * Fix: moving STICK and LPAD at once can cause pads or buttons to stuck. Fixes #598
+  * Fix: radial menu not respecting gdk scale factor. Fixes #587
+  * Managed to generate AppImage for Ubuntu 20.04
+  * Version 0.4.8
+
+  [ TiB Rkt Arimana ]
+  * Update README.md
+
+  [ kozec ]
+  * Fix: 'confirm with release' menu option doesn't works. Fixes #589
+  * Unicode profile names related fixes. Fixes #565
+
+  [ Rener ]
+  * Basic hipfire action
+  * Include hipfire in the gui
+  * Adjusting AE to show the hipfire action
+  * Some more corrections on hipfire and add modes [exclusive,sensible]
+  * Some cleanups and comments
+  * Includes the delay parameter into the GUI, rename variables and made some parameters optional
+  * Add hipfire to the documentation
+  * Revert gtk version (changed by glade editor)
+
+  [ kozec ]
+  * Fix: moving STICK and LPAD at once can cause pads or buttons to stuck. Fixes #598
+  * Fix: radial menu not respecting gdk scale factor. Fixes #587
+  * Managed to generate AppImage for Ubuntu 20.04
+  * Version 0.4.8
+
+  [ TiB Rkt Arimana ]
+  * Update README.md
+
+ -- btinarako <btinarako@btinarako-System-Product-Name>  Sat, 16 Jan 2021 21:38:45 +0100

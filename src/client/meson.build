@@ -6,7 +6,8 @@ if host_machine.system() == 'windows'
 		include_directories: include,
 		link_with: [utils_lib],
 		dependencies: [ meson.get_compiler('c').find_library('wsock32') ],
-		sources: [ '../utils/msys_socket.c', ]
+		sources: [ '../utils/msys_socket.c', ],
+		install: true
 	)
 	
 	platform_dependent_deps = [
@@ -25,7 +26,8 @@ client_lib = shared_library('scc-client',
 		'controller.c',
 		'command.c',
 		'socket.c',
-	]
+	],
+	install: true
 )
 
 slave_mapper_lib = shared_library('scc-slave-mapper',
@@ -33,7 +35,8 @@ slave_mapper_lib = shared_library('scc-slave-mapper',
 	link_with: [utils_lib, tools_lib, client_lib, virtual_device_lib ],
 	sources: [
 		'slave_mapper.c',
-	]
+	],
+	install: true
 )
 
 gio_client_lib = shared_library('scc-gio-client',
@@ -45,6 +48,7 @@ gio_client_lib = shared_library('scc-gio-client',
 	],
 	sources: [
 		'gio.c',
-	]
+	],
+	install: true
 )
 
