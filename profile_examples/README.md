@@ -1,1 +1,0 @@
-Drag and drop link on main window to import profile.

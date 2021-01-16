@@ -1,2 +1,0 @@
-/home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/reconfigure/meson-private/cmake_python-3/CMakeFiles/rebuild_cache.dir
-/home/btinarako/Public/GitHub/home:bnopod/sc-controller/sc-controller/reconfigure/meson-private/cmake_python-3/CMakeFiles/edit_cache.dir

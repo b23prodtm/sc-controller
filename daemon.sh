@@ -1,14 +1,9 @@
 #!/bin/bash
 
 # Set PATH
-SCRIPTS="$(pwd)/scripts"
-export PATH="$SCRIPTS":"$PATH"
-export PYTHONPATH=".":"$PYTHONPATH"
-export SCC_SHARED="$(pwd)"
-
 if [ x"$1" == x"lldb" ] ; then
 	shift
-	lldb python -- 'scripts/scc-daemon' debug $@
+	lldb python -- sc-xbox.py $@
 else
-	python 'scripts/scc-daemon' $@
+	python sc-xbox.py $@
 fi

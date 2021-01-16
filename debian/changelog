@@ -1,7 +1,7 @@
-sc-controller (0.4.9) UNRELEASED; urgency=medium
+sc-controller (0.5) UNRELEASED; urgency=medium
 
   [ bnopod ]
-  * Initial release. (Closes: #XXXXXX) 
+  * Initial release. (Closes: #2) 
 
   [ kozec ]
   * Imported code from 'https://github.com/ynsta/steamcontroller'
@@ -2383,4 +2383,10 @@ sc-controller (0.4.9) UNRELEASED; urgency=medium
   [ TiB Rkt Arimana ]
   * Update README.md
 
- -- btinarako <btinarako@btinarako-System-Product-Name>  Sat, 16 Jan 2021 21:38:45 +0100
+  [ b23prodtm ]
+  * Update to Ynsta implementation
+  * Update to Ynsta implementation
+  * Update to Ynsta implementation
+  * Update to Ynsta implementation
+
+ -- btinarako <btinarako@btinarako-System-Product-Name>  Sat, 16 Jan 2021 23:53:38 +0100
