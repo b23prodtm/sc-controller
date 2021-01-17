@@ -31,7 +31,7 @@ $ ninja -C build sc-controller  # start GUI
 $ ninja -C build scc-daemon     # start without gui to check why it doesn't work
 ```
 
-###### on OpenBSD or NetBSD
+###### on OpenBSD or netbsd
 ```
 # (install pkg-config, ninja-build and meson packages first. Meson is available as pip package)
 $ meson build

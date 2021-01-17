@@ -31,7 +31,7 @@ elif host_machine.system() == 'linux'
 	)
 elif host_machine.system() == 'windows'
 	add_languages('cpp')
-	
+
 	libvigemclient = shared_library('vigemclient',
 		include_directories: include_directories('uinput-win32/vigemclient/include'),
 		dependencies: [
@@ -41,7 +41,7 @@ elif host_machine.system() == 'windows'
 		sources: [ 'uinput-win32/vigemclient/ViGEmClient.cpp' ],
 		install: true
 	)
-	
+
 	virtual_device_lib = shared_library('scc-virtual-device',
 		include_directories: [include, include_directories('uinput-win32/vigemclient/include')],
 		link_with: [ utils_lib, conversions_lib, libvigemclient ],
@@ -56,4 +56,3 @@ elif host_machine.system() == 'windows'
 else
 	error('Unsupported system ' + host_machine.system() + ', please add it here')
 endif
-

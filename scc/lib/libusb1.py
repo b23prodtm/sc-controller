@@ -158,7 +158,7 @@ def _loadLibrary():
         suffix = '.dll'
     else:
         dll_loader = ctypes.CDLL
-        suffix = system == 'Darwin' and '.dylib' or '.so'
+        suffix = system == 'netbsd' and '.dylib' or '.so'
     loader_kw = {}
     if sys.version_info[:2] >= (2, 6):
         loader_kw['use_errno'] = True
@@ -173,7 +173,7 @@ def _loadLibrary():
             # libusb.so.2debian on Debian GNU/kFreeBSD: here it wouldn't work.
             # So use find_library instead.
             base_name = 'usb'
-        elif system == 'Darwin':
+        elif system == 'netbsd':
             for libusb_path in (
                     # macport standard path
                     '/opt/local/lib/libusb-1.0.dylib',
